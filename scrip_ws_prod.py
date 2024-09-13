@@ -1,14 +1,31 @@
 
 # flake8: noqa: E221, E241
 # pylint: disable=C0301
-# pylint: disable=C0303, C0114, W0613, R0914, RO915, C0411, W0012, R0915, R1705, C0103, W0621
+# pylint: disable=C0303, C0114, W0613, R0914, RO915, C0411, W0012, R0915, R1705, C0103, W0621, W0611, C0305, C0412, C0404, W1203, W0404
 
+
+import pandas as pd
 
 import random
-import pandas as pd
 from datetime import datetime, timedelta
 from faker import Faker
 from dateutil.relativedelta import relativedelta
+
+import csv
+import logging
+import asyncio
+from asyncio import Semaphore
+import datetime
+
+import random
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+from typing import List, Dict
+from tqdm import tqdm
+import aiofiles
+import json
+from os import environ
+from playwright.async_api import async_playwright, Playwright, expect, TimeoutError as PlaywrightTimeoutError
 
 
 # Initialisation de Faker pour générer des données en France
@@ -155,18 +172,37 @@ def choix_pondere(options, poids):
 
 def generer_purchase_date(first_car_driving_date):
     """
-    Génère une date d'achat aléatoire entre 1 et 365 jours après la date de mise en circulation.
+    Génère une date d'achat aléatoire entre la date de mise en circulation et la date actuelle.
 
     Args:
         first_car_driving_date (datetime): Date de mise en circulation du véhicule.
 
     Returns:
         str: Date d'achat au format 'mm/YYYY'.
+
+    Raises:
+        TypeError: Si first_car_driving_date n'est pas un objet datetime.
+        ValueError: Si first_car_driving_date est dans le futur.
     """
-    jours_apres = random.randint(1, 365)
+    if not isinstance(first_car_driving_date, datetime):
+        raise TypeError("first_car_driving_date doit être un objet datetime")
+
+    max_allowed_date = datetime.now()  # Date actuelle de l'exécution du script
+
+    if first_car_driving_date > max_allowed_date:
+        raise ValueError("La date de mise en circulation ne peut pas être dans le futur")
+
+    # Calcul du nombre de jours entre la date de mise en circulation et la date actuelle
+    max_days = (max_allowed_date - first_car_driving_date).days
+
+    if max_days == 0:
+        # Si la date de mise en circulation est aujourd'hui, on retourne cette date
+        return first_car_driving_date.strftime('%m/%Y')
+
+    # Génération d'un nombre aléatoire de jours entre 0 et max_days
+    jours_apres = random.randint(0, max_days)
     purchase_date = first_car_driving_date + timedelta(days=jours_apres)
     return purchase_date.strftime('%m/%Y')
-
 
 
 
@@ -250,8 +286,7 @@ def generer_home_info():
         home_resident_type = random.choices(["1", "2"], weights=[70, 30])[0]
     return home_type, home_resident_type
 
-
-def generer_parking_code(home_type, home_resident_type):  # def
+def generer_parking_code(home_type, home_resident_type):
     """
     Génère un code de stationnement en fonction du type de logement et du type de résident.
 
@@ -271,7 +306,7 @@ def generer_parking_code(home_type, home_resident_type):  # def
     else:
         return random.choices(["G", "C", "P", "J", "V"], weights=[10, 30, 30, 5, 25])[0]
 
-def generer_statut_assurance(): 
+def generer_statut_assurance():
     """
     Génère un statut d'assurance basé sur des poids prédéfinis.
 
@@ -357,7 +392,7 @@ def generer_profil(vehicules_df, communes_df):
     age = calculer_age(date_naissance)
 
     # Calcul de la date d'obtention du permis de conduire
-    age_minimum_permis = 17
+    age_minimum_permis = 18
     date_minimum_permis = date_naissance + timedelta(days=age_minimum_permis * 365)
     if date_minimum_permis > aujourd_hui:
         date_permis = None
@@ -378,7 +413,7 @@ def generer_profil(vehicules_df, communes_df):
         conjoint_permis = random.choice(["Oui", "Non"])
 
         if conjoint_permis == "Oui":
-            age_minimum_permis_conjoint = 17
+            age_minimum_permis_conjoint = 18
             date_minimum_permis_conjoint = conjoint_date_naissance + timedelta(days=age_minimum_permis_conjoint * 365)
             if date_minimum_permis_conjoint <= aujourd_hui:
                 jours_depuis_permis_possible_conjoint = (aujourd_hui - date_minimum_permis_conjoint).days
@@ -476,7 +511,7 @@ def generer_profil(vehicules_df, communes_df):
         'HomeResidentType': home_resident_type,
         'ParkingCode': parking_code,
         'PrimaryApplicantHasBeenInsured': insurance_status,
-        'Id': random.randint(5, 10),  # Id aléatoire entre 5 et 10
+        'Id': str(random.randint(5, 10)),  # Id aléatoire entre 5 et 10 (as a string)
         'TitleAddress': random.choice(["MONSIEUR", "MADAME"]), 
         'LastName': fake.last_name(),  # Nom de famille
         'FirstName': fake.first_name(),  # Prénom
@@ -664,7 +699,7 @@ for profil in profils:
     if profil['InsuranceNeed'] == "Vous le possédez déjà":
         # Convertir PurchaseDate en objet datetime
         month, year = map(int, profil['PurchaseDate'].split('/'))
-        purchase_date = datetime(year, month, 1)  # On prend le premier jour du mois pour simplifier le calcul 
+        purchase_date = datetime(year, month, 1)  # On prend le premier jour du mois pour simplifier le calcul
 
         difference = (actuel - purchase_date).days // 365  # Calculer la différence en années
         if difference < 1:
@@ -692,7 +727,7 @@ for profil in profils:
         not_running_values = ["6", "7", "8", "1", "2", "3"]
         profil['PrimaryApplicantContrNotRunningSince'] = random.choice(not_running_values)
     else:
-        profil['PrimaryApplicantContrNotRunningSince'] = None  # en none
+        profil['PrimaryApplicantContrNotRunningSince'] = None  # Ou une autre valeur par défaut si nécessaire
 
     # Créer la colonne CurrentCarrier
     current_carrier_values = ['71', '73', '1', '68', '74', '72', '75', '76', '77', '4', '33', '34', '78', '37', '79', '3', '8', '80', '81', '9', '13', '82', '44', '14', '83', '45', '89', '84', '90', '17', '18', '48', '19', '20', '22', '21', '85', '86', '49', '50', '70', '69', '56', '87', '26', '88', '0', '59', '60']
@@ -717,8 +752,457 @@ for profil in profils:
 # Convertir les profils en DataFrame et sauvegarder
 profils_df = pd.DataFrame(profils)
 # Afficher les 10 premiers profils
-for profil in profils[:10]:
 
-    print(profil)
+# Paramètres
+start_line = 1  # Commencer à la première ligne
+end_line = 10   # Finir à la dixième ligne
 
-print(profils_df.columns)
+for profile in profils[:2]:
+
+    print(profile)
+
+
+
+
+# Statistiques supplémentaires
+print("\nStatistiques supplémentaires:")
+print(f"Nombre total de profils générés : {len(profils_df)}")
+print("\nTop 5 des régions les plus représentées:")
+print(profils_df['code_region'].value_counts().head())
+print("\nÂge moyen des profils:", profils_df['Age'].mean())
+print("\nDistribution des niveaux de garantie:")
+print(profils_df['ContrGuaranteeCode'].value_counts(normalize=True))
+print("\nTop 10 des professions les plus fréquentes:")
+print(profils_df['PrimaryApplicantOccupationCode'].value_counts().head(10))
+
+#:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+TIMEOUT = 2 * 60000
+SBR_WS_CDP = 'wss://brd-customer-hl_e9a5f52e-zone-scraping_browser1:jpuci55coo47@brd.superproxy.io:9222'
+TARGET_URL = environ.get('TARGET_URL', default='https://www.assurland.com/')
+
+# Liste d'agents utilisateurs
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
+    "Mozilla/5.0 (Windows NT 10.0; WOW64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/113.0.0.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.3",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.3",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 OPR/112.0.0.",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.3",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.3",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/127.0.2651.105",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/113.0.0.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; Xbox; Xbox One) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edge/44.18363.8131",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0"]
+
+# Liste de langues
+LANGUAGES = ["fr-FR", "en-GB", "de-DE", "es-ES"]
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+def display_profiles(profils: List[Dict[str, str]], num_lines: int = 5):
+    """
+    Affiche les premières lignes des profils dans le journal de logs.
+
+    Cette fonction prend une liste de profils (chacun représenté par un dictionnaire)
+    et affiche les détails des premiers profils dans le journal de logs. Elle est utile
+    pour avoir un aperçu rapide des données de profil au début de l'exécution du programme.
+
+    Args:
+        profiles (List[Dict[str, str]]): Une liste de dictionnaires, où chaque dictionnaire
+                                        représente un profil avec des paires clé-valeur.
+        num_lines (int, optional): Le nombre de profils à afficher. Par défaut à 5.
+
+    Fonctionnement:
+        1. Affiche un message indiquant le nombre de profils qui vont être affichés.
+        2. Itère sur les 'num_lines' premiers profils de la liste.
+        3. Pour chaque profil, affiche toutes ses paires clé-valeur.
+        4. Ajoute un séparateur entre chaque profil pour une meilleure lisibilité.
+
+    Note:
+        - Si la liste de profils contient moins d'éléments que 'num_lines',
+        tous les profils disponibles seront affichés.
+        - L'affichage se fait via le logger, assurez-vous que celui-ci est correctement configuré.
+
+    Exemple d'utilisation:
+        profiles = [
+            {"Id": "1", "Nom": "Dupont", "Age": "30"},
+            {"Id": "2", "Nom": "Martin", "Age": "25"},
+            {"Id": "3", "Nom": "Durand", "Age": "35"}
+        ]
+        display_profiles(profils, num_lines=2)
+    """
+    logger.info(f"Affichage des {num_lines} premiers profils :")
+    for i, profile in enumerate(profils[:num_lines], start=1):
+        logger.info(f"Profil {i}:")
+        for key, value in profile.items():
+            logger.info(f"  {key}: {value}")
+        logger.info("-" * 50)  # Séparateur entre les profils
+
+async def exponential_backoff(page, url, max_retries=5, initial_timeout=30000):
+    """
+    Effectue une navigation vers une URL avec une stratégie de backoff exponentiel en cas d'échec.
+
+    Cette fonction tente de naviguer vers l'URL spécifiée, en augmentant le temps d'attente
+    et le délai d'expiration de manière exponentielle à chaque tentative échouée.
+
+    Args:
+        page (Page): L'objet Page de Playwright sur lequel effectuer la navigation.
+        url (str): L'URL vers laquelle naviguer.
+        max_retries (int, optional): Le nombre maximal de tentatives. Par défaut à 5.
+        initial_timeout (int, optional): Le délai d'expiration initial en millisecondes. Par défaut à 30000 (30 secondes).
+
+    Fonctionnement:
+        1. Tente de naviguer vers l'URL avec un délai d'expiration initial.
+        2. En cas d'échec (timeout), augmente le délai d'expiration de manière exponentielle.
+        3. Attend un temps aléatoire entre les tentatives, également augmenté de manière exponentielle.
+        4. Répète jusqu'à ce que la navigation réussisse ou que le nombre maximal de tentatives soit atteint.
+
+    Raises:
+        PlaywrightTimeoutError: Si la navigation échoue après le nombre maximal de tentatives.
+
+    Logs:
+        - Avertissement à chaque échec de tentative, indiquant le temps d'attente avant la prochaine tentative.
+        - Erreur si toutes les tentatives échouent.
+
+    Note:
+        - Le temps d'attente entre les tentatives est calculé de manière aléatoire pour éviter les motifs prévisibles.
+        - Le délai d'expiration augmente de manière exponentielle à chaque tentative.
+
+    Exemple d'utilisation:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch()
+            page = await browser.new_page()
+            await exponential_backoff(page, "https://example.com")
+    """
+    for attempt in range(max_retries):
+        try:
+            timeout = initial_timeout * (2 ** attempt)
+            await page.goto(url, timeout=timeout)
+            return
+        except PlaywrightTimeoutError:
+            if attempt < max_retries - 1:
+                wait_time = random.uniform(1, 2 ** attempt)
+                logger.warning(
+                    f"Timeout lors de la navigation vers {url}. Attente de {wait_time:.2f} secondes avant la prochaine tentative.")
+                await asyncio.sleep(wait_time)
+            else:
+                logger.error(f"Échec de la navigation vers {url} après {max_retries} tentatives")
+                raise
+
+async def get_random_browser(playwright: Playwright, bright_data: bool, headless: bool):
+    """
+    Crée et retourne de manière asynchrone une instance de navigateur aléatoire et son contexte avec des paramètres aléatoires.
+
+    Cette fonction sélectionne un navigateur aléatoire (soit Chromium, soit Firefox), définit des dimensions de viewport,
+    un user agent et une langue aléatoires. Elle peut lancer un navigateur directement ou se connecter à un navigateur Bright Data.
+
+    Args:
+        playwright (Playwright): L'instance Playwright à utiliser pour la création du navigateur.
+        bright_data (bool): Si True, se connecte à un navigateur Bright Data. Si False, lance un navigateur local.
+        headless (bool): Indique si le navigateur doit être exécuté en mode headless.
+
+    Returns:
+        tuple: Un tuple contenant :
+            - browser: L'instance du navigateur lancé.
+            - context: Le contexte du navigateur avec les paramètres appliqués.
+
+    Raises:
+        PlaywrightError: En cas d'erreur lors du lancement du navigateur ou de la création du contexte.
+
+    Note:
+        - La fonction utilise des listes prédéfinies USER_AGENTS et LANGUAGES pour la randomisation.
+        - Lors de l'utilisation de Bright Data, elle utilise toujours Chromium et se connecte via CDP.
+        - La fonction enregistre des informations sur le navigateur choisi et ses paramètres.
+
+    Exemple:
+        playwright = await async_playwright().start()
+        browser, context = await get_random_browser(playwright, bright_data=False, headless=True)
+    """
+    browser_choice = random.choice(['chromium', 'firefox'])
+    slow_mo = random.randint(500, 800)
+    viewport = {
+    "width": random.randint(1024, 1920),
+    "height": random.randint(768, 1080)
+    }
+    user_agent = random.choice(USER_AGENTS)
+    language = random.choice(LANGUAGES)
+
+    launch_options = {
+    "headless": headless,
+    "slow_mo": slow_mo,
+    }
+
+    if bright_data:
+        browser = await playwright.chromium.connect_over_cdp(SBR_WS_CDP)
+    else:
+        browser = await getattr(playwright, browser_choice).launch(**launch_options)
+
+    context = await browser.new_context(
+    viewport=viewport
+    )
+
+    logger.info(f"{browser_choice.capitalize()} a été choisi avec les options : {launch_options}, viewport: {viewport}, user_agent: {user_agent}, locale: {language}")
+    return browser, context
+
+
+async def simulate_human_behavior(page):
+    """
+    Simule un comportement humain sur une page web de manière asynchrone.
+
+    Cette fonction effectue une série d'actions pour imiter le comportement d'un utilisateur humain
+    sur une page web, incluant le défilement aléatoire, des pauses et des mouvements de souris.
+
+    Args:
+        page (Page): L'objet Page de Playwright sur lequel effectuer les actions.
+
+    Actions réalisées:
+        1. Défilement aléatoire de la page.
+        2. Pause aléatoire entre 1 et 3 secondes.
+        3. Mouvement aléatoire du curseur de la souris.
+        4. Pause aléatoire supplémentaire entre 0.5 et 1.5 secondes.
+
+    Note:
+        - Cette fonction utilise des temps d'attente et des positions aléatoires pour rendre
+        le comportement moins prévisible et plus proche d'un utilisateur humain.
+        - Les actions sont exécutées de manière séquentielle avec des pauses entre chacune.
+
+    Raises:
+        PlaywrightError: En cas d'erreur lors de l'exécution des actions sur la page.
+
+    Exemple d'utilisation:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch()
+            page = await browser.new_page()
+            await page.goto("https://example.com")
+            await simulate_human_behavior(page)
+    """
+    await page.evaluate("window.scrollTo(0, document.body.scrollHeight * Math.random());")
+    await page.wait_for_timeout(random.randint(1000, 3000))
+    await page.mouse.move(random.randint(100, 500), random.randint(100, 500))
+    await page.wait_for_timeout(random.randint(500, 1500))
+
+
+
+async def run_for_profile(playwright: Playwright, profile: dict, headless: bool, bright_data: bool,
+                        url=TARGET_URL) -> None:
+    """
+    Exécute un processus de simulation pour un profil donné sur un site web cible.
+
+    Cette fonction asynchrone gère l'ensemble du processus de simulation pour un profil d'assurance auto,
+    depuis l'ouverture du navigateur jusqu'à la récupération des tarifs, en passant par le remplissage
+    de plusieurs formulaires.
+
+    Args:
+        playwright (Playwright): L'instance Playwright pour la création du navigateur.
+        profile (dict): Le dictionnaire contenant les informations du profil à simuler.
+        headless (bool): Indique si le navigateur doit être exécuté en mode headless.
+        bright_data (bool): Indique si Bright Data doit être utilisé pour la connexion.
+        url (str, optional): L'URL cible. Par défaut, utilise TARGET_URL.
+
+    Actions principales:
+        1. Initialisation du navigateur et de la page.
+        2. Navigation vers l'URL cible avec gestion des retards.
+        3. Simulation de comportement humain.
+        4. Remplissage de plusieurs formulaires (projet, profil, véhicule, antécédents, contrats).
+        5. Récupération des tarifs.
+
+    Gestion des erreurs:
+        - En cas d'erreur, les informations du profil sont enregistrées dans un fichier JSON d'échecs.
+        - Le fichier d'échecs est nommé avec la date du jour et la plage de lignes traitées.
+
+    Note:
+        - La fonction utilise des techniques pour éviter la détection de l'automatisation.
+        - Des pauses aléatoires et des simulations de comportement humain sont intégrées.
+
+    Raises:
+        Exception: Toute exception survenant pendant l'exécution est capturée, enregistrée,
+                    et relancée après avoir sauvegardé les informations d'échec.
+
+    Exemple d'utilisation:
+        async with async_playwright() as p:
+            await run_for_profile(p, profile_data, headless=True, bright_data=False)
+    """
+    await asyncio.sleep(random.uniform(1, 2))
+
+    browser, context = await get_random_browser(playwright, bright_data, headless)
+    page = await context.new_page()
+
+    # Ajouter un script furtif
+    await page.add_init_script("""
+        Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
+        Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]});""")
+
+    try:
+        await exponential_backoff(page, url)
+        await simulate_human_behavior(page)
+
+        actions = [
+            page.get_by_role("button", name="Continuer sans accepter").click,
+            page.get_by_role("button", name="Tout accepter").click
+        ]
+        await random.choice(actions)()
+        await simulate_human_behavior(page)
+
+        AUTO_INSURANCE_SELECTOR = "div.al_product.al_car[title='Comparez les assurances auto']"
+        await page.wait_for_selector(AUTO_INSURANCE_SELECTOR, state="visible", timeout=30000)
+        auto_insurance_div = page.locator(AUTO_INSURANCE_SELECTOR)
+        await expect(auto_insurance_div).to_be_enabled(timeout=30000)
+        await auto_insurance_div.click()
+        await simulate_human_behavior(page)
+
+        logger.info("Cliqué sur le div 'Comparez les assurances auto'")
+        print(f"Le profil '{profile['Id']}' est lancé....")
+
+        
+
+    except Exception as e:
+        logger.error(f"Erreur lors de l'exécution du profil: {str(e)}")
+        date_du_jour = datetime.now().strftime("%d_%m_%y")
+
+        # Créer le nom du fichier avec la date du jour
+        nom_fichier_echecs = f"fichiers_echecs_{date_du_jour}_{start_line}_au_{end_line}.json"
+        # Écrire les informations du profil dans le fichier JSON des échecs
+        async with aiofiles.open(nom_fichier_echecs, mode='a') as f:
+            await f.write(json.dumps({'ID': profile['Id']}))
+            await f.write('\n')
+            print(f"=====> Le profil {profile['Id']} a été stocké dans le fichier des échecs:", nom_fichier_echecs)
+        raise
+    finally:
+        await context.close()
+
+async def run_for_profile_with_semaphore_and_progress(playwright, profile, headless, bright_data, semaphore,
+                                                    progress_bar):
+    """
+    Fonction wrapper asynchrone qui exécute le traitement d'un profil avec gestion du sémaphore et de la progression.
+
+    Cette fonction encapsule l'appel à run_for_profile en ajoutant la gestion du sémaphore pour
+    contrôler la concurrence et la mise à jour de la barre de progression.
+
+    Args:
+        playwright (Playwright): L'instance Playwright pour la création du navigateur.
+        profile (dict): Le dictionnaire contenant les informations du profil à traiter.
+        headless (bool): Indique si le navigateur doit être exécuté en mode headless.
+        bright_data (bool): Indique si Bright Data doit être utilisé pour la connexion.
+        semaphore (asyncio.Semaphore): Le sémaphore pour contrôler la concurrence.
+        progress_bar (tqdm): La barre de progression à mettre à jour.
+
+    Fonctionnement:
+        1. Acquiert le sémaphore avant d'exécuter le traitement.
+        2. Appelle run_for_profile pour traiter le profil.
+        3. Gère les exceptions potentielles lors du traitement.
+        4. Met à jour la barre de progression après le traitement.
+        5. Libère le sémaphore, que le traitement ait réussi ou échoué.
+
+    Raises:
+        Aucune exception n'est levée, mais les erreurs sont enregistrées dans le journal.
+
+    Note:
+        - Cette fonction est conçue pour être utilisée avec asyncio.gather dans la fonction main.
+        - Elle assure que le sémaphore est toujours libéré et que la progression est mise à jour,
+        même en cas d'erreur lors du traitement du profil.
+    """
+    async with semaphore:
+        try:
+            await run_for_profile(playwright, profile, headless, bright_data)
+        except Exception as e:
+            logger.error(f"Erreur lors du traitement du profil {profile['Id']}: {str(e)}")
+        finally:
+            progress_bar.update(1)
+
+
+                    
+
+async def main(headless: bool, bright_data: bool, max_concurrent: int = 20):
+    """
+    Fonction principale asynchrone qui gère le traitement parallèle des profils.
+
+    Cette fonction coordonne le processus global de lecture des profils à partir d'un fichier CSV,
+    l'affichage d'un aperçu des profils, et le lancement du traitement parallèle de ces profils
+    en utilisant Playwright.
+
+    Args:
+        headless (bool): Indique si les navigateurs doivent être exécutés en mode headless.
+        bright_data (bool): Indique si Bright Data doit être utilisé pour la connexion.
+        max_concurrent (int, optional): Nombre maximal de tâches concurrentes. Par défaut à 20.
+
+    Fonctionnement:
+        1. Lecture des profils à partir d'un fichier CSV.
+        2. Vérification de la présence de profils.
+        3. Initialisation d'un sémaphore pour limiter la concurrence.
+        4. Création d'une barre de progression pour suivre l'avancement.
+        5. Affichage d'un aperçu des profils.
+        6. Lancement du traitement parallèle des profils avec Playwright.
+        7. Attente de la fin de tous les traitements.
+
+    Utilise:
+        - read_csv_profiles(): Fonction pour lire les profils depuis un fichier CSV.
+        - display_profiles(): Fonction pour afficher un aperçu des profils.
+        - run_for_profile_with_semaphore_and_progress(): Fonction asynchrone pour traiter un profil.
+
+    Note:
+        - La fonction utilise asyncio.gather pour exécuter toutes les tâches en parallèle.
+        - Un sémaphore est utilisé pour limiter le nombre de tâches concurrentes.
+        - Une barre de progression (tqdm) est utilisée pour suivre l'avancement global.
+
+    Raises:
+        Aucune exception n'est explicitement levée, mais des erreurs peuvent se produire
+        lors de la lecture des profils ou de leur traitement.
+
+    Exemple d'utilisation:
+        asyncio.run(main(headless=True, bright_data=False, max_concurrent=10))
+    """
+    
+    if not profils:
+        logger.error("Aucun profil n'a été lu. Fin du programme.")
+        return
+    semaphore = Semaphore(max_concurrent)
+    progress_bar = tqdm(total=len(profils), desc="Traitement des profils")
+
+    display_profiles(profils)
+
+    async with async_playwright() as playwright:
+        tasks = [
+            run_for_profile_with_semaphore_and_progress(playwright, profile, headless, bright_data, semaphore,
+                                                        progress_bar)
+            for profile in profils
+        ]
+        await asyncio.gather(*tasks)
+
+    progress_bar.close()
+
+if __name__ == "__main__":
+    """
+    Point d'entrée principal du script.
+
+    Ce bloc exécute la fonction main avec des paramètres spécifiques lorsque le script est
+    exécuté directement (et non importé comme un module).
+
+    Paramètres utilisés:
+        - headless=False : Les navigateurs seront exécutés en mode visible (non headless).
+        - bright_data=True : Utilisation de Bright Data pour la connexion.
+        - max_concurrent=20 : Limite le nombre de tâches concurrentes à 20.
+
+    Fonctionnement:
+        Utilise asyncio.run pour exécuter la coroutine main dans la boucle d'événements asyncio.
+
+    Note:
+        - Ces paramètres peuvent être ajustés selon les besoins spécifiques de l'exécution.
+        - L'exécution en mode non-headless (headless=False) permet de voir les navigateurs en action,
+        ce qui peut être utile pour le débogage mais peut consommer plus de ressources.
+        - L'utilisation de Bright Data (bright_data=True) implique que la configuration appropriée
+        pour Bright Data est en place.
+    """
+    asyncio.run(main(headless=False, bright_data=True, max_concurrent=20))
