@@ -1,5 +1,11 @@
-import pandas as pd
+
+# flake8: noqa: E221, E241
+# pylint: disable=C0301
+# pylint: disable=C0303, C0114, W0613, R0914, RO915, C0411, W0012, R0915, R1705, C0103, W0621
+
+
 import random
+import pandas as pd
 from datetime import datetime, timedelta
 from faker import Faker
 from dateutil.relativedelta import relativedelta
@@ -244,7 +250,8 @@ def generer_home_info():
         home_resident_type = random.choices(["1", "2"], weights=[70, 30])[0]
     return home_type, home_resident_type
 
-def generer_parking_code(home_type, home_resident_type):
+
+def generer_parking_code(home_type, home_resident_type):  # def
     """
     Génère un code de stationnement en fonction du type de logement et du type de résident.
 
@@ -264,7 +271,7 @@ def generer_parking_code(home_type, home_resident_type):
     else:
         return random.choices(["G", "C", "P", "J", "V"], weights=[10, 30, 30, 5, 25])[0]
 
-def generer_statut_assurance():
+def generer_statut_assurance(): 
     """
     Génère un statut d'assurance basé sur des poids prédéfinis.
 
@@ -494,7 +501,7 @@ communes_df = charger_donnees_communes(chemin_fichier_communes)
 
 # Générer les profils avec les informations de véhicules
 profils = []
-for _ in range(100000):  # Par exemple, générer 1000 profils
+for _ in range(100):  # Par exemple, générer 1000 profils
     profil = generer_profil(vehicules_df, communes_df)
     vehicule = vehicules_df.sample().iloc[0]
     profil.update({
@@ -657,7 +664,7 @@ for profil in profils:
     if profil['InsuranceNeed'] == "Vous le possédez déjà":
         # Convertir PurchaseDate en objet datetime
         month, year = map(int, profil['PurchaseDate'].split('/'))
-        purchase_date = datetime(year, month, 1)  # On prend le premier jour du mois pour simplifier le calcul
+        purchase_date = datetime(year, month, 1)  # On prend le premier jour du mois pour simplifier le calcul 
 
         difference = (actuel - purchase_date).days // 365  # Calculer la différence en années
         if difference < 1:
@@ -685,7 +692,7 @@ for profil in profils:
         not_running_values = ["6", "7", "8", "1", "2", "3"]
         profil['PrimaryApplicantContrNotRunningSince'] = random.choice(not_running_values)
     else:
-        profil['PrimaryApplicantContrNotRunningSince'] = None  # Ou une autre valeur par défaut si nécessaire
+        profil['PrimaryApplicantContrNotRunningSince'] = None  # en none
 
     # Créer la colonne CurrentCarrier
     current_carrier_values = ['71', '73', '1', '68', '74', '72', '75', '76', '77', '4', '33', '34', '78', '37', '79', '3', '8', '80', '81', '9', '13', '82', '44', '14', '83', '45', '89', '84', '90', '17', '18', '48', '19', '20', '22', '21', '85', '86', '49', '50', '70', '69', '56', '87', '26', '88', '0', '59', '60']
