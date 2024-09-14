@@ -1,7 +1,7 @@
 
 # flake8: noqa: E221, E241
 # pylint: disable=C0301
-# pylint: disable=C0303, C0114, W0613, R0914, RO915, C0411, W0012, R0915, R1705, C0103, W0621, W0611, C0305, C0412, C0404, W1203, W0404
+# pylint: disable=C0303, C0114, W0613, R0914, RO915, C0411, W0012, R0915, R1705, C0103, W0621, W0611, C0305, C0412, C0404, W1203, W0404, W0718, R0912, R0913
 
 
 import pandas as pd
@@ -9,15 +9,13 @@ import pandas as pd
 import random
 from datetime import datetime, timedelta
 from faker import Faker
-from dateutil.relativedelta import relativedelta
+
 
 import csv
 import logging
 import asyncio
 from asyncio import Semaphore
 import datetime
-
-import random
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from typing import List, Dict
@@ -993,6 +991,162 @@ async def simulate_human_behavior(page):
     await page.wait_for_timeout(random.randint(1000, 3000))
     await page.mouse.move(random.randint(100, 500), random.randint(100, 500))
     await page.wait_for_timeout(random.randint(500, 1500))
+
+async def fill_form_projet(page, profile):
+    """
+    Remplit le formulaire concernant le projet d'assurance auto de l'utilisateur.
+
+    Cette fonction asynchrone navigue à travers les différentes sections du formulaire 'PROJET',
+    en remplissant les champs selon les informations fournies dans le profil de l'utilisateur.
+
+    Args:
+        page (Page): L'objet Page de Playwright représentant la page web actuelle.
+        profile (dict): Un dictionnaire contenant les informations du profil de l'utilisateur.
+
+    Fonctionnement:
+        1. Attend que le formulaire soit chargé.
+        2. Remplit les informations sur le besoin d'assurance (achat prévu ou véhicule déjà possédé).
+        3. Si applicable, remplit les détails sur le type d'achat de véhicule.
+        4. Gère les informations sur les conducteurs secondaires.
+        5. Remplit les informations sur le titulaire de la carte grise.
+        6. Navigue vers la page suivante après avoir rempli le formulaire.
+
+    Gestion des erreurs:
+        - Utilise des blocs try/except pour gérer les timeouts et les erreurs inattendues.
+        - Affiche des messages d'erreur détaillés en cas de problème.
+
+    Logs:
+        - Affiche des messages de progression et de confirmation pour chaque étape complétée.
+        - Signale les valeurs non reconnues ou manquantes dans le profil.
+
+    Note:
+        - Utilise des constantes comme TIMEOUT pour la gestion des attentes.
+        - Adapte le comportement en fonction des réponses précédentes (ex: affichage de champs supplémentaires).
+
+    Raises:
+        Exception: Capture et affiche toute exception survenant pendant le processus de remplissage.
+
+    Exemple d'utilisation:
+        await fill_form_projet(page, user_profile)
+    """
+    try:
+        # Attendre que le formulaire soit chargé
+        await page.wait_for_selector('div.al_label span:text("Votre projet")')
+        print("Vous avez accés à la page du formulaire 'PROJET' ")
+        print(f"Le profil '{profile['Id']}' est lancé....")
+        await page.wait_for_selector('.InsuranceNeed', state='visible', timeout=TIMEOUT)
+        if profile['InsuranceNeed'] == "Vous comptez l'acheter":
+            await page.click('button.list-group-item[value="0"]')
+            print(f"----> La valeur '{profile['InsuranceNeed']}' a été choisie...")
+            try:
+                await page.wait_for_selector('.InsuranceNeedDetail', state='visible', timeout=TIMEOUT)
+                print("Le div InsuranceNeedDetail est apparu")
+                if profile['InsuranceNeedDetail'] == "D'une voiture en remplacement":
+                    await page.click('.InsuranceNeedDetail button.list-group-item[value="2"]')
+                    print(f"----> La valeur '{profile['InsuranceNeedDetail']}' a été choisie...")
+                elif profile['InsuranceNeedDetail'] == "D'une voiture supplémentaire":
+                    await page.click('.InsuranceNeedDetail button.list-group-item[value="3"]')
+                    print(f"----> La valeur '{profile['InsuranceNeedDetail']}' a été choisie...")
+                elif profile['InsuranceNeedDetail'] == "D'une première voiture":
+                    await page.click('.InsuranceNeedDetail button.list-group-item[value="4"]')
+                    print(f"----> La valeur '{profile['InsuranceNeedDetail']}' a été choisie...")
+                else:
+                    print(f"Type d'achat de voiture non reconnu : {profile['InsuranceNeedDetail']}")
+
+                if profile['AddCarAge'] == "Neuve":
+                    await page.click('.AddCarAge button.list-group-item[value="1"]')
+                    print(f"----> La valeur '{profile['AddCarAge']}' a été choisie...")
+                elif profile['AddCarAge'] == "D'occasion":
+                    await page.click('.AddCarAge button.list-group-item[value="2"]')
+                    print(f"----> La valeur '{profile['AddCarAge']}' a été choisie...")
+                else:
+                    print(f"Type de détail de voiture non reconnu : {profile['AddCarAge']}")
+            except PlaywrightTimeoutError:
+                print("Le div InsuranceNeedDetail n'est pas apparu comme prévu")
+
+        elif profile['InsuranceNeed'] == "Vous le possédez déjà":
+            await page.click('button.list-group-item[value="1"]')
+            print(f"----> La valeur '{profile['InsuranceNeed']}' a été choisie...")
+        else:
+            print(f"Statut d'achat non reconnu : {profile['InsuranceNeed']}")
+
+        await page.wait_for_selector('.OtherDriver', state='visible', timeout=TIMEOUT)
+
+        if profile['OtherDriver'] == "Oui":
+            await page.click('.OtherDriver button.list-group-item[value="3"]')
+            print(f"----> La valeur '{profile['OtherDriver']}' a été choisie sur la déclaration d'un conducteur secondaire.")
+            try:
+                if 'OtherDriverType' in profile:
+                    await page.wait_for_selector('#OtherDriverType', state="visible", timeout=TIMEOUT)
+                    if profile['OtherDriverType'] == "Votre conjoint ou concubin":
+                        await page.select_option('#OtherDriverType', value="1")
+                        print(
+                            f"----> La valeur '{profile['OtherDriverType']}' a été choisie pour le type du conducteur secondaire.")
+                    elif profile['OtherDriverType'] == "Votre enfant":
+                        await page.select_option('#OtherDriverType', value="2")
+                        print(
+                            f"----> La valeur '{profile['OtherDriverType']}' a été choisie pour le type du conducteur secondaire.")
+                    elif profile['OtherDriverType'] == "Votre père ou votre mère":
+                        await page.select_option('#OtherDriverType', value="3")
+                        print(
+                            f"----> La valeur '{profile['OtherDriverType']}' a été choisie pour le type du conducteur secondaire.")
+                    elif profile['OtherDriverType'] == "Le père ou la mère de votre conjoint ou concubin":
+                        await page.select_option('#OtherDriverType', value="4")
+                        print(
+                            f"----> La valeur '{profile['OtherDriverType']}' a été choisie pour le type du conducteur secondaire.")
+                    else:
+                        print("Type du conducteur secondaire non reconnu")
+                else:
+                    print("Type du conducteur secondaire non spécifié dans profile")
+            except PlaywrightTimeoutError:
+                print("Le div OtherDriverType n'est pas apparu comme prévu")
+
+        elif profile['OtherDriver'] == "Non":
+            await page.click('.OtherDriver button.list-group-item[value="1"]')
+            print(f"----> La valeur '{profile['OtherDriver']}' a été choisie sur la déclaration d'un conducteur secondaire.")
+        else:
+            print(f"Déclaration d'un conducteur secondaire : {profile['OtherDriver']}")
+
+        # Titulaire de la carte grise
+        if 'GreyCardOwner' in profile:
+            await page.wait_for_selector('#GreyCardOwner', state="visible", timeout=TIMEOUT)
+            if profile['GreyCardOwner'] == "Vous":
+                await page.select_option('#GreyCardOwner', value="1")
+                print(
+                    f"----> La valeur '{profile['GreyCardOwner']}' a été choisie pour le Titulaire de la carte grise.")
+            elif profile['OtherDriverType'] == "Votre conjoint ou concubin":
+                await page.select_option('#GreyCardOwner', value="2")
+                print(
+                    f"----> La valeur '{profile['GreyCardOwner']}' a été choisie pour le Titulaire de la carte grise.")
+            elif profile['OtherDriverType'] == "Vous ET votre conjoint ou concubin":
+                await page.select_option('#GreyCardOwner', value="3")
+                print(
+                    f"----> La valeur '{profile['GreyCardOwner']}' a été choisie pour le Titulaire de la carte grise.")
+            elif profile['OtherDriverType'] == "Votre père ou votre mère":
+                await page.select_option('#GreyCardOwner', value="4")
+                print(
+                    f"----> La valeur '{profile['GreyCardOwner']}' a été choisie pour le Titulaire de la carte grise.")
+            elif profile['OtherDriverType'] == "Le père ou la mère de votre conjoint ou concubin":
+                await page.select_option('#GreyCardOwner', value="5")
+                print(
+                    f"----> La valeur '{profile['GreyCardOwner']}' a été choisie pour le Titulaire de la carte grise.")
+            elif profile['OtherDriverType'] == "Il s'agit d'un véhicule de société":
+                await page.select_option('#GreyCardOwner', value="6")
+                print(
+                    f"----> La valeur '{profile['GreyCardOwner']}' a été choisie pour le Titulaire de la carte grise.")
+            else:
+                print("Type du Titulaire de la carte grise non reconnu")
+        else:
+            print("Type du Titulaire de la carte grise non spécifié dans profile")
+
+        print("Toutes les étapes de fill_form_projet ont été complétées avec succès.")
+
+        await asyncio.sleep(2)
+        await page.get_by_role("button", name="SUIVANT ").click()
+        print("Navigation vers la page suivante : Votre profil.")
+
+    except Exception as e:
+        print(f"Une erreur s'est produite lors du remplissage du formulaire PROJET : {str(e)}")
 
 
 
