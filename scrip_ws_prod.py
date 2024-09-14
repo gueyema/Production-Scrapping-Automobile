@@ -427,7 +427,7 @@ def generer_profil(vehicules_df, communes_df):
         has_child = random.choice(["Oui", "Non"])
         if has_child == "Oui":
             nombre_enfants = random.choice([1, 2, 3])
-            annees_possible = range(1998, 2025)
+            annees_possible = [str(year) for year in range(1998, 2025)]  # Conversion en str
 
             if nombre_enfants >= 1:
                 enfant_annee_naissance_1 = random.choice(annees_possible)
@@ -534,7 +534,7 @@ communes_df = charger_donnees_communes(chemin_fichier_communes)
 
 # Générer les profils avec les informations de véhicules
 profils = []
-for _ in range(100):  # Par exemple, générer 1000 profils
+for _ in range(10):  # Par exemple, générer 1000 profils
     profil = generer_profil(vehicules_df, communes_df)
     vehicule = vehicules_df.sample().iloc[0]
     profil.update({
@@ -776,7 +776,9 @@ print(profils_df['PrimaryApplicantOccupationCode'].value_counts().head(10))
 #:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 TIMEOUT = 2 * 60000
-SBR_WS_CDP = 'wss://brd-customer-hl_e9a5f52e-zone-scraping_browser1:jpuci55coo47@brd.superproxy.io:9222'
+# SBR_WS_CDP = 'wss://brd-customer-hl_e9a5f52e-zone-scraping_browser1:jpuci55coo47@brd.superproxy.io:9222'
+
+SBR_WS_CDP = 'wss://brd-customer-hl_538b14f9-zone-scraping_browser1:zk8riomp0pt9@brd.superproxy.io:9222'
 TARGET_URL = environ.get('TARGET_URL', default='https://www.assurland.com/')
 
 # Liste d'agents utilisateurs
@@ -1149,6 +1151,207 @@ async def fill_form_projet(page, profile):
         print(f"Une erreur s'est produite lors du remplissage du formulaire PROJET : {str(e)}")
 
 
+async def fill_form_profil(page, profile):
+    """
+    Remplit le formulaire de profil sur une page web avec les informations fournies.
+
+    Cette fonction automatise le processus de remplissage d'un formulaire de profil
+    en utilisant Playwright. Elle gère divers champs tels que le sexe, la date de naissance,
+    le statut matrimonial, la situation professionnelle, les informations sur le permis de conduire,
+    et les détails sur le conjoint et les enfants si applicable.
+
+    Args:
+        page (Page): L'objet Page de Playwright représentant la page web actuelle.
+        profile (dict): Un dictionnaire contenant les informations du profil à remplir.
+            Clés attendues:
+            - PrimaryApplicantSex (str): Le sexe du demandeur principal ("Un homme" ou "Une femme").
+            - PrimaryApplicantBirthDate (str): La date de naissance du demandeur principal.
+            - PrimaryApplicantMaritalStatus (str): Le statut matrimonial du demandeur.
+            - PrimaryApplicantOccupationCode (str): Le code de profession du demandeur.
+            - PrimaryApplicantDrivLicenseDate (str): La date d'obtention du permis de conduire.
+            - PrimaryApplicantIsPreLicenseExper (str): Si le demandeur a fait de la conduite accompagnée ("Oui" ou "Non").
+            - PrimaryApplicantDrivLicenseSusp (str): Le statut de suspension du permis de conduire.
+            - ConjointNonSouscripteurBirthDate (str): La date de naissance du conjoint (si applicable).
+            - ConjointNonSouscripteurHasDriveLicense (str): Si le conjoint a un permis de conduire ("Oui" ou "Non").
+            - ConjointNonSouscripteurDriveLicenseDate (str): La date d'obtention du permis du conjoint (si applicable).
+            - HasChild (str): Si le demandeur a des enfants ("Oui" ou "Non").
+            - ChildBirthDateYear1, ChildBirthDateYear2, ChildBirthDateYear3 (str): Les années de naissance des enfants (si applicable).
+
+    Raises:
+        ValueError: Si une valeur invalide est fournie pour un champ ou si une erreur survient lors du remplissage.
+        Exception: Pour toute autre erreur inattendue lors du processus de remplissage.
+
+    Returns:
+        None
+
+    Note:
+        Cette fonction utilise des sélecteurs spécifiques et des timeouts pour interagir avec les éléments de la page.
+        Elle effectue également des vérifications pour s'assurer que les valeurs sont correctement saisies.
+    """
+    try:
+        await page.wait_for_selector('div.al_label span:text("Votre profil")', timeout=TIMEOUT)
+        await page.wait_for_selector('.PrimaryApplicantSex', state="visible", timeout=TIMEOUT)
+        if profile['PrimaryApplicantSex'] == "Un homme":
+            await page.click('.PrimaryApplicantSex button.list-group-item[value="H"]')
+            print(f"----> La valeur '{profile['PrimaryApplicantSex']}' a été choisie pour le genre.")
+        elif profile['PrimaryApplicantSex'] == "Une femme":
+            await page.click('.PrimaryApplicantSex button.list-group-item[value="F"]')
+            print(f"----> La valeur '{profile['PrimaryApplicantSex']}' a été choisie pour le genre.")
+        else:
+            print("Genre non reconnu dans profile")
+
+        await page.wait_for_selector("#PrimaryApplicantBirthDate", state="visible", timeout=60000)
+        await page.evaluate('document.getElementById("PrimaryApplicantBirthDate").value = ""')
+        await page.fill("#PrimaryApplicantBirthDate", profile['PrimaryApplicantBirthDate'])
+        await page.press("#PrimaryApplicantBirthDate", "Enter")
+        await page.wait_for_timeout(500)
+        entered_value = await page.evaluate('document.getElementById("PrimaryApplicantBirthDate").value')
+        if entered_value != profile['PrimaryApplicantBirthDate']:
+            raise ValueError(
+                f"La date de naissance saisie ({entered_value}) ne correspond pas à la valeur attendue ({profile['PrimaryApplicantBirthDate']})")
+        print(f"----> Date de naissance '{profile['PrimaryApplicantBirthDate']}' saisie avec succès.")
+
+        """ Statut matrimonial du profil """
+        try:
+            await page.wait_for_selector("#PrimaryApplicantMaritalStatus", state="visible", timeout=60000)
+            await page.select_option("#PrimaryApplicantMaritalStatus", label=profile['PrimaryApplicantMaritalStatus'])
+            print(f"----> Statut marital '{profile['PrimaryApplicantMaritalStatus']}' sélectionné avec succès.")
+        except Exception as e:
+            logging.error(f"Erreur lors de la sélection du statut marital: {str(e)}")
+            # await page.screenshot(path="error_marital_status.png")
+            raise ValueError(f"Erreur lors de la sélection du statut marital : {str(e)}")
+
+        """ Situation prof du profil """
+        try:
+            await page.wait_for_selector("#PrimaryApplicantOccupationCode", state="visible", timeout=60000)
+            await page.select_option("#PrimaryApplicantOccupationCode", label=profile['PrimaryApplicantOccupationCode'])
+            print(f"----> Statut professionnel '{profile['PrimaryApplicantOccupationCode']}' sélectionné avec succès.")
+        except Exception as e:
+            logging.error(f"Erreur lors de la sélection du statut professionnel: {str(e)}")
+            # await page.screenshot(path="error_professional_status.png")
+            raise ValueError(f"Erreur lors de la sélection du statut professionnel : {str(e)}")
+
+        """ Date d'obtention du permis du profil """
+        try:
+            await page.wait_for_selector("#PrimaryApplicantDrivLicenseDate", state="visible", timeout=60000)
+            await page.evaluate('document.getElementById("PrimaryApplicantDrivLicenseDate").value = ""')
+            await page.fill("#PrimaryApplicantDrivLicenseDate", profile['PrimaryApplicantDrivLicenseDate'])
+            await page.press("#PrimaryApplicantDrivLicenseDate", "Enter")
+            await page.wait_for_timeout(500)
+            print(
+                f"----> Date d'obtention du permis '{profile['PrimaryApplicantDrivLicenseDate']}' saisie avec succès.")
+        except Exception as e:
+            logging.error(f"Erreur lors de la saisie de la date d'obtention du permis: {str(e)}")
+            # await page.screenshot(path="error_driving_license_date.png")
+            raise ValueError(f"Erreur lors de la saisie de la date d'obtention du permis : {str(e)}")
+
+        try:
+            await page.wait_for_selector(".PrimaryApplicantIsPreLicenseExper", state="visible", timeout=TIMEOUT)
+            buttons = await page.query_selector_all(".PrimaryApplicantIsPreLicenseExper button")
+            if not buttons:
+                raise ValueError("Les boutons de conduite accompagnée n'ont pas été trouvés.")
+            if profile['PrimaryApplicantIsPreLicenseExper'] == "Oui":
+                await page.click('.PrimaryApplicantIsPreLicenseExper button.list-group-item[value="True"]')
+                print(
+                    f"----> La valeur '{profile['PrimaryApplicantIsPreLicenseExper']}' a été choisie pour la conduite accompagnée.")
+            elif profile['PrimaryApplicantIsPreLicenseExper'] == "Non":
+                await page.click('.PrimaryApplicantIsPreLicenseExper button.list-group-item[value="False"]')
+                print(
+                    f"----> La valeur '{profile['PrimaryApplicantIsPreLicenseExper']}' a été choisie pour la conduite accompagnée.")
+            else:
+                raise ValueError(
+                    f"Valeur non reconnue pour la conduite accompagnée : {profile['PrimaryApplicantIsPreLicenseExper']}")
+        except Exception as e:
+            logging.error(f"Erreur lors de la sélection de l'option de conduite accompagnée: {str(e)}")
+            # await page.screenshot(path="error_accompanied_driving.png")
+            raise ValueError(f"Erreur lors de la sélection de l'option de conduite accompagnée : {str(e)}")
+
+        try:
+            await page.wait_for_selector("#PrimaryApplicantDrivLicenseSusp", state="visible", timeout=10000)
+            await page.select_option("#PrimaryApplicantDrivLicenseSusp",
+                                     label=profile['PrimaryApplicantDrivLicenseSusp'])
+            selected_value = await page.evaluate('document.getElementById("PrimaryApplicantDrivLicenseSusp").value')
+            selected_text = await page.evaluate(
+                'document.getElementById("PrimaryApplicantDrivLicenseSusp").options[document.getElementById("PrimaryApplicantDrivLicenseSusp").selectedIndex].text')
+            if selected_text != profile['PrimaryApplicantDrivLicenseSusp']:
+                raise ValueError(
+                    f"Le statut sélectionné ({selected_text}) ne correspond pas au statut attendu ({profile['PrimaryApplicantDrivLicenseSusp']})")
+            print(
+                f"----> Statut de suspension du permis '{profile['PrimaryApplicantDrivLicenseSusp']}' sélectionné avec succès (valeur: {selected_value}).")
+        except Exception as e:
+            logging.error(f"Erreur lors de la sélection du statut de suspension du permis: {str(e)}")
+            # await page.screenshot(path="error_license_suspension_status.png")
+            raise ValueError(f"Erreur lors de la sélection du statut de suspension du permis : {str(e)}")
+
+        """ Votre conjoint ou concubin """
+        valid_marital_statuses = ["Marié(e)", "Concubin(e) / vie maritale", "Pacsé(e)"]
+        if profile.get('PrimaryApplicantMaritalStatus') in valid_marital_statuses:
+            logging.info(f"Le statut marital '{profile.get('PrimaryApplicantMaritalStatus')}' nécessite de remplir l'information sur le permis du conjoint.")
+            try:
+                await page.wait_for_selector("#ConjointNonSouscripteurBirthDate", state="visible", timeout=60000)
+                await page.evaluate('document.getElementById("ConjointNonSouscripteurBirthDate").value = ""')
+                await page.fill("#ConjointNonSouscripteurBirthDate", profile['ConjointNonSouscripteurBirthDate'])
+                await page.press("#ConjointNonSouscripteurBirthDate", "Enter")
+                await page.wait_for_timeout(500)
+                print(f"----> Date de naissance '{profile['ConjointNonSouscripteurBirthDate']}' saisie avec succès.")
+            except Exception as e:
+                logging.error(f"Erreur lors de la saisie de la date de naissance: {str(e)}")
+                # await page.screenshot(path="error_birth_date.png")
+                raise ValueError(f"Erreur lors de la saisie de la date de naissance : {str(e)}")
+
+            try:
+                await page.wait_for_selector('.ConjointNonSouscripteurHasDriveLicense', state='visible', timeout=TIMEOUT)
+                if profile['ConjointNonSouscripteurHasDriveLicense'] == "Non":
+                    await page.click('.ConjointNonSouscripteurHasDriveLicense button.list-group-item[value="False"]')
+                    print(f"----> La valeur '{profile['ConjointNonSouscripteurHasDriveLicense']}' a été choisie pour le conjoint avec un permis.")
+                elif profile['ConjointNonSouscripteurHasDriveLicense'] == "Oui":
+                    await page.click('.ConjointNonSouscripteurHasDriveLicense button.list-group-item[value="True"]')
+                    print(f"----> La valeur '{profile['ConjointNonSouscripteurHasDriveLicense']}' a été choisie pour le conjoint avec un permis.")
+                    await page.wait_for_selector("#ConjointNonSouscripteurDriveLicenseDate", state="visible",
+                                                 timeout=60000)
+                    await page.evaluate('document.getElementById("ConjointNonSouscripteurDriveLicenseDate").value = ""')
+                    await page.fill("#ConjointNonSouscripteurDriveLicenseDate", profile['ConjointNonSouscripteurDriveLicenseDate'])
+                    await page.press("#ConjointNonSouscripteurDriveLicenseDate", "Enter")
+                    await page.wait_for_timeout(500)  # Attendre que le calendrier se ferme
+                    print(f"Date d'obtention du permis du conjoint '{profile['ConjointNonSouscripteurDriveLicenseDate']}' saisie avec succès.")
+                else:
+                    print('Valeur non reconnu pour le permis du conjoint ou concubin')
+            except Exception as e:
+                print(f"Une erreur soulevé sur les informations du conjoint : {str(e)}")
+        else:
+            print(f"Le statut marital '{profile.get('PrimaryApplicantMaritalStatus')}' ne nécessite pas de remplir l'information sur le permis du conjoint.")
+
+        """ Vos enfants """
+        try:
+            await page.wait_for_selector('.HasChild', state='visible', timeout=TIMEOUT)
+            if profile['HasChild'] == "Oui":
+                await page.click('.HasChild button.list-group-item[value="True"]')
+                await page.select_option('#ChildBirthDateYear1', value=profile['ChildBirthDateYear1'])
+                print(
+                    f"Année de l'enfant 1 '{profile['ChildBirthDateYear1']}' saisie avec succès.")
+                await page.select_option('#ChildBirthDateYear2', value=profile['ChildBirthDateYear2'])
+                print(
+                    f"Année de l'enfant 2'{profile['ChildBirthDateYear2']}' saisie avec succès.")
+                await page.select_option('#ChildBirthDateYear3', value=profile['ChildBirthDateYear3'])
+                print(
+                    f"Année de l'enfant 3 '{profile['ChildBirthDateYear3']}' saisie avec succès.")
+            elif profile['HasChild'] == "Non":
+                await page.click('.HasChild button.list-group-item[value="False"]')
+            else:
+                print("Valeur non connue pour les enfants")
+
+        except Exception as e:
+            print(f"Une erreur soulevé sur les informations des années de naissance des enfants : {str(e)}")
+
+        await asyncio.sleep(2)
+        await page.get_by_role("button", name="SUIVANT ").click()
+        print("Navigation vers la page suivante : Votre profil.")
+    except Exception as e:
+        print(f"Une erreur s'est produite lors du remplissage du formulaire PROFIL : {str(e)}")
+
+
+
+
 
 async def run_for_profile(playwright: Playwright, profile: dict, headless: bool, bright_data: bool,
                         url=TARGET_URL) -> None:
@@ -1219,6 +1422,15 @@ async def run_for_profile(playwright: Playwright, profile: dict, headless: bool,
 
         logger.info("Cliqué sur le div 'Comparez les assurances auto'")
         print(f"Le profil '{profile['Id']}' est lancé....")
+        await fill_form_projet(page, profile)
+        #await simulate_human_behavior(page)
+        await page.wait_for_load_state("networkidle")
+        logger.info("=" * 100)
+        await fill_form_profil(page, profile)
+        #await simulate_human_behavior(page)
+        await page.wait_for_load_state("networkidle")
+        logger.info("=" * 100)
+        
 
         
 
