@@ -1,4 +1,3 @@
-
 # flake8: noqa: E221, E241
 # pylint: disable=C0301
 # pylint: disable=C0303, C0114, W0613, R0914, RO915, C0411, W0012, R0915, R1705, C0103, W0621, W0611, C0305, C0412, C0404, W1203, W0404, W0718, R0912, R0913, W0105, W0707
@@ -1398,14 +1397,7 @@ async def fill_form_vehicule(page, profile):
 
     Exemple :
     ---------
-    >>> profile = {
-    ...     'CarSelectMode': '1',
-    ...     'InsuranceNeed': 'Vous comptez l'acheter',
-    ...     'AddCarAge': 'Neuve',
-    ...     'car_make_value': 'Toyota',
-    ...     # ... autres informations de profil nécessaires ...
-    ... }
-    >>> await fill_form_vehicule(page, profile)
+
     """
     try:
         await page.wait_for_selector('div.form-group.has-feedback.CarSelectMode', state='visible', timeout=6000)
@@ -1507,15 +1499,37 @@ async def fill_form_vehicule(page, profile):
 
             """ ID de la voiture """
             try:
+                # Attendre que le modal soit visible
                 await page.wait_for_selector('.modal-content', state='visible', timeout=60000)
+
                 select_vehicule = profile['ID_Veh_Neuve']
-                await page.click(f'#{select_vehicule}')
-                print(
-                    f"----> L'option avec la valeur '\033[34m{select_vehicule}\033[0m' a été sélectionnée avec succès pour la question : ID du véhicule ")
+
+                # Essayer de cliquer sur l'ID spécifique pendant 6 secondes
+                try:
+                    await page.click(f'button#{select_vehicule}', timeout=6000)
+                    print(
+                        f"----> Le bouton avec l'ID '\033[34m{select_vehicule}\033[0m' a été cliqué avec succès pour la sélection du véhicule")
+                except PlaywrightTimeoutError:
+                    # Si l'ID spécifique n'est pas trouvé, cliquer sur un bouton aléatoire
+                    all_buttons = await page.query_selector_all('button.al_vehicule')
+                    if not all_buttons:
+                        raise ValueError("Aucun bouton de véhicule trouvé dans le modal")
+
+                    random_button = random.choice(all_buttons)
+                    random_id = await random_button.get_attribute('id')
+                    await random_button.click()
+
+                    # Récupérer le nom du modèle pour l'affichage
+                    model_name = await random_button.query_selector('strong')
+                    model_text = await model_name.inner_text() if model_name else "Modèle inconnu"
+
+                    print(
+                        f"----> ID spécifique non trouvé. Un bouton aléatoire avec l'ID '\033[34m{random_id}\033[0m' et le modèle '\033[34m{model_text}\033[0m' a été cliqué pour la sélection du véhicule")
+
             except PlaywrightTimeoutError:
                 print("Le div '.modal-content' n'est pas visible.")
             except Exception as e:
-                raise ValueError(f"Erreur d'exception sur les informations de l'ID du véhicule : {str(e)}")
+                raise ValueError(f"Erreur d'exception lors de la sélection du véhicule : {str(e)}")
         else:
             """ Date d'achat prévue de la voiture """
             try:
@@ -1623,15 +1637,37 @@ async def fill_form_vehicule(page, profile):
 
             """ ID de la voiture """
             try:
+                # Attendre que le modal soit visible
                 await page.wait_for_selector('.modal-content', state='visible', timeout=60000)
-                select_vehicule = profile['ID_Veh']
-                await page.click(f'#{select_vehicule}')
-                print(
-                    f"----> L'option avec la valeur '\033[34m{select_vehicule}\033[0m' a été sélectionnée avec succès pour la question : ID du véhicule ")
+
+                select_vehicule = profile['ID_Veh_Neuve']
+
+                # Essayer de cliquer sur l'ID spécifique pendant 6 secondes
+                try:
+                    await page.click(f'button#{select_vehicule}', timeout=6000)
+                    print(
+                        f"----> Le bouton avec l'ID '\033[34m{select_vehicule}\033[0m' a été cliqué avec succès pour la sélection du véhicule")
+                except PlaywrightTimeoutError:
+                    # Si l'ID spécifique n'est pas trouvé, cliquer sur un bouton aléatoire
+                    all_buttons = await page.query_selector_all('button.al_vehicule')
+                    if not all_buttons:
+                        raise ValueError("Aucun bouton de véhicule trouvé dans le modal")
+
+                    random_button = random.choice(all_buttons)
+                    random_id = await random_button.get_attribute('id')
+                    await random_button.click()
+
+                    # Récupérer le nom du modèle pour l'affichage
+                    model_name = await random_button.query_selector('strong')
+                    model_text = await model_name.inner_text() if model_name else "Modèle inconnu"
+
+                    print(
+                        f"----> ID spécifique non trouvé. Un bouton aléatoire avec l'ID '\033[34m{random_id}\033[0m' et le modèle '\033[34m{model_text}\033[0m' a été cliqué pour la sélection du véhicule")
+
             except PlaywrightTimeoutError:
                 print("Le div '.modal-content' n'est pas visible.")
             except Exception as e:
-                raise ValueError(f"Erreur d'exception sur les informations de l'ID du véhicule : {str(e)}")
+                raise ValueError(f"Erreur d'exception lors de la sélection du véhicule : {str(e)}")
     except Exception as e:
         raise ValueError(f"Erreur d'exception sur les informations de la marque du véhicule : {str(e)}")
 
@@ -1821,15 +1857,7 @@ async def fill_antecedents(page, profile):
 
     Exemple :
     ---------
-    >>> profile = {
-    ...     'PrimaryApplicantHasBeenInsured': 'Y',
-    ...     'PrimaryApplicantInsuranceYearNb': '5',
-    ...     'PrimaryApplicantIsFirstDrivOtherCar': 'Non',
-    ...     'PrimaryApplicantContrCancell': 'N',
-    ...     'PrimaryApplicantBonusCoeff': '0.50',
-    ...     'PrimaryApplicantDisasterLast3year': '0'
-    ... }
-    >>> await fill_antecedents(page, profile)
+
     """
     try:
         await page.wait_for_selector('.al_label span', state='visible', timeout=60000)
@@ -2611,4 +2639,4 @@ if __name__ == "__main__":
         - L'utilisation de Bright Data (bright_data=True) implique que la configuration appropriée
         pour Bright Data est en place.
     """
-    asyncio.run(main(headless=False, bright_data=True, max_concurrent=2))
+    asyncio.run(main(headless=False, bright_data=False, max_concurrent=2))
