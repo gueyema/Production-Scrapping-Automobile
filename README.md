@@ -48,3 +48,50 @@ assurland-auto-scraper/
 └── LICENSE
 
 ```
+## 🛠 Prérequis
+
+- Python 3.8+
+- pip (gestionnaire de paquets Python)
+- Navigateur compatible avec Playwright (Chrome, Firefox, ou Edge)
+- PyCharm comme IDE pour une gestion des versions avec Git et GitLab
+  
+# 🚗 Script de Génération de Profils d'Assurance Automobile
+
+## 🌟 Présentation
+Bienvenue dans le script de génération de profils d'assurance automobile ! Ce puissant outil Python est conçu pour créer des jeux de données synthétiques réalistes, représentant des utilisateurs, leurs véhicules, et leurs situations d'assurance. Idéal pour les tests, les simulations, et l'analyse de données, ce script vous permet de plonger dans le monde de l'assurance automobile avec des données précises et variées.
+
+## 🔑 Fonctionnalités Clés
+
+### 1. **Génération de Profils Personnels**
+- **Données Démographiques** : Âge, sexe, statut marital, et situation professionnelle.
+- **Historique de Conduite** : Date d'obtention du permis et expérience de conduite.
+
+### 2. **Simulation de Véhicules**
+- **Véhicules Existants et Neufs** : Caractéristiques techniques détaillées (marque, modèle, type de carburant).
+- **Informations SRA** : Données sur la sécurité et la réparation automobile.
+
+### 3. **Données d'Assurance**
+- **Historique d'Assurance** : Statut d'assurance et besoins futurs.
+- **Coefficients de Bonus-Malus** : Calculs basés sur l'historique de conduite.
+
+### 4. **Informations Géographiques**
+- **Codes Postaux et INSEE** : Répartition régionale pondérée pour des données plus réalistes.
+
+### 5. **Génération de Données Complémentaires**
+- **Utilisation du Véhicule** : Kilométrage moyen et fréquence d'utilisation.
+- **Type de Logement et Stationnement** : Informations sur le lieu de résidence.
+
+## 🚀 Comment Utiliser le Script
+
+### Étape 1 : Préparation des Données
+Assurez-vous d'avoir les fichiers CSV suivants :
+- `df_sra_final.csv` : Données des véhicules.
+- `df_sra_neuve.csv` : Données des véhicules neufs.
+- `df_communes.csv` : Données des communes françaises.
+
+### Étape 2 : Configuration
+- **Ajustez les chemins** des fichiers CSV dans le script si nécessaire.
+- **Modifiez le nombre de profils** à générer (par défaut : 100).
+
+### Étape 3 : Exécution
+Lancez le script avec la commande suivante :
