@@ -2465,7 +2465,7 @@ async def recup_tarifs(page, profile):
 
         if profile_details:
             date_du_jour = datetime.now().strftime("%d_%m_%y")
-            nom_fichier_csv = f"offres_{date_du_jour}_{start_line}_au_{end_line}.csv"
+            nom_fichier_csv = f"results\offres_{date_du_jour}_{start_line}_au_{end_line}.csv"
             
             # Écrire les offres dans le fichier CSV
             async with aiofiles.open(nom_fichier_csv, mode='a', newline='', encoding='utf-8') as f:
@@ -2483,7 +2483,7 @@ async def recup_tarifs(page, profile):
                 print(f"=====> Les offres du profil {profile['Id']} ont été stockées dans le fichier:", nom_fichier_csv)
         else:
             date_du_jour = datetime.now().strftime("%d_%m_%y")
-            nom_fichier_sans_tarif = f"fichiers_ST_{date_du_jour}_{start_line}_au_{end_line}.csv"
+            nom_fichier_sans_tarif = f"results\fichiers_ST_{date_du_jour}_{start_line}_au_{end_line}.csv"
             
             # Écrire les informations du profil dans le fichier CSV des échecs
             async with aiofiles.open(nom_fichier_sans_tarif, mode='a', newline='', encoding='utf-8') as f:
@@ -2599,7 +2599,7 @@ async def run_for_profile(playwright: Playwright, profile: dict, headless: bool,
         date_du_jour = datetime.now().strftime("%d_%m_%y")
 
         # Créer le nom du fichier avec la date du jour
-        nom_fichier_echecs = f"fichiers_echecs_{date_du_jour}_{start_line}_au_{end_line}.json"
+        nom_fichier_echecs = f"results\fichiers_echecs_{date_du_jour}_{start_line}_au_{end_line}.json"
         # Écrire les informations du profil dans le fichier JSON des échecs
         async with aiofiles.open(nom_fichier_echecs, mode='a') as f:
             await f.write(json.dumps({'ID': profile['Id']}))
