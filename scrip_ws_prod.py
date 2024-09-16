@@ -22,7 +22,7 @@ from tqdm import tqdm
 import aiofiles
 import json
 from os import environ
-from playwright.async_api import async_playwright, Playwright, expect, TimeoutError as PlaywrightTimeoutError
+from playwright.async_api import async_playwright, Playwright, expect, TimeoutError as PlaywrightTimeoutError, Page
 
 
 # Initialisation de Faker pour générer des données en France
@@ -1341,6 +1341,110 @@ async def fill_form_profil(page, profile):
         print(f"Une erreur s'est produite lors du remplissage du formulaire PROFIL : {str(e)}")
 
 
+async def select_car_brand_Neuve(page: Page, profile: dict, max_retries=3, retry_delay=2):
+    selector = "#SpecCarMakeName"
+    brand = profile['SpecCarMakeNameNeuve']
+
+    for attempt in range(max_retries):
+        try:
+            # Attendre que le sélecteur soit visible
+            await page.wait_for_selector(selector, state="visible", timeout=30000)
+
+            # Attendre que le sélecteur soit activé (non désactivé)
+            await page.wait_for_function(
+                f"!document.querySelector('{selector}').disabled",
+                timeout=30000
+            )
+
+            # Vérifier si l'option existe avant de la sélectionner
+            option_exists = await page.evaluate(f"""
+                () => {{
+                    const select = document.querySelector('{selector}');
+                    return Array.from(select.options).some(option => option.text === '{brand}');
+                }}
+            """)
+
+            if not option_exists:
+                print(f"L'option '{brand}' n'existe pas dans la liste déroulante.")
+                return False
+
+            # Sélectionner l'option
+            await page.select_option(selector, label=brand)
+
+            # Vérifier si la sélection a réussi
+            selected_value = await page.evaluate(f"document.querySelector('{selector}').value")
+            if selected_value:
+                print(f"----> Marque de la voiture '{brand}' sélectionnée avec succès.")
+                return True
+            else:
+                raise Exception("La sélection n'a pas été appliquée.")
+
+        except (PlaywrightTimeoutError, TimeoutError) as e:
+            if attempt < max_retries - 1:
+                print(f"Tentative {attempt + 1} échouée. Nouvelle tentative dans {retry_delay} secondes...")
+                await asyncio.sleep(retry_delay)
+            else:
+                print(f"Le sélecteur '{selector}' n'est pas devenu interactif après {max_retries} tentatives.")
+
+        except Exception as e:
+            print(f"Erreur lors de la sélection de la marque de voiture: {str(e)}")
+            break
+
+    print("Impossible de sélectionner la marque de voiture.")
+    return False
+
+async def select_car_brand_Occasion(page: Page, profile: dict, max_retries=3, retry_delay=2):
+    selector = "#SpecCarMakeName"
+    brand = profile['SpecCarMakeName']
+
+    for attempt in range(max_retries):
+        try:
+            # Attendre que le sélecteur soit visible
+            await page.wait_for_selector(selector, state="visible", timeout=30000)
+
+            # Attendre que le sélecteur soit activé (non désactivé)
+            await page.wait_for_function(
+                f"!document.querySelector('{selector}').disabled",
+                timeout=30000
+            )
+
+            # Vérifier si l'option existe avant de la sélectionner
+            option_exists = await page.evaluate(f"""
+                () => {{
+                    const select = document.querySelector('{selector}');
+                    return Array.from(select.options).some(option => option.text === '{brand}');
+                }}
+            """)
+
+            if not option_exists:
+                print(f"L'option '{brand}' n'existe pas dans la liste déroulante.")
+                return False
+
+            # Sélectionner l'option
+            await page.select_option(selector, label=brand)
+
+            # Vérifier si la sélection a réussi
+            selected_value = await page.evaluate(f"document.querySelector('{selector}').value")
+            if selected_value:
+                print(f"----> Marque de la voiture '{brand}' sélectionnée avec succès.")
+                return True
+            else:
+                raise Exception("La sélection n'a pas été appliquée.")
+
+        except (PlaywrightTimeoutError, TimeoutError) as e:
+            if attempt < max_retries - 1:
+                print(f"Tentative {attempt + 1} échouée. Nouvelle tentative dans {retry_delay} secondes...")
+                await asyncio.sleep(retry_delay)
+            else:
+                print(f"Le sélecteur '{selector}' n'est pas devenu interactif après {max_retries} tentatives.")
+
+        except Exception as e:
+            print(f"Erreur lors de la sélection de la marque de voiture: {str(e)}")
+            break
+
+    print("Impossible de sélectionner la marque de voiture.")
+    return False
+
 async def fill_form_vehicule(page, profile):
     """
     Remplit de manière asynchrone un formulaire de véhicule sur une page web en utilisant les informations de profil fournies.
@@ -1433,15 +1537,9 @@ async def fill_form_vehicule(page, profile):
                 raise ValueError(f"Erreur d'exception sur les informations de la date d'achat prévue : {str(e)}")
 
             """ Marque de la voiture """
-            try:
-                await page.wait_for_selector("#SpecCarMakeName", state="visible", timeout=TIMEOUT * 2)
-                await page.select_option("#SpecCarMakeName", label=profile['SpecCarMakeNameNeuve'])
-                print(f"----> Marque de la voiture '{profile['SpecCarMakeNameNeuve']}' sélectionné avec succès.")
-            except PlaywrightTimeoutError:
-                print("Le bouton '.SpecCarMakeName' n'est pas visible.")
-            except Exception as e:
-                logging.error(f"Erreur lors de la sélection de la marque de voiture: {str(e)}")
-                raise ValueError(f"Erreur lors de la sélection de la marque de voiture : {str(e)}")
+            success = await select_car_brand_Neuve(page, profile)
+            if not success:
+                print("La sélection de la marque de voiture a échoué. Gestion de l'erreur...")
 
             """ Modéle de la marque de voiture """
             await asyncio.sleep(2)
@@ -1571,15 +1669,9 @@ async def fill_form_vehicule(page, profile):
                     f"Erreur d'exception sur les informations de la date de mise en circulation du véhicule : {str(e)}")
 
             """ Marque de la voiture """
-            try:
-                await page.wait_for_selector("#SpecCarMakeName", state="visible", timeout=TIMEOUT * 2)
-                await page.select_option("#SpecCarMakeName", label=profile['SpecCarMakeName'], timeout=60000)
-                print(f"----> Marque de la voiture '{profile['SpecCarMakeName']}' sélectionné avec succès.")
-            except PlaywrightTimeoutError:
-                print("Le bouton '.SpecCarMakeName' n'est pas visible.")
-            except Exception as e:
-                logging.error(f"Erreur lors de la sélection de la marque de voiture: {str(e)}")
-                raise ValueError(f"Erreur lors de la sélection de la marque de voiture : {str(e)}")
+            success = await select_car_brand_Occasion(page, profile)
+            if not success:
+                print("La sélection de la marque de voiture a échoué. Gestion de l'erreur...")
 
             """ Modéle de la marque de voiture """
             await asyncio.sleep(2)
