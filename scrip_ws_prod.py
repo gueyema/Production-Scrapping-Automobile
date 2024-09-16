@@ -503,7 +503,7 @@ def generer_profil(vehicules_df, communes_df):
         'HomeResidentType': home_resident_type,
         'ParkingCode': parking_code,
         'PrimaryApplicantHasBeenInsured': insurance_status,
-        'Id': str(random.randint(5, 10)),  # Id aléatoire entre 5 et 10 (as a string)
+        'Id': str(random.randint(1, 10000)),  # Id aléatoire entre 5 et 10 (as a string)
         'TitleAddress': random.choice(["MONSIEUR", "MADAME"]), 
         'LastName': fake.last_name(),  # Nom de famille
         'FirstName': fake.first_name(),  # Prénom
@@ -528,7 +528,7 @@ communes_df = charger_donnees_communes(chemin_fichier_communes)
 
 # Générer les profils avec les informations de véhicules
 profils = []
-for _ in range(2):  # Par exemple, générer 1000 profils
+for _ in range(100):  # Par exemple, générer 1000 profils
     profil = generer_profil(vehicules_df, communes_df)
     vehicule = vehicules_df.sample().iloc[0]
     profil.update({
@@ -738,7 +738,7 @@ for profil in profils:
     profil['ContrGuaranteeCode'] = random.choice(contr_guarantee_codes)  # Choix aléatoire parmi les valeurs
 
     # Créer la colonne UserOptIn
-    profil['UserOptIn'] = random.choice(["0", "1"])  # Choix aléatoire entre "0" et "1"
+    profil['UserOptIn'] = "1" # Choix aléatoire entre "0" et "1"
 
     profil['CarSelectMode'] = "2"
 
@@ -749,7 +749,7 @@ profils_df = pd.DataFrame(profils)
 
 # Paramètres
 start_line = 1  # Commencer à la première ligne
-end_line = 2   # Finir à la dixième ligne
+end_line = 1000   # Finir à la dixième ligne
 
 for profile in profils[:2]:
 
