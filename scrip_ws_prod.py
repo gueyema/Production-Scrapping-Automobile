@@ -2639,4 +2639,4 @@ if __name__ == "__main__":
         - L'utilisation de Bright Data (bright_data=True) implique que la configuration appropriée
         pour Bright Data est en place.
     """
-    asyncio.run(main(headless=False, bright_data=False, max_concurrent=2))
+    asyncio.run(main(headless=False, bright_data=True, max_concurrent=2))
