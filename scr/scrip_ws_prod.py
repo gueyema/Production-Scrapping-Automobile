@@ -503,7 +503,7 @@ def generer_profil(vehicules_df, communes_df):
         'HomeResidentType': home_resident_type,
         'ParkingCode': parking_code,
         'PrimaryApplicantHasBeenInsured': insurance_status,
-        'Id': str(random.randint(1, 10000)),  # Id aléatoire entre 5 et 10 (as a string)
+        'Id': str(random.randint(101, 10000)),  # Id aléatoire entre 5 et 10 (as a string)
         'TitleAddress': random.choice(["MONSIEUR", "MADAME"]), 
         'LastName': fake.last_name(),  # Nom de famille
         'FirstName': fake.first_name(),  # Prénom
@@ -515,20 +515,20 @@ def generer_profil(vehicules_df, communes_df):
     }
 
 # Charger les données de véhicules
-chemin_fichier_vehicules = 'notebook/df_sra_final.csv'  # Remplacez par le chemin de votre fichier CSV
+chemin_fichier_vehicules = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_sra_final.csv'  # Remplacez par le chemin de votre fichier CSV
 vehicules_df = charger_donnees_vehicules(chemin_fichier_vehicules)
 
 #Charger les données de véhicules neufs
-chemin_fichier_vehicules_neuves = 'notebook/df_sra_neuve.csv'  # Remplacez par le chemin de votre fichier CSV
+chemin_fichier_vehicules_neuves = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_sra_neuve.csv'  # Remplacez par le chemin de votre fichier CSV
 vehicules_neuves_df = charger_donnees_vehicules_neuve(chemin_fichier_vehicules_neuves)
 
 # Charger les données des communes
-chemin_fichier_communes = 'notebook/df_communes.csv'  # Remplacez par le chemin réel
+chemin_fichier_communes = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_communes.csv'  # Remplacez par le chemin réel
 communes_df = charger_donnees_communes(chemin_fichier_communes)
 
 # Générer les profils avec les informations de véhicules
 profils = []
-for _ in range(100):  # Par exemple, générer 1000 profils
+for _ in range(1000):  # Par exemple, générer 1000 profils
     profil = generer_profil(vehicules_df, communes_df)
     vehicule = vehicules_df.sample().iloc[0]
     profil.update({
@@ -748,7 +748,7 @@ profils_df = pd.DataFrame(profils)
 # Afficher les 10 premiers profils
 
 # Paramètres
-start_line = 1  # Commencer à la première ligne
+start_line = 101  # Commencer à la première ligne
 end_line = 1000   # Finir à la dixième ligne
 
 for profile in profils[:2]:
@@ -772,8 +772,8 @@ print(profils_df['PrimaryApplicantOccupationCode'].value_counts().head(10))
 #:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 TIMEOUT = 2 * 60000
-# SBR_WS_CDP = 'wss://brd-customer-hl_e9a5f52e-zone-scraping_browser1:jpuci55coo47@brd.superproxy.io:9222'
-SBR_WS_CDP = 'wss://brd-customer-hl_538b14f9-zone-scraping_browser1:zk8riomp0pt9@brd.superproxy.io:9222'
+SBR_WS_CDP = 'wss://brd-customer-hl_e9a5f52e-zone-scraping_browser1:jpuci55coo47@brd.superproxy.io:9222'
+# SBR_WS_CDP = 'wss://brd-customer-hl_538b14f9-zone-scraping_browser1:zk8riomp0pt9@brd.superproxy.io:9222'
 
 TARGET_URL = environ.get('TARGET_URL', default='https://www.assurland.com/')
 
@@ -2465,7 +2465,7 @@ async def recup_tarifs(page, profile):
 
         if profile_details:
             date_du_jour = datetime.now().strftime("%d_%m_%y")
-            nom_fichier_csv = f"results\offres_{date_du_jour}_{start_line}_au_{end_line}.csv"
+            nom_fichier_csv = f"offres_{date_du_jour}_{start_line}_au_{end_line}.csv"
             
             # Écrire les offres dans le fichier CSV
             async with aiofiles.open(nom_fichier_csv, mode='a', newline='', encoding='utf-8') as f:
@@ -2483,7 +2483,7 @@ async def recup_tarifs(page, profile):
                 print(f"=====> Les offres du profil {profile['Id']} ont été stockées dans le fichier:", nom_fichier_csv)
         else:
             date_du_jour = datetime.now().strftime("%d_%m_%y")
-            nom_fichier_sans_tarif = f"results\fichiers_ST_{date_du_jour}_{start_line}_au_{end_line}.csv"
+            nom_fichier_sans_tarif = f"fichiers_ST_{date_du_jour}_{start_line}_au_{end_line}.csv"
             
             # Écrire les informations du profil dans le fichier CSV des échecs
             async with aiofiles.open(nom_fichier_sans_tarif, mode='a', newline='', encoding='utf-8') as f:
@@ -2599,7 +2599,7 @@ async def run_for_profile(playwright: Playwright, profile: dict, headless: bool,
         date_du_jour = datetime.now().strftime("%d_%m_%y")
 
         # Créer le nom du fichier avec la date du jour
-        nom_fichier_echecs = f"results\fichiers_echecs_{date_du_jour}_{start_line}_au_{end_line}.json"
+        nom_fichier_echecs = f"fichiers_echecs_{date_du_jour}_{start_line}_au_{end_line}.json"
         # Écrire les informations du profil dans le fichier JSON des échecs
         async with aiofiles.open(nom_fichier_echecs, mode='a') as f:
             await f.write(json.dumps({'ID': profile['Id']}))
