@@ -506,8 +506,8 @@ def generer_profil(vehicules_df, communes_df):
         'PrimaryApplicantHasBeenInsured': insurance_status,
         'Id': str(random.randint(101, 10000)),  # Id aléatoire entre 5 et 10 (as a string)
         'TitleAddress': random.choice(["MONSIEUR", "MADAME"]), 
-        'LastName': fake.last_name(),  # Nom de famille
-        'FirstName': fake.first_name(),  # Prénom
+        'LastName': last_name(),  # Nom de famille
+        'FirstName': first_name(),  # Prénom
         'Address': f"{fake.building_number()} {fake.street_name()}",  # Adresse sans ville ni code postal
         'Email': email,  # Email généré
         'Phone': f"0{random.randint(6, 7)}{random.randint(10000000, 99999999)}",  # Numéro de téléphone valide en France
