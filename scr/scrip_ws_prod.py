@@ -130,6 +130,9 @@ def charger_donnees_communes(chemin_fichier):
         'code_departement', 'nom_departement', 'code_region', 'JobParkZipCode', 'JobParkInseeCode'
     ]
     df[cols_to_convert] = df[cols_to_convert].astype(str)
+    codes_a_formater = ['HomeParkZipCode', 'HomeParkInseeCode', 'JobParkZipCode', 'JobParkInseeCode']
+    for col in codes_a_formater:
+        df[col] = df[col].str.zfill(5)
     if 'code_region' not in df.columns:
         raise ValueError("La colonne 'code_region' n'existe pas dans le fichier CSV des communes")
     df['poids'] = df['code_region'].map(poids_regions).fillna(1)
@@ -503,7 +506,7 @@ def generer_profil(vehicules_df, communes_df):
         'HomeResidentType': home_resident_type,
         'ParkingCode': parking_code,
         'PrimaryApplicantHasBeenInsured': insurance_status,
-        'Id': str(random.randint(101, 10000)),  # Id aléatoire entre 5 et 10 (as a string)
+        'Id': str(random.randint(1001, 1500)),  # Id aléatoire entre 5 et 10 (as a string)
         'TitleAddress': random.choice(["MONSIEUR", "MADAME"]), 
         'LastName': last_name,  # Nom de famille
         'FirstName': first_name,  # Prénom
@@ -528,7 +531,7 @@ communes_df = charger_donnees_communes(chemin_fichier_communes)
 
 # Générer les profils avec les informations de véhicules
 profils = []
-for _ in range(1000):  # Par exemple, générer 1000 profils
+for _ in range(250):  # Par exemple, générer 1000 profils
     profil = generer_profil(vehicules_df, communes_df)
     vehicule = vehicules_df.sample().iloc[0]
     profil.update({
@@ -748,7 +751,7 @@ profils_df = pd.DataFrame(profils)
 # Afficher les 10 premiers profils
 
 # Paramètres
-start_line = 1001  # Commencer à la première ligne
+start_line = 1021  # Commencer à la première ligne
 end_line = 1500   # Finir à la dixième ligne
 
 for profile in profils[:2]:
@@ -769,7 +772,7 @@ print(profils_df['ContrGuaranteeCode'].value_counts(normalize=True))
 print("\nTop 10 des professions les plus fréquentes:")
 print(profils_df['PrimaryApplicantOccupationCode'].value_counts().head(10))
 
-#:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 TIMEOUT = 2 * 60000
 SBR_WS_CDP = 'wss://brd-customer-hl_e9a5f52e-zone-scraping_browser1:jpuci55coo47@brd.superproxy.io:9222'
@@ -812,6 +815,7 @@ def display_profiles(profils: List[Dict[str, str]], num_lines: int = 5):
     pour avoir un aperçu rapide des données de profil au début de l'exécution du programme.
 
     Args:
+        profils:
         num_lines (int, optional): Le nombre de profils à afficher. Par défaut à 5.
 
     Fonctionnement:
@@ -2572,7 +2576,6 @@ async def run_for_profile(playwright: Playwright, profile: dict, headless: bool,
         logger.info("Cliqué sur le div 'Comparez les assurances auto'")
         print(f"Le profil '{profile['Id']}' est lancé....")
         await fill_form_projet(page, profile)
-        #await simulate_human_behavior(page)
         await page.wait_for_load_state("networkidle")
         logger.info("=" * 100)
         await fill_form_profil(page, profile)
