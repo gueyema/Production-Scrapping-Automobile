@@ -8,6 +8,7 @@ import pandas as pd
 import random
 from datetime import datetime, timedelta
 from faker import Faker
+import unicodedata
 
 
 import csv
@@ -465,8 +466,8 @@ def generer_profil(vehicules_df, communes_df):
     insurance_status = generer_statut_assurance()
 
     # Générer des informations personnelles
-    first_name = fake.first_name()  # Prénom
-    last_name = fake.last_name()  # Nom de famille
+    first_name = unidecode.unidecode(fake.first_name())  # Prénom sans accents
+    last_name = unidecode.unidecode(fake.last_name()) 
     email = f"{first_name.lower()}.{last_name.lower()}@{random.choice(email_domains)}" 
     date_scrap = datetime.now()
     return {
