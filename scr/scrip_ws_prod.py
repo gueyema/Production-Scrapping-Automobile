@@ -6,7 +6,6 @@
 import pandas as pd
 
 import random
-from datetime import datetime, timedelta
 from faker import Faker
 import unidecode
 
@@ -519,7 +518,7 @@ def generer_profil(vehicules_df, communes_df):
 chemin_fichier_vehicules = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_sra_final.csv'  # Remplacez par le chemin de votre fichier CSV
 vehicules_df = charger_donnees_vehicules(chemin_fichier_vehicules)
 
-#Charger les données de véhicules neufs
+# Charger les données de véhicules neufs
 chemin_fichier_vehicules_neuves = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_sra_neuve.csv'  # Remplacez par le chemin de votre fichier CSV
 vehicules_neuves_df = charger_donnees_vehicules_neuve(chemin_fichier_vehicules_neuves)
 
@@ -651,8 +650,8 @@ for profil in profils:
     profil['CarUsageCode'] = determine_car_usage_code(profil)
     profil['AvgKmNumber'] = generer_avg_km_number(profil['CarUsageCode'])
     profil['FreqCarUse'] = generer_freq_car_use(profil['AvgKmNumber'])
-    profil['PrimaryApplicantIsFirstDrivOtherCar']= "Non"  # Nouvelle colonne avec valeur "Non"
-    profil['PrimaryApplicantContrCancell']= "N"
+    profil['PrimaryApplicantIsFirstDrivOtherCar'] = "Non"  # Nouvelle colonne avec valeur "Non"
+    profil['PrimaryApplicantContrCancell'] = "N"
     # Déterminer le coefficient de bonus
     bonus_coeff_mapping = {
         "0": "1",
@@ -685,8 +684,8 @@ for profil in profils:
 
     # Si l'année d'assurance est supérieure à 25, le coefficient est "120"
     profil['PrimaryApplicantBonusCoeff'] = bonus_coeff_mapping.get(profil['PrimaryApplicantInsuranceYearNb'], "120")
-    profil['PrimaryApplicantDisasterLast3year']= "0"
-     # Calculer CarOwningTime
+    profil['PrimaryApplicantDisasterLast3year'] = "0"
+    # Calculer CarOwningTime
     actuel = datetime.now()
     # Calculer CarOwningTime
     if profil['InsuranceNeed'] == "Vous le possédez déjà":
@@ -739,7 +738,7 @@ for profil in profils:
     profil['ContrGuaranteeCode'] = random.choice(contr_guarantee_codes)  # Choix aléatoire parmi les valeurs
 
     # Créer la colonne UserOptIn
-    profil['UserOptIn'] = "1" # Choix aléatoire entre "0" et "1"
+    profil['UserOptIn'] = "1"
 
     profil['CarSelectMode'] = "2"
 
@@ -749,8 +748,8 @@ profils_df = pd.DataFrame(profils)
 # Afficher les 10 premiers profils
 
 # Paramètres
-start_line = 101  # Commencer à la première ligne
-end_line = 1000   # Finir à la dixième ligne
+start_line = 1001  # Commencer à la première ligne
+end_line = 1500   # Finir à la dixième ligne
 
 for profile in profils[:2]:
 
@@ -813,8 +812,6 @@ def display_profiles(profils: List[Dict[str, str]], num_lines: int = 5):
     pour avoir un aperçu rapide des données de profil au début de l'exécution du programme.
 
     Args:
-        profiles (List[Dict[str, str]]): Une liste de dictionnaires, où chaque dictionnaire
-                                        représente un profil avec des paires clé-valeur.
         num_lines (int, optional): Le nombre de profils à afficher. Par défaut à 5.
 
     Fonctionnement:
@@ -926,15 +923,15 @@ async def get_random_browser(playwright: Playwright, bright_data: bool, headless
     browser_choice = random.choice(['chromium', 'firefox'])
     slow_mo = random.randint(100, 500)
     viewport = {
-    "width": random.randint(1024, 1920),
-    "height": random.randint(768, 1080)
+        "width": random.randint(1024, 1920),
+        "height": random.randint(768, 1080)
     }
     user_agent = random.choice(USER_AGENTS)
     language = random.choice(LANGUAGES)
 
     launch_options = {
-    "headless": headless,
-    "slow_mo": slow_mo,
+        "headless": headless,
+        "slow_mo": slow_mo,
     }
 
     if bright_data:
@@ -943,7 +940,7 @@ async def get_random_browser(playwright: Playwright, bright_data: bool, headless
         browser = await getattr(playwright, browser_choice).launch(**launch_options)
 
     context = await browser.new_context(
-    viewport=viewport
+        viewport=viewport
     )
 
     logger.info(f"{browser_choice.capitalize()} a été choisi avec les options : {launch_options}, viewport: {viewport}, user_agent: {user_agent}, locale: {language}")
@@ -2417,7 +2414,7 @@ async def recup_tarifs(page, profile):
                 'code_type_frequence_rcc_occasion': profile['code_type_frequence_rcc'],
                 'code_type_frequence_dta_occasion': profile['code_type_frequence_dta'],
                 'code_type_frequence_vol_occasion': profile['code_type_frequence_vol'],
-                'code_type_frequence_bdg_occasion': profile['code_type_frequence_bdg'],
+
 
                 'Marque_vehicule_neuf': profile['SpecCarMakeNameNeuve'],
                 'Modele_vehicule_neuf': profile['SpecCarTypeNeuve'],
@@ -2430,7 +2427,6 @@ async def recup_tarifs(page, profile):
                 'classe_tarification_vehicule_Neuve': profile['classe_tarification_vehicule_Neuve'],
                 'puissance_reel_vehicule_Neuve': profile['puissance_reel_vehicule_Neuve'],
                 'categorie_commerciale_vehicule_Neuve': profile['categorie_commerciale_vehicule_Neuve'],
-                'qualification_vehicule_vert_Neuve': profile['qualification_vehicule_vert_Neuve'],
                 'code_type_frequence_rcm_Neuve': profile['code_type_frequence_rcm_Neuve'],
                 'code_type_frequence_rcc_Neuve': profile['code_type_frequence_rcc_Neuve'],
                 'code_type_cout_rcm_Neuve': profile['code_type_cout_rcm_Neuve'],
@@ -2580,19 +2576,15 @@ async def run_for_profile(playwright: Playwright, profile: dict, headless: bool,
         await page.wait_for_load_state("networkidle")
         logger.info("=" * 100)
         await fill_form_profil(page, profile)
-        #await simulate_human_behavior(page)
         await page.wait_for_load_state("load")
         logger.info("=" * 100)
         await fill_form_vehicule(page, profile)
-        #await simulate_human_behavior(page)
         await page.wait_for_load_state("networkidle")
         logger.info("=" * 100)
         await fill_antecedents(page, profile)
-        #await simulate_human_behavior(page)
         await page.wait_for_load_state("networkidle")
         logger.info("=" * 100)
         await fill_form_contrats(page, profile)
-        #await simulate_human_behavior(page)
         logger.info("=" * 100)
         await recup_tarifs(page, profile)
     except Exception as e:
