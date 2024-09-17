@@ -28,12 +28,19 @@ from playwright.async_api import async_playwright, Playwright, expect, TimeoutEr
 # Initialisation de Faker pour générer des données en France
 fake = Faker('fr_FR')
 
+# Nombre de profils qu'on veut lancer.....
+nbre_profils_souhaites = 500
+# Le compteur ID de départ pour les identifiants des profils
+id_counter = 2000
+
+# Paramètres sur les lignes de départ et d'arrivé
+start_line = 2000  # Commencer à la première ligne
+end_line = 2500   # Finir à la dixième ligne
 # Liste de domaines d'email valides en France
 email_domains = [
   "gmail.com", "yahoo.fr", "orange.fr", "hotmail.fr", "free.fr",
   "sfr.fr", "laposte.net", "outlook.fr", "wanadoo.fr", "bbox.fr"
 ]
-
 # Poids pour les régions
 poids_regions = {
   '11': 20, '24': 10, '27': 10, '28': 15, '32': 15, '44': 15,
@@ -362,6 +369,8 @@ def generer_profil(vehicules_df, communes_df):
     Returns:
         dict: Dictionnaire contenant toutes les informations du profil généré.
     """
+    global id_counter
+    id_counter += 1
     aujourd_hui = datetime.now()
 
     # Définir les pourcentages pour le sexe
@@ -370,7 +379,7 @@ def generer_profil(vehicules_df, communes_df):
     # Définir les pourcentages pour le statut marital
     statut_marital = choix_pondere(
         ["Célibataire", "Marié(e)", "Concubin(e) / vie maritale", "Pacsé(e)", "Veuf(ve)", "Séparé(e)", "Divorcé(e)"],
-        [40, 30, 10, 5, 5, 5, 5]
+        [20, 30, 20, 10, 5, 10, 5]
     )
 
     # Définir les pourcentages pour l'occupation
@@ -384,7 +393,7 @@ def generer_profil(vehicules_df, communes_df):
 
     # Définir les tranches d'âge et leur distribution
     tranches_age = [(18, 25), (26, 35), (36, 50), (51, 65), (66, 80), (81, 100)]
-    distribution_age = [10, 20, 30, 20, 15, 5]
+    distribution_age = [5, 25, 30, 20, 10, 10]
     tranche_age = choix_pondere(tranches_age, distribution_age)
     age_min, age_max = tranche_age
     date_naissance = aujourd_hui - timedelta(days=random.randint(age_min * 365, age_max * 365))
@@ -472,6 +481,7 @@ def generer_profil(vehicules_df, communes_df):
     last_name = unidecode.unidecode(fake.last_name()) 
     email = f"{first_name.lower()}.{last_name.lower()}@{random.choice(email_domains)}" 
     date_scrap = datetime.now()
+
     return {
         'PrimaryApplicantSex': sexe,
         'PrimaryApplicantBirthDate': date_naissance.strftime('%d/%m/%Y'),
@@ -506,7 +516,7 @@ def generer_profil(vehicules_df, communes_df):
         'HomeResidentType': home_resident_type,
         'ParkingCode': parking_code,
         'PrimaryApplicantHasBeenInsured': insurance_status,
-        'Id': str(random.randint(1001, 1500)),  # Id aléatoire entre 5 et 10 (as a string)
+        'Id': str(id_counter),
         'TitleAddress': random.choice(["MONSIEUR", "MADAME"]), 
         'LastName': last_name,  # Nom de famille
         'FirstName': first_name,  # Prénom
@@ -516,6 +526,7 @@ def generer_profil(vehicules_df, communes_df):
         'DateScraping': date_scrap.strftime('%d/%m/%Y')
         
     }
+
 
 # Charger les données de véhicules
 chemin_fichier_vehicules = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_sra_final.csv'  # Remplacez par le chemin de votre fichier CSV
@@ -531,7 +542,7 @@ communes_df = charger_donnees_communes(chemin_fichier_communes)
 
 # Générer les profils avec les informations de véhicules
 profils = []
-for _ in range(250):  # Par exemple, générer 1000 profils
+for _ in range(nbre_profils_souhaites):  # Par exemple, générer 1000 profils
     profil = generer_profil(vehicules_df, communes_df)
     vehicule = vehicules_df.sample().iloc[0]
     profil.update({
@@ -749,11 +760,6 @@ for profil in profils:
 # Convertir les profils en DataFrame et sauvegarder
 profils_df = pd.DataFrame(profils)
 # Afficher les 10 premiers profils
-
-# Paramètres
-start_line = 1021  # Commencer à la première ligne
-end_line = 1500   # Finir à la dixième ligne
-
 for profile in profils[:2]:
 
     print(profile)
