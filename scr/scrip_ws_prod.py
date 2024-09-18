@@ -31,11 +31,11 @@ fake = Faker('fr_FR')
 # Nombre de profils qu'on veut lancer.....
 nbre_profils_souhaites = 1000
 # Le compteur ID de départ pour les identifiants des profils
-id_counter = 9500
+id_counter = 10500
 
 # Paramètres sur les lignes de départ et d'arrivé
-start_line = 9500  # Commencer à la première ligne
-end_line = 10500   # Finir à la dixième ligne
+start_line = 10500  # Commencer à la première ligne
+end_line = 11500   # Finir à la dixième ligne
 # Liste de domaines d'email valides en France
 email_domains = [
   "gmail.com", "yahoo.fr", "orange.fr", "hotmail.fr", "free.fr",
@@ -66,8 +66,8 @@ kilometrages = {
 
 # Poids pour l'historique d'assurance
 INSURANCE_HISTORY_WEIGHTS = {
-  "P": 90,  # Comme, conducteur principal
-  "S": 10,  # Comme, conducteur secondaire
+  "P": 95,  # Comme, conducteur principal
+  "S": 5,  # Comme, conducteur secondaire
   "N": 00   # Non
 }
 
