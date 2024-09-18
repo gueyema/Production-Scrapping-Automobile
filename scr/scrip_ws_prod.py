@@ -31,11 +31,11 @@ fake = Faker('fr_FR')
 # Nombre de profils qu'on veut lancer.....
 nbre_profils_souhaites = 1000
 # Le compteur ID de départ pour les identifiants des profils
-id_counter = 2500
+id_counter = 9500
 
 # Paramètres sur les lignes de départ et d'arrivé
-start_line = 2500  # Commencer à la première ligne
-end_line = 3500   # Finir à la dixième ligne
+start_line = 9500  # Commencer à la première ligne
+end_line = 10500   # Finir à la dixième ligne
 # Liste de domaines d'email valides en France
 email_domains = [
   "gmail.com", "yahoo.fr", "orange.fr", "hotmail.fr", "free.fr",
@@ -43,9 +43,9 @@ email_domains = [
 ]
 # Poids pour les régions
 poids_regions = {
-  '11': 20, '24': 10, '27': 10, '28': 15, '32': 15, '44': 15,
-  '52': 15, '53': 15, '75': 15, '76': 15, '84': 15, '93': 10,
-  '94': 5, '01': 5, '02': 5, '03': 5, '04': 5, '06': 5
+  '11': 30, '24': 15, '27': 15, '28': 15, '32': 15, '44': 15,
+  '52': 15, '53': 15, '75': 15, '76': 15, '84': 15, '93': 15,
+  '94': 5, '01': 0, '02': 0, '03': 0, '04': 0, '06': 0
 }
 
 # Types de trajet et critères correspondants
@@ -66,8 +66,8 @@ kilometrages = {
 
 # Poids pour l'historique d'assurance
 INSURANCE_HISTORY_WEIGHTS = {
-  "P": 60,  # Comme, conducteur principal
-  "S": 40,  # Comme, conducteur secondaire
+  "P": 90,  # Comme, conducteur principal
+  "S": 10,  # Comme, conducteur secondaire
   "N": 00   # Non
 }
 
