@@ -29,13 +29,13 @@ from playwright.async_api import async_playwright, Playwright, expect, TimeoutEr
 fake = Faker('fr_FR')
 
 # Nombre de profils qu'on veut lancer.....
-nbre_profils_souhaites = 500
+nbre_profils_souhaites = 1000
 # Le compteur ID de départ pour les identifiants des profils
-id_counter = 2000
+id_counter = 2500
 
 # Paramètres sur les lignes de départ et d'arrivé
-start_line = 2000  # Commencer à la première ligne
-end_line = 2500   # Finir à la dixième ligne
+start_line = 2500  # Commencer à la première ligne
+end_line = 3500   # Finir à la dixième ligne
 # Liste de domaines d'email valides en France
 email_domains = [
   "gmail.com", "yahoo.fr", "orange.fr", "hotmail.fr", "free.fr",
