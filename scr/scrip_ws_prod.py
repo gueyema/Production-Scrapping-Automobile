@@ -2,14 +2,10 @@
 # pylint: disable=C0301
 # pylint: disable=C0303, C0114, W0613, R0914, RO915, C0411, W0012, R0915, R1705, C0103, W0621, W0611, C0305, C0412, C0404, W1203, W0404, W0718, R0912, R0913, W0105, W0707
 
-
 import pandas as pd
-
 import random
 from faker import Faker
 import unidecode
-
-
 import csv
 import logging
 import asyncio
@@ -17,25 +13,24 @@ from asyncio import Semaphore
 import datetime
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from typing import List, Dict
+from typing import List, Dict, Optional, Tuple, Any
 from tqdm import tqdm
 import aiofiles
 import json
 from os import environ
 from playwright.async_api import async_playwright, Playwright, expect, TimeoutError as PlaywrightTimeoutError, Page
 
-
 # Initialisation de Faker pour générer des données en France
 fake = Faker('fr_FR')
 
 # Nombre de profils qu'on veut lancer.....
-nbre_profils_souhaites = 900
+nbre_profils_souhaites = 5
 # Le compteur ID de départ pour les identifiants des profils
-id_counter = 12640
+id_counter = 12648
 
 # Paramètres sur les lignes de départ et d'arrivé
-start_line = 12640  # Commencer à la première ligne
-end_line = 13640  # Finir à la dixième ligne
+start_line = 12648  # Commencer à la première ligne
+end_line = 12653  # Finir à la dixième ligne
 # Liste de domaines d'email valides en France
 email_domains = [
   "gmail.com", "yahoo.fr", "orange.fr", "hotmail.fr", "free.fr",
@@ -529,15 +524,15 @@ def generer_profil(vehicules_df, communes_df):
 
 
 # Charger les données de véhicules
-chemin_fichier_vehicules = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_sra_final.csv'  # Remplacez par le chemin de votre fichier CSV
+chemin_fichier_vehicules = r'C:\Users\Utilisateur\PycharmProjects\Production-Scrapping-Automobile\notebook\df_sra_final.csv'  # Remplacez par le chemin de votre fichier CSV
 vehicules_df = charger_donnees_vehicules(chemin_fichier_vehicules)
 
 # Charger les données de véhicules neufs
-chemin_fichier_vehicules_neuves = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_sra_neuve.csv'  # Remplacez par le chemin de votre fichier CSV
+chemin_fichier_vehicules_neuves = 'C:/Users/Utilisateur/PycharmProjects/Production-Scrapping-Automobile/notebook/df_sra_neuve.csv'  # Remplacez par le chemin de votre fichier CSV
 vehicules_neuves_df = charger_donnees_vehicules_neuve(chemin_fichier_vehicules_neuves)
 
 # Charger les données des communes
-chemin_fichier_communes = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_communes.csv'  # Remplacez par le chemin réel
+chemin_fichier_communes = 'C:/Users/Utilisateur/PycharmProjects/Production-Scrapping-Automobile/notebook/df_communes.csv'  # Remplacez par le chemin réel
 communes_df = charger_donnees_communes(chemin_fichier_communes)
 
 # Générer les profils avec les informations de véhicules
@@ -761,7 +756,6 @@ for profil in profils:
 profils_df = pd.DataFrame(profils)
 # Afficher les 10 premiers profils
 for profile in profils[:2]:
-
     print(profile)
 
 
@@ -779,6 +773,11 @@ print("\nTop 10 des professions les plus fréquentes:")
 print(profils_df['PrimaryApplicantOccupationCode'].value_counts().head(10))
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+MAX_RETRIES = 5
+RETRY_DELAY = 3
+PAGE_TIMEOUT = 60 * 1000  # 60 seconds in milliseconds
+CAPTCHA_TIMEOUT = 60 * 1000  # 60 seconds in milliseconds
 
 TIMEOUT = 2 * 60000
 SBR_WS_CDP = 'wss://brd-customer-hl_e9a5f52e-zone-scraping_browser1:jpuci55coo47@brd.superproxy.io:9222'
@@ -2401,191 +2400,281 @@ async def fill_form_contrats(page, profile):
             print(f"Le titre trouvé est '{title_text}', ce qui ne correspond pas à 'Vos antécédents'.")
     except Exception as e:
         raise ValueError(f"Erreur lors du remplissage du contrat : {str(e)}")
-    
+
+
+
 
     
-
-async def recup_tarifs(page, profile):
+async def handle_captcha(page: Page, context_message: str = "") -> None:
     """
-    Récupère les tarifs d'assurance pour un profil donné et les enregistre dans un fichier CSV.
-
-    Cette fonction effectue les opérations suivantes :
-    1. Clique sur le bouton pour accéder aux devis.
-    2. Gère la résolution du captcha.
-    3. Scrape le contenu de la page pour récupérer les offres d'assurance.
-    4. Enregistre les offres dans un fichier CSV.
-    5. En cas d'absence d'offres, enregistre l'ID du profil dans un fichier CSV séparé.
-
-    Args:
-        page (Page): L'objet Page de Playwright représentant la page web actuelle.
-        profile (dict): Un dictionnaire contenant les informations du profil d'assurance.
-
-    Returns:
-        None
-
-    Raises:
-        PlaywrightTimeoutError: Si le div '.al_form' n'est pas visible dans le délai imparti.
-        ValueError: Pour toute autre erreur survenant pendant l'exécution de la fonction.
-
-    Note:
-        - Les variables globales 'start_line' et 'end_line' sont utilisées pour nommer les fichiers de sortie.
-        - Les fichiers CSV sont créés avec la date du jour dans leur nom.
-        - Si un fichier CSV existe déjà, les nouvelles données sont ajoutées à la fin sans réécrire l'en-tête.
+    Gère la résolution du captcha avec gestion d'erreurs améliorée
     """
+    try:
+        client = await page.context.new_cdp_session(page)
+        print(f'Résolution du captcha {context_message}...')
+        solve_res = await client.send('Captcha.waitForSolve', {
+            'detectTimeout': CAPTCHA_TIMEOUT,
+        })
+        print(f'Statut captcha {context_message}:', solve_res['status'])
+    except Exception as e:
+        raise ValueError(f"Erreur captcha {context_message}: {str(e)}")
+
+async def wait_for_page_load(page: Page) -> None:
+    """
+    Attend le chargement complet de la page avec vérification
+    """
+    try:
+        await page.wait_for_load_state('load', timeout=3 * PAGE_TIMEOUT)
+        if not await page.is_visible('.al_form'):
+            raise ValueError("Page non chargée correctement")
+    except PlaywrightTimeoutError:
+        raise ValueError("Timeout lors du chargement de la page")
+
+async def get_formulas(page: Page) -> List[Dict]:
+    """
+    Récupère la liste des formules disponibles avec gestion d'erreurs
+    """
+    try:
+        formula_selector = await page.wait_for_selector(
+            '#FormulaChange',
+            state='visible',
+            timeout=2 * PAGE_TIMEOUT
+        )
+        formulas = await formula_selector.evaluate('''(element) => {
+            return Array.from(element.options).map(option => ({
+                value: option.value,
+                text: option.text
+            }));
+        }''')
+        print(f"\033[34mNombre de formules trouvées: {len(formulas)}\033[0m")
+        return formulas
+    except Exception as e:
+        raise ValueError(f"Erreur récupération formules: {str(e)}")
+
+
+async def extract_offer_details(offre, formula: Dict, profile: Dict) -> dict[str | Any, str | Any] | None:
+    """
+    Extrait les détails d'une offre avec gestion des valeurs manquantes
+    """
+    try:
+        element_assureur = await offre.query_selector('.al_carrier')
+        element_prime = await offre.query_selector('.al_premium')
+
+        assureur = await element_assureur.inner_text() if element_assureur else "Non disponible"
+        prime = await element_prime.inner_text() if element_prime else "Non disponible"
+
+        return {
+            'Formule': formula['text'],
+            'Formule_ID': formula['value'],
+            'Compagnie': assureur,
+            'Prime': prime,
+            'ID': profile['Id'],
+            'TypeBesoin': profile.get('InsuranceNeed', ''),
+            'TypeBesoinDetails': profile.get('InsuranceNeedDetail', ''),
+            'AgeCar': profile.get('AddCarAge', ''),
+            'OtherDriver': profile.get('OtherDriver', ''),
+            'CarteGrise': profile.get('GreyCardOwner', ''),
+            'Genre': profile.get('PrimaryApplicantSex', ''),
+            'DateNaissance': profile.get('PrimaryApplicantBirthDate', ''),
+            'Age': profile.get('Age', ''),
+            'SituationMatrimoniale': profile.get('PrimaryApplicantMaritalStatus', ''),
+            'Profession': profile.get('PrimaryApplicantOccupationCode', ''),
+            'DateObtentionPermis': profile.get('PrimaryApplicantDrivLicenseDate', ''),
+            'ConduiteAccompagné': profile.get('PrimaryApplicantIsPreLicenseExper', ''),
+            'DateNaissanceConjoint': profile.get('ConjointNonSouscripteurBirthDate', ''),
+            'DatePermisConjoint': profile.get('ConjointNonSouscripteurDriveLicenseDate', ''),
+            'Enfants_a_charge': profile.get('HasChild', ''),
+            'Annee_Enfant_1': profile.get('ChildBirthDateYear1', ''),
+            'Annee_Enfant_2': profile.get('ChildBirthDateYear2', ''),
+            'Annee_Enfant_3': profile.get('ChildBirthDateYear3', ''),
+            'DateAchat': profile.get('PurchaseDate', ''),
+            'DateAchat_Prevue': profile.get('PurchaseDatePrev', ''),
+            'DateCirculation': profile.get('FirstCarDrivingDate', ''),
+            'ID_vehicule_occasion': profile.get('ID_Veh', ''),
+            'Marque_occasion': profile.get('SpecCarMakeName', ''),
+            'Modele_occasion': profile.get('SpecCarType', ''),
+            'Alimentation_occasion': profile.get('SpecCarFuelType', ''),
+            'Carrosserie_occasion': profile.get('SpecCarBodyType', ''),
+            'Puissance_occasion': profile.get('SpecCarPower', ''),
+            'categorie_commerciale_vehicule_occasion': profile.get('categorie_commerciale_vehicule', ''),
+            'qualification_vehicule_vert_occasion': profile.get('qualification_vehicule_vert', ''),
+            'valeur_a_neuf_vehicule_ocassion': profile.get('valeur_a_neuf_vehicule', ''),
+            'groupe_tarification_vehicule_occasion': profile.get('groupe_tarification_vehicule', ''),
+            'classe_tarification_vehicule_occasion': profile.get('classe_tarification_vehicule', ''),
+            'code_type_frequence_bdg_occasion': profile.get('code_type_frequence_bdg', ''),
+            'code_type_cout_bdg_occasion': profile.get('code_type_cout_bdg', ''),
+            'code_vente_vehicule_occasion': profile.get('code_vente_vehicule', ''),
+            'code_type_frequence_rcm_occasion': profile.get('code_type_frequence_rcm', ''),
+            'code_type_frequence_rcc_occasion': profile.get('code_type_frequence_rcc', ''),
+            'code_type_frequence_dta_occasion': profile.get('code_type_frequence_dta', ''),
+            'code_type_frequence_vol_occasion': profile.get('code_type_frequence_vol', ''),
+            'Marque_vehicule_neuf': profile.get('SpecCarMakeNameNeuve', ''),
+            'Modele_vehicule_neuf': profile.get('SpecCarTypeNeuve', ''),
+            'Alimentation_vehicule_neuf': profile.get('SpecCarFuelTypeNeuve', ''),
+            'Carrosserie_vehicule_neuf': profile.get('SpecCarBodyTypeNeuve', ''),
+            'Puissance_vehicule_neuf': profile.get('SpecCarPowerNeuve', ''),
+            'ID_vehicule_neuf': profile.get("ID_Veh_Neuve", ''),
+            'valeur_a_neuf_vehiculeNeuve': profile.get('valeur_a_neuf_vehicule_Neuve', ''),
+            'groupe_tarification_vehicule_Neuve': profile.get('groupe_tarification_vehicule_Neuve', ''),
+            'classe_tarification_vehicule_Neuve': profile.get('classe_tarification_vehicule_Neuve', ''),
+            'puissance_reel_vehicule_Neuve': profile.get('puissance_reel_vehicule_Neuve', ''),
+            'categorie_commerciale_vehicule_Neuve': profile.get('categorie_commerciale_vehicule_Neuve', ''),
+            'code_type_frequence_rcm_Neuve': profile.get('code_type_frequence_rcm_Neuve', ''),
+            'code_type_frequence_rcc_Neuve': profile.get('code_type_frequence_rcc_Neuve', ''),
+            'code_type_cout_rcm_Neuve': profile.get('code_type_cout_rcm_Neuve', ''),
+            'code_type_frequence_dta_Neuve': profile.get('code_type_frequence_dta_Neuve', ''),
+            'qualification_vehicule_vert_Neuve': profile.get('qualification_vehicule_vert_Neuve', ''),
+            'code_type_frequence_vol_Neuve': profile.get('code_type_frequence_vol_Neuve', ''),
+            'code_type_cout_vol_Neuve': profile.get('code_type_cout_vol_Neuve', ''),
+            'code_type_frequence_bdg_Neuve': profile.get('code_type_frequence_bdg_Neuve', ''),
+            'code_type_cout_bdg_Neuve': profile.get('code_type_cout_bdg_Neuve', ''),
+            'code_vente_vehicule_Neuve': profile.get('code_vente_vehicule_Neuve', ''),
+            'ModeFinancement': profile.get('PurchaseMode', ''),
+            'Usage': profile.get('CarUsageCode', ''),
+            'KmParcours': profile.get('AvgKmNumber', ''),
+            'CP_Stationnement': profile.get('HomeParkZipCode', ''),
+            'Ville_Stationnement': profile.get('HomeParkInseeCode', ''),
+            'ResidenceType': profile.get('HomeType', ''),
+            'TypeLocation': profile.get('HomeResidentType', ''),
+            'CP_Travail': profile.get('JobParkZipCode', ''),
+            'Ville_Travail': profile.get('JobParkInseeCode', ''),
+            'nom_departement': profile.get('nom_departement', ''),
+            'code_departement': profile.get('code_departement', ''),
+            'code_region': profile.get('code_region', ''),
+            'Type_Parking': profile.get('ParkingCode', ''),
+            'TypeAssure': profile.get('PrimaryApplicantHasBeenInsured', ''),
+            'NbreAnneeAssure': profile.get('PrimaryApplicantInsuranceYearNb', ''),
+            'Bonus': profile.get('PrimaryApplicantBonusCoeff', ''),
+            'NbreAnneePossessionVeh': profile.get('CarOwningTime', ''),
+            'CtrActuel': profile.get('CurrentGuaranteeCode', ''),
+            'AssureurActuel': profile.get('CurrentCarrier', ''),
+            'NiveauProtection': profile.get('ContrGuaranteeCode', ''),
+            'Date_scraping': profile.get('DateScraping', datetime.now().strftime("%Y-%m-%d"))
+        }
+    except Exception as e:
+        print(f"\033[31mErreur extraction offre: {str(e)}\033[0m")
+        return None
+
+
+async def process_formula(page: Page, formula: Dict, profile: Dict) -> List[Dict]:
+    """
+    Traite une formule spécifique avec gestion des tentatives
+    """
+    offers = []
+    for retry_count in range(MAX_RETRIES):
+        try:
+            print(f"\033[34mTraitement de la formule: {formula['text']}\033[0m")
+
+            formula_selector = await page.wait_for_selector('#FormulaChange')
+            await formula_selector.select_option(value=formula['value'])
+
+            await handle_captcha(page, "chargement de formule")
+            await wait_for_page_load(page)
+
+            if await page.is_visible('.al_content .container-fluid'):
+                offres = await page.query_selector_all('.al_content .container-fluid')
+                for offre in offres:
+                    offer_details = await extract_offer_details(offre, formula, profile)
+                    if offer_details:
+                        offers.append(offer_details)
+
+                await asyncio.sleep(random.uniform(3, 5))
+                return offers
+
+            print(
+                f"\033[31mÉchec chargement formule: {formula['text']} (tentative {retry_count + 1}/{MAX_RETRIES})\033[0m")
+            await asyncio.sleep(RETRY_DELAY)
+
+        except Exception as e:
+            if retry_count + 1 < MAX_RETRIES:
+                print(
+                    f"\033[31mErreur formule {formula['text']} (tentative {retry_count + 1}/{MAX_RETRIES}): {str(e)}\033[0m")
+                await asyncio.sleep(RETRY_DELAY)
+            else:
+                print(f"\033[31mÉchec définitif formule {formula['text']}: {str(e)}\033[0m")
+
+    return offers
+
+
+async def save_offers_to_csv(offers: List[Dict], profile_id: str) -> None:
+    """
+    Sauvegarde les offres dans un fichier CSV avec gestion des erreurs
+    """
+    if not offers:
+        return
+
+    date_str = datetime.now().strftime("%d_%m_%y")
+    filename = f"offres_formules_{date_str}_{start_line}_au_{end_line}.csv"
+
+    try:
+        async with aiofiles.open(filename, mode='a', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=offers[0].keys())
+
+            if await f.tell() == 0:
+                await writer.writeheader()
+
+            for offer in offers:
+                await writer.writerow(offer)
+
+        print(f"\033[32m=======> Offres du profil {profile_id} enregistrées dans {filename}\033[0m")
+    except Exception as e:
+        print(f"\033[31mErreur sauvegarde offres: {str(e)}\033[0m")
+        raise
+
+
+async def save_failed_profile(profile_id: str) -> None:
+    """
+    Enregistre les profils en échec avec gestion des erreurs
+    """
+    date_str = datetime.now().strftime("%d_%m_%y")
+    filename = f"fichiers_ST_formules_{date_str}_{start_line}_au_{end_line}.csv"
+
+    try:
+        async with aiofiles.open(filename, mode='a', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=['ID'])
+
+            if await f.tell() == 0:
+                await writer.writeheader()
+
+            await writer.writerow({'ID': profile_id})
+
+        print(f"\033[32m=======> Profil {profile_id} enregistré comme échec dans {filename}\033[0m")
+    except Exception as e:
+        print(f"\033[31mErreur sauvegarde profil échec: {str(e)}\033[0m")
+        raise
+
+
+async def recup_tarifs(page: Page, profile: Dict) -> List[Dict]:
+    """
+    Fonction principale de récupération des tarifs avec gestion complète des erreurs
+    """
+    all_offers = []
     try:
         await asyncio.sleep(random.uniform(1, 3))
         await page.get_by_role("button", name="ACCÉDEZ À VOS DEVIS ").click()
 
-        client = await page.context.new_cdp_session(page)
-        print('Waiting captcha to solve...')
-        solve_res = await client.send('Captcha.waitForSolve', {
-            'detectTimeout': 10000,
-        })
-        print('Captcha solve status:', solve_res['status'])
+        await handle_captcha(page)
+        print(f"\033[34m ============== ACCÉDEZ À VOS DEVIS pour le profil {profile['Id']}....\033[0m")
 
-        print('Navigated! Scraping page content...')
-        print(f"'\033[34m ============== ACCÉDEZ À VOS DEVIS pour le profil avec l'identifiant {profile['Id']}....\033[0m")
-        await page.wait_for_load_state('load', timeout=60000)
-        await page.wait_for_selector('.al_form .al_content .container-fluid', state='visible', timeout=5 * 60000)
+        await wait_for_page_load(page)
+        formulas = await get_formulas(page)
 
-        offres = await page.query_selector_all('.al_content .container-fluid')
-        profile_details = []
+        for formula in formulas:
+            formula_offers = await process_formula(page, formula, profile)
+            if formula_offers:
+                all_offers.extend(formula_offers)
 
-        for offre in offres:
-            element_assureur = await offre.query_selector('.al_carrier')
-            assureur = await element_assureur.inner_text()
-
-            element_prime = await offre.query_selector('.al_premium')
-            prime = await element_prime.inner_text()
-
-            profile_details.append({
-                'Compagnie': assureur,
-                'Prime': prime,
-                'ID': profile['Id'],
-                'TypeBesoin': profile['InsuranceNeed'],
-                'TypeBesoinDetails': profile['InsuranceNeedDetail'],
-                'AgeCar': profile['AddCarAge'],
-                'OtherDriver': profile['OtherDriver'],
-                'CarteGrise': profile['GreyCardOwner'],
-                'Genre': profile['PrimaryApplicantSex'],
-                'DateNaissance': profile['PrimaryApplicantBirthDate'],
-                'Age': profile['Age'],
-                'SituationMatrimoniale': profile['PrimaryApplicantMaritalStatus'],
-                'Profession': profile['PrimaryApplicantOccupationCode'],
-                'DateObtentionPermis': profile['PrimaryApplicantDrivLicenseDate'],
-                'ConduiteAccompagné': profile['PrimaryApplicantIsPreLicenseExper'],
-                'DateNaissanceConjoint': profile['ConjointNonSouscripteurBirthDate'],
-                'DatePermisConjoint': profile['ConjointNonSouscripteurDriveLicenseDate'],
-                'Enfants_a_charge': profile['HasChild'],
-                'Annee_Enfant_1': profile['ChildBirthDateYear1'],
-                'Annee_Enfant_2': profile['ChildBirthDateYear2'],
-                'Annee_Enfant_3': profile['ChildBirthDateYear3'],
-                'DateAchat': profile['PurchaseDate'],
-                'DateAchat_Prevue': profile['PurchaseDatePrev'],
-                'DateCirculation': profile['FirstCarDrivingDate'],
-                'ID_vehicule_occasion': profile["ID_Veh"],
-                'Marque_occasion': profile['SpecCarMakeName'],
-                'Modele_occasion': profile['SpecCarType'],
-                'Alimentation_occasion': profile['SpecCarFuelType'],
-                'Carrosserie_occasion': profile['SpecCarBodyType'],
-                'Puissance_occasion': profile['SpecCarPower'],
-                'categorie_commerciale_vehicule_occasion': profile['categorie_commerciale_vehicule'],
-                'qualification_vehicule_vert_occasion': profile['qualification_vehicule_vert'],
-                'valeur_a_neuf_vehicule_ocassion': profile['valeur_a_neuf_vehicule'],
-                'groupe_tarification_vehicule_occasion': profile['groupe_tarification_vehicule'],
-                'classe_tarification_vehicule_occasion': profile['classe_tarification_vehicule'],
-                'code_type_frequence_bdg_occasion': profile['code_type_frequence_bdg'],
-                'code_type_cout_bdg_occasion': profile['code_type_cout_bdg'],
-                'code_vente_vehicule_occasion': profile['code_vente_vehicule'],
-                'code_type_frequence_rcm_occasion': profile['code_type_frequence_rcm'],
-                'code_type_frequence_rcc_occasion': profile['code_type_frequence_rcc'],
-                'code_type_frequence_dta_occasion': profile['code_type_frequence_dta'],
-                'code_type_frequence_vol_occasion': profile['code_type_frequence_vol'],
-
-
-                'Marque_vehicule_neuf': profile['SpecCarMakeNameNeuve'],
-                'Modele_vehicule_neuf': profile['SpecCarTypeNeuve'],
-                'Alimentation_vehicule_neuf': profile['SpecCarFuelTypeNeuve'],
-                'Carrosserie_vehicule_neuf': profile['SpecCarBodyTypeNeuve'],
-                'Puissance_vehicule_neuf': profile['SpecCarPowerNeuve'],
-                'ID_vehicule_neuf': profile["ID_Veh_Neuve"],
-                'valeur_a_neuf_vehiculeNeuve': profile['valeur_a_neuf_vehicule_Neuve'],
-                'groupe_tarification_vehicule_Neuve': profile['groupe_tarification_vehicule_Neuve'],
-                'classe_tarification_vehicule_Neuve': profile['classe_tarification_vehicule_Neuve'],
-                'puissance_reel_vehicule_Neuve': profile['puissance_reel_vehicule_Neuve'],
-                'categorie_commerciale_vehicule_Neuve': profile['categorie_commerciale_vehicule_Neuve'],
-                'code_type_frequence_rcm_Neuve': profile['code_type_frequence_rcm_Neuve'],
-                'code_type_frequence_rcc_Neuve': profile['code_type_frequence_rcc_Neuve'],
-                'code_type_cout_rcm_Neuve': profile['code_type_cout_rcm_Neuve'],
-                'code_type_frequence_dta_Neuve': profile['code_type_frequence_dta_Neuve'],
-                'qualification_vehicule_vert_Neuve': profile['qualification_vehicule_vert_Neuve'],
-                'code_type_frequence_vol_Neuve': profile['code_type_frequence_vol_Neuve'],
-                'code_type_cout_vol_Neuve': profile['code_type_cout_vol_Neuve'],
-                'code_type_frequence_bdg_Neuve': profile['code_type_frequence_bdg_Neuve'],
-                'code_type_cout_bdg_Neuve': profile['code_type_cout_bdg_Neuve'],
-                'code_vente_vehicule_Neuve': profile['code_vente_vehicule_Neuve'],
-                'ModeFinancement': profile['PurchaseMode'],
-                'Usage': profile['CarUsageCode'],
-                'KmParcours': profile['AvgKmNumber'],
-                'CP_Stationnement': profile['HomeParkZipCode'],
-                'Ville_Stationnement': profile['HomeParkInseeCode'],
-                'ResidenceType': profile['HomeType'],
-                'TypeLocation': profile['HomeResidentType'],
-                'CP_Travail': profile['JobParkZipCode'],
-                'Ville_Travail': profile['JobParkInseeCode'],
-                'nom_departement': profile['nom_departement'],
-                'code_departement': profile['code_departement'],
-                'code_region': profile['code_region'],
-                'Type_Parking': profile['ParkingCode'],
-                'TypeAssure': profile['PrimaryApplicantHasBeenInsured'],
-                'NbreAnneeAssure': profile['PrimaryApplicantInsuranceYearNb'],
-                'Bonus': profile['PrimaryApplicantBonusCoeff'],
-                'NbreAnneePossessionVeh': profile['CarOwningTime'],
-                'CtrActuel': profile['CurrentGuaranteeCode'],
-                'AssureurActuel': profile['CurrentCarrier'],
-                'NiveauProtection': profile['ContrGuaranteeCode'],
-                'Date_scraping': profile['DateScraping']
-            })
-
-        if profile_details:
-            date_du_jour = datetime.now().strftime("%d_%m_%y")
-            nom_fichier_csv = f"offres_{date_du_jour}_{start_line}_au_{end_line}.csv"
-            
-            # Écrire les offres dans le fichier CSV
-            async with aiofiles.open(nom_fichier_csv, mode='a', newline='', encoding='utf-8') as f:
-                writer = csv.DictWriter(f, fieldnames=profile_details[0].keys())
-                
-                # Écrire l'en-tête si le fichier est vide
-                file_empty = await f.tell() == 0
-                if file_empty:
-                    await writer.writeheader()
-                
-                # Écrire les lignes de données
-                for row in profile_details:
-                    await writer.writerow(row)
-                
-                print(f"=====> Les offres du profil {profile['Id']} ont été stockées dans le fichier:", nom_fichier_csv)
+        if all_offers:
+            await save_offers_to_csv(all_offers, profile['Id'])
         else:
-            date_du_jour = datetime.now().strftime("%d_%m_%y")
-            nom_fichier_sans_tarif = f"fichiers_ST_{date_du_jour}_{start_line}_au_{end_line}.csv"
-            
-            # Écrire les informations du profil dans le fichier CSV des échecs
-            async with aiofiles.open(nom_fichier_sans_tarif, mode='a', newline='', encoding='utf-8') as f:
-                writer = csv.DictWriter(f, fieldnames=['ID'])
-                
-                # Écrire l'en-tête si le fichier est vide
-                file_empty = await f.tell() == 0
-                if file_empty:
-                    await writer.writeheader()
-                
-                await writer.writerow({'ID': profile['Id']})
-                print(f"=====> Le profil {profile['Id']} a été stocké dans le fichier des échecs:", nom_fichier_sans_tarif)
+            await save_failed_profile(profile['Id'])
 
-    except PlaywrightTimeoutError:
-        print("Le div '.al_form' n'est pas visible, passage au champ suivant.")
+        return all_offers
+
     except Exception as e:
-        raise ValueError(f"Erreur d'exception sur la récupération des offres : {str(e)}")
-
+        print(f"\033[31mErreur critique lors du scraping: {str(e)}\033[0m")
+        await save_failed_profile(profile['Id'])
+        raise ValueError(f"Erreur récupération tarifs: {str(e)}")
 
 
 
@@ -2659,16 +2748,16 @@ async def run_for_profile(playwright: Playwright, profile: dict, headless: bool,
         logger.info("Cliqué sur le div 'Comparez les assurances auto'")
         print(f"Le profil '{profile['Id']}' est lancé....")
         await fill_form_projet(page, profile)
-        await page.wait_for_load_state("networkidle")
+        await page.wait_for_load_state("load")
         logger.info("=" * 100)
         await fill_form_profil(page, profile)
-        await page.wait_for_load_state("networkidle")
+        await page.wait_for_load_state("load")
         logger.info("=" * 100)
         await fill_form_vehicule(page, profile)
-        await page.wait_for_load_state("networkidle")
+        await page.wait_for_load_state("load")
         logger.info("=" * 100)
         await fill_antecedents(page, profile)
-        await page.wait_for_load_state("networkidle")
+        await page.wait_for_load_state("load")
         logger.info("=" * 100)
         await fill_form_contrats(page, profile)
         logger.info("=" * 100)
@@ -2730,7 +2819,7 @@ async def run_for_profile_with_semaphore_and_progress(playwright, profile, headl
 
                     
 
-async def main(headless: bool, bright_data: bool, max_concurrent: int = 20):
+async def main(headless: bool, bright_data: bool, max_concurrent: int = 10):
     """
     Fonction principale asynchrone qui gère le traitement parallèle des profils.
 
@@ -2810,4 +2899,4 @@ if __name__ == "__main__":
         - L'utilisation de Bright Data (bright_data=True) implique que la configuration appropriée
         pour Bright Data est en place.
     """
-    asyncio.run(main(headless=False, bright_data=True, max_concurrent=20))
+    asyncio.run(main(headless=False, bright_data=False, max_concurrent=2))
