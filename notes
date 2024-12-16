@@ -1,0 +1,1456 @@
+"""
+Système d'Analyse de Devis d'Assurance Auto
+=========================================
+
+Ce script permet d'analyser en détail les devis d'assurance automobile à travers 
+un tableau de bord interactif multi-onglets. Il offre des fonctionnalités avancées 
+de visualisation et d'analyse comparative des tarifs.
+
+Dépendances requises:
+-------------------
+- pandas: Manipulation et analyse des données
+- panel: Création du tableau de bord interactif
+- plotly: Visualisations interactives
+- numpy: Calculs numériques
+- json: Manipulation des données géographiques
+
+Structure du projet:
+------------------
+1. Configuration initiale et chargement des données
+2. Fonctions utilitaires pour le traitement géographique
+3. Onglets d'analyse spécifiques
+4. Configuration du tableau de bord principal
+"""
+
+import pandas as pd
+import panel as pn
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly.figure_factory as ff
+import numpy as np
+from plotly.subplots import make_subplots
+from datetime import datetime
+import json
+
+# Configuration de Panel avec style personnalisé
+
+pn.extension('plotly', 'tabulator', template='fast', sizing_mode="stretch_width")
+
+css = """
+.custom-panel {
+    color: black !important;
+    background-color: white !important;
+}
+.markdown-body {
+    color: black !important;
+}
+.bk-root {
+    color: black !important;
+}
+"""
+pn.extension(raw_css=[css])
+pn.state.template.param.update(
+    title="Analyse des Tarifs d'Assurance Auto",
+    main_max_width="1200px",
+    header_background="#f8f9fa"
+)
+
+
+#df = None
+
+def load_data():
+    """
+    Charge et prépare les données des devis d'assurance depuis un fichier CSV.
+    
+    Processus de traitement :
+    1. Chargement du fichier CSV
+    2. Formatage des codes postaux en format 5 chiffres
+    3. Extraction des codes départementaux
+    4. Mapping des départements aux régions
+    5. Conversion et nettoyage des données numériques
+    6. Gestion des valeurs manquantes
+    
+    Returns:
+    --------
+    pandas.DataFrame
+        DataFrame nettoyé avec les colonnes suivantes :
+        - CP_Stationnement : Code postal (str, 5 chiffres)
+        - Departement_Code : Code département (str, 2 chiffres)
+        - Region : Nom de la région (str)
+        - Prime : Montant de la prime (float)
+        - Age : Âge du conducteur (int)
+        - Bonus : Coefficient bonus-malus (float)
+        - KmParcours : Kilométrage annuel (int)
+        + autres colonnes du fichier original
+    """
+    pd.options.mode.chained_assignment = None
+
+    global df
+    # Chargement avec spécification des types de données
+    df = pd.read_csv(
+        r'C:/Users/magueye.gueye/PycharmProjects/Webscraping_AUTO/notebooks/fichier_de_sortie.csv',
+        low_memory=False,
+        dtype={
+            'CP_Stationnement': str,
+            'Departement_Code': str,
+            'Prime': float,
+            'Age': float,
+            'KmParcours': float,
+            'Bonus': float,
+            'Genre': str,
+            'SituationMatrimoniale': str,
+            'Profession': str,
+            'AgeCar': str,
+            'Marque': str,
+            'NiveauProtection': str,
+            'Compagnie': str
+        }
+    )
+    
+    # Nettoyage et formatage des données
+    df['CP_Stationnement'] = df['CP_Stationnement'].astype(str).str.zfill(5)
+    df['Departement_Code'] = df['Departement_Code'].astype(str).str[:2]
+    
+    # Nettoyage des valeurs numériques
+    numeric_columns = ['Prime', 'Age', 'KmParcours', 'Bonus']
+    for col in numeric_columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+        # Remplacement des valeurs infinies par NaN
+        df[col] = df[col].replace([np.inf, -np.inf], np.nan)
+    
+    # Suppression des lignes avec des valeurs manquantes dans les colonnes critiques
+    df = df.dropna(subset=numeric_columns)
+    
+    # Nettoyage des caractères spéciaux dans les chaînes
+    string_columns = ['Genre', 'SituationMatrimoniale', 'Profession', 'AgeCar', 'Marque', 'NiveauProtection', 'Compagnie']
+    for col in string_columns:
+        df[col] = df[col].astype(str).str.strip()
+        df[col] = df[col].replace(r'[\t\n\r]', '', regex=True)
+    
+    # Dictionnaire de correspondance départements-régions
+    departement_to_region_dict = {
+        '01': 'Ain', '02': 'Aisne', '03': 'Allier', '04': 'Alpes-de-Haute-Provence',
+        '05': 'Hautes-Alpes', '06': 'Alpes-Maritimes', '07': 'Ardèche', '08': 'Ardennes',
+        '09': 'Ariège', '10': 'Aube', '11': 'Aude', '12': 'Aveyron', '13': 'Bouches-du-Rhône',
+        '14': 'Calvados', '15': 'Cantal', '16': 'Charente', '17': 'Charente-Maritime',
+        '18': 'Cher', '19': 'Corrèze', '2A': 'Corse-du-Sud', '2B': 'Haute-Corse',
+        '21': 'Côte-d\'Or', '22': 'Côtes-d\'Armor', '23': 'Creuse', '24': 'Dordogne',
+        '25': 'Doubs', '26': 'Drôme', '27': 'Eure', '28': 'Eure-et-Loir', '29': 'Finistère',
+        '30': 'Gard', '31': 'Haute-Garonne', '32': 'Gers', '33': 'Gironde', '34': 'Hérault',
+        '35': 'Ille-et-Vilaine', '36': 'Indre', '37': 'Indre-et-Loire', '38': 'Isère',
+        '39': 'Jura', '40': 'Landes', '41': 'Loir-et-Cher', '42': 'Loire', '43': 'Haute-Loire',
+        '44': 'Loire-Atlantique', '45': 'Loiret', '46': 'Lot', '47': 'Lot-et-Garonne',
+        '48': 'Lozère', '49': 'Maine-et-Loire', '50': 'Manche', '51': 'Marne',
+        '52': 'Haute-Marne', '53': 'Mayenne', '54': 'Meurthe-et-Moselle', '55': 'Meuse',
+        '56': 'Morbihan', '57': 'Moselle', '58': 'Nièvre', '59': 'Nord', '60': 'Oise',
+        '61': 'Orne', '62': 'Pas-de-Calais', '63': 'Puy-de-Dôme', '64': 'Pyrénées-Atlantiques',
+        '65': 'Hautes-Pyrénées', '66': 'Pyrénées-Orientales', '67': 'Bas-Rhin',
+        '68': 'Haut-Rhin', '69': 'Rhône', '70': 'Haute-Saône', '71': 'Saône-et-Loire',
+        '72': 'Sarthe', '73': 'Savoie', '74': 'Haute-Savoie', '75': 'Paris',
+        '76': 'Seine-Maritime', '77': 'Seine-et-Marne', '78': 'Yvelines', '79': 'Deux-Sèvres',
+        '80': 'Somme', '81': 'Tarn', '82': 'Tarn-et-Garonne', '83': 'Var', '84': 'Vaucluse',
+        '85': 'Vendée', '86': 'Vienne', '87': 'Haute-Vienne', '88': 'Vosges', '89': 'Yonne',
+        '90': 'Territoire de Belfort', '91': 'Essonne', '92': 'Hauts-de-Seine',
+        '93': 'Seine-Saint-Denis', '94': 'Val-de-Marne', '95': 'Val-d\'Oise',
+        '971': 'Guadeloupe', '972': 'Martinique', '973': 'Guyane', '974': 'La Réunion',
+        '976': 'Mayotte'
+    }
+    
+    # Ajout de la colonne Région
+    df['Region'] = df['Departement_Code'].map(departement_to_region_dict)
+    df['Region'] = df['Region'].fillna('Inconnu')
+    
+    # Conversion des colonnes numériques
+    df['Prime'] = pd.to_numeric(df['Prime'], errors='coerce')
+    df['Compagnie'] = df['Compagnie'].str.replace(r'[\t\n]', '', regex=True)
+    
+    # Conversion des autres colonnes en type Int64
+    cols_to_convert = df.select_dtypes(include=['float64']).columns.tolist()
+    cols_to_convert.remove('Bonus')
+    df[cols_to_convert] = df[cols_to_convert].apply(lambda x: x.astype('Int64'))
+    
+    # Conversion des colonnes spécifiques
+    numeric_columns = ['Age', 'Bonus', 'KmParcours']
+    for col in numeric_columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    
+    # Suppression des valeurs manquantes dans les colonnes critiques
+    df = df.dropna(subset=['Prime', 'Age', 'KmParcours'])
+    
+    return df
+
+def load_departements_geojson(filepath):
+    """
+    Charge les données géographiques des départements français depuis un fichier GeoJSON.
+    
+    Parameters:
+    -----------
+    filepath : str
+        Chemin d'accès vers le fichier GeoJSON contenant les données des départements
+    
+    Returns:
+    --------
+    dict
+        Dictionnaire contenant les données GeoJSON avec :
+        - type : Type de la collection (FeatureCollection)
+        - features : Liste des caractéristiques des départements
+            - geometry : Géométrie du département
+            - properties : Propriétés du département (code, nom, etc.)
+    
+    Raises:
+    -------
+    FileNotFoundError : Si le fichier GeoJSON n'est pas trouvé
+    JSONDecodeError : Si le fichier n'est pas un JSON valide
+    """
+    with open(filepath, 'r', encoding='utf-8') as file:
+        geojson_data = json.load(file)
+    return geojson_data
+
+def load_postal_data():
+    """
+    Charge les données des codes postaux français.
+    
+    Returns:
+    --------
+    pandas.DataFrame
+        DataFrame contenant les informations des codes postaux
+    """
+    postal_df = pd.read_csv(r"C:/Users/magueye.gueye/Downloads/base-officielle-codes-postaux.csv", 
+                           dtype={'code_postal': str}, 
+                           sep=';')
+    return postal_df
+
+def prepare_geographical_data(df):
+    """
+    Prépare les données géographiques pour l'analyse.
+    
+    Processus :
+    1. Chargement des données postales
+    2. Fusion avec les données de devis
+    3. Harmonisation des formats
+    4. Gestion des cas particuliers
+    
+    Parameters:
+    -----------
+    df : pandas.DataFrame
+        DataFrame contenant les données de devis
+        
+    Returns:
+    --------
+    pandas.DataFrame
+        DataFrame enrichi avec :
+        - Informations géographiques
+        - Coordonnées
+        - Classifications territoriales
+    """
+    postal_df = load_postal_data()
+    postal_df.rename(columns={'code_postal': 'CP_Stationnement'}, inplace=True)
+    
+    df['CP_Stationnement'] = df['CP_Stationnement'].astype(str).str.zfill(5)
+    postal_df['CP_Stationnement'] = postal_df['CP_Stationnement'].astype(str).str.zfill(5)
+    
+    return df.merge(postal_df, on='CP_Stationnement', how='left')
+
+# Configuration des colonnes pour Tabulator
+def configure_tabulator_columns(df):
+    """
+    Configure les colonnes pour l'affichage dans Tabulator.
+    """
+    column_defs = []
+    for col in df.columns:
+        if pd.api.types.is_numeric_dtype(df[col]):
+            column_defs.append({
+                "title": col,
+                "field": col,
+                "headerHorzAlign": "center",
+                "hozAlign": "right",
+                "formatter": "money",
+                "headerFilter": "input",
+            })
+        else:
+            column_defs.append({
+                "title": col,
+                "field": col,
+                "headerHorzAlign": "center",
+                "hozAlign": "left",
+                "headerFilter": "input",
+            })
+    return column_defs
+
+def create_profile_statistics_tab():
+    """
+    Crée un onglet dédié à l'analyse statistique des profils.
+    """
+    # Variables clés pour l'analyse
+    variables_analyse = {
+        'Démographique': ['Age', 'Genre', 'SituationMatrimoniale', 'Profession'],
+        'Véhicule': ['Marque', 'AgeCar', 'KmParcours'],
+        'Assurance': ['Bonus', 'NiveauProtection']
+    }
+
+    def create_age_analysis():
+        """Analyse détaillée de la distribution des âges"""
+        age_stats = {
+            'Moyenne': df['Age'].mean(),
+            'Médiane': df['Age'].median(),
+            'Écart-type': df['Age'].std(),
+            'Min': df['Age'].min(),
+            'Max': df['Age'].max()
+        }
+
+        # Création des tranches d'âge
+        df['Tranche_Age'] = pd.cut(df['Age'], 
+                                 bins=[0, 25, 35, 45, 55, 65, 100],
+                                 labels=['18-25', '26-35', '36-45', '46-55', '56-65', '65+'])
+
+        # Distribution par tranche d'âge
+        age_dist = df.groupby('Tranche_Age', observed=True).size().reset_index()
+        age_dist.columns = ['Tranche_Age', 'Nombre']
+        age_dist['Pourcentage'] = (age_dist['Nombre'] / age_dist['Nombre'].sum() * 100).round(2)
+
+        # Graphique de distribution des âges
+        fig_age = go.Figure()
+        
+        # Histogramme des âges
+        fig_age.add_trace(go.Histogram(
+            x=df['Age'],
+            name='Distribution des âges',
+            nbinsx=30,
+            histnorm='percent'
+        ))
+        
+        # Courbe de densité
+        fig_age.update_layout(
+            title='Distribution des Âges des Assurés',
+            xaxis_title='Âge',
+            yaxis_title='Pourcentage',
+            template='plotly_white'
+        )
+
+        return pn.Column(
+            pn.pane.Markdown("### Statistiques d'Âge"),
+            pn.pane.DataFrame(pd.DataFrame([age_stats]).round(2)),
+            pn.pane.Markdown("### Distribution par Tranche d'Âge"),
+            pn.pane.DataFrame(age_dist),
+            pn.pane.Plotly(fig_age)
+        )
+
+    def create_variable_analysis():
+        """Analyse de la répartition des profils par variables clés"""
+        analyses = []
+        
+        for category, vars in variables_analyse.items():
+            analyses.append(pn.pane.Markdown(f"## Analyse {category}"))
+            
+            for var in vars:
+                if var in ['Age', 'KmParcours', 'Bonus']:
+                    # Analyse des variables numériques
+                    stats = pd.DataFrame({
+                        'Statistique': ['Moyenne', 'Médiane', 'Écart-type', 'Min', 'Max'],
+                        'Valeur': [
+                            df[var].mean(),
+                            df[var].median(),
+                            df[var].std(),
+                            df[var].min(),
+                            df[var].max()
+                        ]
+                    })
+                    
+                    # Graphique de distribution
+                    fig = go.Figure()
+                    fig.add_trace(go.Histogram(
+                        x=df[var],
+                        nbinsx=30,
+                        name=var
+                    ))
+                    fig.update_layout(
+                        title=f'Distribution de {var}',
+                        xaxis_title=var,
+                        yaxis_title='Nombre de profils',
+                        template='plotly_white'
+                    )
+                    
+                    analyses.extend([
+                        pn.pane.Markdown(f"### Statistiques {var}"),
+                        pn.pane.DataFrame(stats.round(2)),
+                        pn.pane.Plotly(fig)
+                    ])
+                else:
+                    # Analyse des variables catégorielles
+                    value_counts = df[var].value_counts().reset_index()
+                    value_counts.columns = [var, 'Nombre']
+                    value_counts['Pourcentage'] = (value_counts['Nombre'] / len(df) * 100).round(2)
+                    
+                    # Graphique en barres
+                    fig = px.bar(
+                        value_counts,
+                        x=var,
+                        y='Nombre',
+                        title=f'Répartition par {var}'
+                    )
+                    fig.update_layout(template='plotly_white')
+                    
+                    analyses.extend([
+                        pn.pane.Markdown(f"### Répartition {var}"),
+                        pn.pane.DataFrame(value_counts),
+                        pn.pane.Plotly(fig)
+                    ])
+
+        return pn.Column(*analyses)
+
+    def create_correlation_analysis():
+        """Analyse des corrélations entre variables numériques"""
+        numeric_vars = ['Age', 'KmParcours', 'Bonus', 'Prime']
+        corr_matrix = df[numeric_vars].corr()
+        
+        fig = px.imshow(
+            corr_matrix,
+            labels=dict(color="Corrélation"),
+            color_continuous_scale="RdBu",
+            title="Matrice de Corrélation des Variables Numériques"
+        )
+        
+        return pn.Column(
+            pn.pane.Markdown("## Analyse des Corrélations"),
+            pn.pane.Plotly(fig)
+        )
+
+    def create_bivariate_analysis():
+        """Analyse bivariée des variables principales"""
+        fig = make_subplots(
+            rows=2, cols=2,
+            subplot_titles=(
+                'Prime vs Age',
+                'Prime vs Bonus',
+                'Prime vs Kilomètrage',
+                'Age vs Kilomètrage'
+            )
+        )
+        
+        # Prime vs Age
+        fig.add_trace(
+            go.Scatter(x=df['Age'], y=df['Prime'], mode='markers', 
+                      marker=dict(size=5, opacity=0.5), name='Prime vs Age'),
+            row=1, col=1
+        )
+        
+        # Prime vs Bonus
+        fig.add_trace(
+            go.Scatter(x=df['Bonus'], y=df['Prime'], mode='markers',
+                      marker=dict(size=5, opacity=0.5), name='Prime vs Bonus'),
+            row=1, col=2
+        )
+        
+        # Prime vs Kilomètrage
+        fig.add_trace(
+            go.Scatter(x=df['KmParcours'], y=df['Prime'], mode='markers',
+                      marker=dict(size=5, opacity=0.5), name='Prime vs Km'),
+            row=2, col=1
+        )
+        
+        # Age vs Kilomètrage
+        fig.add_trace(
+            go.Scatter(x=df['Age'], y=df['KmParcours'], mode='markers',
+                      marker=dict(size=5, opacity=0.5), name='Age vs Km'),
+            row=2, col=2
+        )
+        
+        fig.update_layout(height=800, title_text="Analyses Bivariées", showlegend=False)
+        
+        return pn.Column(
+            pn.pane.Markdown("## Analyses Bivariées"),
+            pn.pane.Plotly(fig)
+        )
+
+    # Assemblage de l'onglet complet
+    return pn.Column(
+        pn.pane.Markdown("# Analyse Détaillée des Profils"),
+        create_age_analysis(),
+        create_variable_analysis(),
+        create_correlation_analysis(),
+        create_bivariate_analysis()
+    )
+
+
+def create_stats_tab():
+    """
+    Crée l'onglet d'analyse des statistiques et des coûts.
+    """
+    # Calcul des profils par jour
+    df['Date_scraping'] = pd.to_datetime(df['Date_scraping'], format='%d/%m/%Y')
+    profils_par_jour = df.groupby('Date_scraping')['ID'].nunique().reset_index()
+    profils_par_jour.columns = ['Date', 'Nombre_de_profils']
+
+    # Données de coût
+    couts_data = {
+        'Date': ['05/09/2024', '06/09/2024', '07/09/2024', '08/09/2024', '09/09/2024', 
+                '10/09/2024', '11/09/2024', '12/09/2024', '16/09/2024', '17/09/2024',
+                '18/09/2024', '19/09/2024', '20/09/2024'],
+        'Cout': [30.55, 55.12, 0.0, 0.0, 54.78, 0.0, 57.19, 42.41, 22.95, 28.60, 
+                80.78, 26.9, 1.73],
+        'GBs': [3.64, 6.56, 0.0, 0.0, 6.52, 0.0, 6.81, 5.05, 2.73, 3.41, 
+                9.62, 3.2, 0.206]
+    }
+    couts_df = pd.DataFrame(couts_data)
+    couts_df['Date'] = pd.to_datetime(couts_df['Date'], format='%d/%m/%Y')
+
+    # Fusion des données
+    data_complete = pd.merge(profils_par_jour, couts_df, on='Date', how='outer').fillna(0)
+    data_complete = data_complete.sort_values('Date')
+
+    # Calcul des métriques
+    nombre_profils = df['ID'].nunique()
+    total_rows = len(df)
+    nombre_profils_lances = 12300
+    taux_reussite = (nombre_profils / nombre_profils_lances) * 100
+    total_cost = couts_df['Cout'].sum()
+
+    # Création des sous-graphiques
+    fig = make_subplots(
+        rows=3, cols=2,
+        specs=[[{"type": "domain"}, {"type": "indicator"}],
+               [{"type": "indicator"}, {"type": "indicator"}],
+               [{"type": "xy", "colspan": 2, "secondary_y": True}, None]],
+        subplot_titles=("", "Profils avec tarif<br>Coût total", "Profils lancés", 
+                       "Taux de réussite", "Profils scrapés et coûts par jour"),
+        vertical_spacing=0.1,
+        horizontal_spacing=0.05
+    )
+
+    # Graphique circulaire
+    fig.add_trace(go.Pie(
+        labels=['Profils avec un seul tarif', "Profils avec plus d'un tarif"],
+        values=[nombre_profils, total_rows - nombre_profils],
+        hole=.4,
+        marker_colors=['#3498db', '#e74c3c'],
+        textinfo='percent+label',
+        pull=[0.1, 0]
+    ), row=1, col=1)
+
+    # Indicateurs
+    fig.add_trace(go.Indicator(
+        mode="number+delta",
+        value=nombre_profils,
+        number={'font_color': '#3498db', 'font_size': 60},
+        delta={'position': "bottom", 'reference': nombre_profils_lances, 'relative': False},
+        title={"text": f"<br>Coût total: <span style='color: #e67e22'>${total_cost:.2f}</span>"},
+    ), row=1, col=2)
+
+    fig.add_trace(go.Indicator(
+        mode="number",
+        value=nombre_profils_lances,
+        number={'font_color': '#2ecc71', 'font_size': 60},
+    ), row=2, col=1)
+
+    fig.add_trace(go.Indicator(
+        mode="number+delta",
+        value=taux_reussite,
+        number={'font_color': '#f39c12', 'font_size': 60, 'suffix': "%"},
+        delta={'position': "bottom", 'reference': 100, 'relative': False},
+    ), row=2, col=2)
+
+    # Graphique des profils scrapés par jour
+    fig.add_trace(go.Scatter(
+        x=data_complete['Date'],
+        y=data_complete['Nombre_de_profils'],
+        mode='lines+markers',
+        name='Profils scrapés par jour',
+        line=dict(color='#3498db', width=2)
+    ), row=3, col=1, secondary_y=False)
+
+    # Ligne de tendance
+    z = np.polyfit(range(len(data_complete)), data_complete['Nombre_de_profils'], 1)
+    p = np.poly1d(z)
+    fig.add_trace(go.Scatter(
+        x=data_complete['Date'],
+        y=p(range(len(data_complete))),
+        mode='lines',
+        name='Tendance des profils scrapés',
+        line=dict(color='#3498db', width=2, dash='dash')
+    ), row=3, col=1, secondary_y=False)
+
+    # Graphique des coûts
+    fig.add_trace(go.Bar(
+        x=data_complete['Date'],
+        y=data_complete['Cout'],
+        name='Coût par jour',
+        marker_color='#e67e22',
+        opacity=0.7
+    ), row=3, col=1, secondary_y=True)
+
+    # Mise à jour de la mise en page
+    fig.update_layout(
+        title_text="Analyse des tarifs sur les profils",
+        title_font=dict(size=20),
+        showlegend=True,
+        height=1200,
+        width=1200,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        margin=dict(t=70, b=80, l=50, r=60)
+    )
+
+    # Mise à jour des axes
+    fig.update_xaxes(title_text="Date", row=3, col=1)
+    fig.update_yaxes(title_text="Nombre de profils scrapés", secondary_y=False, row=3, col=1)
+    fig.update_yaxes(title_text="Coût ($)", secondary_y=True, row=3, col=1)
+    fig.update_xaxes(
+        tickformat="%d/%m/%Y",
+        tickangle=45,
+        tickmode='linear',
+        dtick=86400000.0,
+        row=3, col=1
+    )
+
+    # Ajustement des titres des sous-graphiques
+    for i in fig['layout']['annotations']:
+        i['font'] = dict(size=16)
+        i['y'] = i['y'] - 0.05
+
+    # Calcul des statistiques supplémentaires
+    cout_moyen_par_profil = total_cost / nombre_profils
+
+    # Création du tableau de statistiques
+    stats_html = f"""
+    <div style="background-color: #f0f8ff; padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center;">
+        <h2 style="color: #2c3e50;">Statistiques sur les tarifs des profils scrapés</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <th style="padding: 10px; border: 1px solid #3498db; background-color: #3498db; color: white;">Métrique</th>
+                <th style="padding: 10px; border: 1px solid #3498db; background-color: #3498db; color: white;">Valeur</th>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #3498db;">Nombre total de tarifs scrapés</td>
+                <td style="padding: 10px; border: 1px solid #3498db;">{total_rows}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #3498db;">Nombre de profils uniques avec tarif</td>
+                <td style="padding: 10px; border: 1px solid #3498db;">{nombre_profils}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #3498db;">Nombre de profils lancés</td>
+                <td style="padding: 10px; border: 1px solid #3498db;">{nombre_profils_lances}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #3498db;">Pourcentage de profils avec un tarif</td>
+                <td style="padding: 10px; border: 1px solid #3498db;">{(nombre_profils / total_rows * 100):.2f}%</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #3498db;">Nombre moyen de tarifs par profil</td>
+                <td style="padding: 10px; border: 1px solid #3498db;">{(total_rows / nombre_profils):.2f}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #3498db;">Taux de réussite</td>
+                <td style="padding: 10px; border: 1px solid #3498db;">{taux_reussite:.2f}%</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #3498db;">Coût total</td>
+                <td style="padding: 10px; border: 1px solid #3498db;">${total_cost:.2f}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #3498db;">Nombre moyen de profils scrapés par jour</td>
+                <td style="padding: 10px; border: 1px solid #3498db;">{data_complete['Nombre_de_profils'].mean():.2f}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #3498db;">Coût moyen par jour</td>
+                <td style="padding: 10px; border: 1px solid #3498db;">${data_complete['Cout'].mean():.2f}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #3498db;">Total GBs consommés</td>
+                <td style="padding: 10px; border: 1px solid #3498db;">{couts_df['GBs'].sum():.2f} GB</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #3498db;">Coût moyen par profil scrapé</td>
+                <td style="padding: 10px; border: 1px solid #3498db;">${cout_moyen_par_profil:.2f}</td>
+            </tr>
+        </table>
+    </div>
+    """
+
+    # Création du panneau final
+    stats_panel = pn.pane.HTML(stats_html)
+    return pn.Column(stats_panel, pn.pane.Plotly(fig))
+
+def create_distribution_tab():
+    """
+    Crée un onglet d'analyse de la distribution des primes.
+    """
+    # Conversion et nettoyage des données
+    prime_data = df["Prime"].dropna().astype(float).values
+    
+    # Calcul des statistiques
+    mean_prime = np.mean(prime_data)
+    median_prime = np.median(prime_data)
+    std_prime = np.std(prime_data)
+    min_prime = np.min(prime_data)
+    max_prime = np.max(prime_data)
+
+    # Création de l'histogramme avec courbe KDE
+    fig = go.Figure()
+    
+    # Ajout de l'histogramme
+    fig.add_trace(go.Histogram(
+        x=prime_data,
+        name='Distribution des primes',
+        nbinsx=50,
+        histnorm='probability density'
+    ))
+    
+    # Calcul et ajout de la courbe KDE
+    from scipy import stats
+    kde_x = np.linspace(min_prime, max_prime, 200)
+    kde = stats.gaussian_kde(prime_data)
+    fig.add_trace(go.Scatter(
+        x=kde_x,
+        y=kde(kde_x),
+        mode='lines',
+        name='Densité estimée',
+        line=dict(color='red')
+    ))
+
+    # Personnalisation de la mise en page
+    fig.update_layout(
+        title={
+            'text': "Distribution des Primes d'Assurance",
+            'y': 0.95,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top',
+            'font': dict(size=24, color='black')
+        },
+        xaxis_title_text='Prime (€)',
+        yaxis_title_text='Densité',
+        width=1200,
+        height=900,
+        template='plotly_white',
+        showlegend=True,
+        font=dict(color='black')
+    )
+
+    # Ajout des lignes de référence
+    fig.add_vline(x=mean_prime, line_dash="dash", line_color="red",
+                 annotation_text=f"Moyenne: {mean_prime:.2f}€", 
+                 annotation_position="top right")
+    fig.add_vline(x=median_prime, line_dash="dash", line_color="green",
+                 annotation_text=f"Médiane: {median_prime:.2f}€", 
+                 annotation_position="top left")
+
+    # Ajout des statistiques clés
+    stats_text = f"Écart-type: {std_prime:.2f}€<br>Min: {min_prime:.2f}€<br>Max: {max_prime:.2f}€"
+    fig.add_annotation(
+        x=1,
+        y=1,
+        xref="paper",
+        yref="paper",
+        text=stats_text,
+        showarrow=False,
+        font=dict(size=12, color='black'),
+        align="right",
+        bgcolor="white",
+        bordercolor="black",
+        borderwidth=1,
+        borderpad=4
+    )
+
+    # Création du conteneur avec style CSS
+    title_md = pn.pane.Markdown('<h2 style="color: black;">Distribution des Primes</h2>')
+    plot_pane = pn.pane.Plotly(fig)
+
+    return pn.Column(
+        title_md,
+        plot_pane,
+        css_classes=['custom-panel'],
+        styles={'background': 'white'}  # Utilisation de styles au lieu de background
+    )
+
+
+def create_distribution_by_variables_tab():
+    """
+    Crée l'onglet d'analyse des distributions par variables.
+    """
+    # Définition des variables disponibles
+    variables_numeriques = ['Age', 'KmParcours', 'Bonus']
+    variables_categorielles = ['Genre', 'SituationMatrimoniale', 'Profession', 'AgeCar', 'NiveauProtection']
+    variables = variables_numeriques + variables_categorielles
+
+    # Création des sélecteurs
+    variable_selector = pn.widgets.Select(
+        name='Sélectionnez une variable',
+        options=variables
+    )
+    
+    prime_type_selector = pn.widgets.RadioButtonGroup(
+        name='Type de Prime',
+        options=['Médiane', 'Minimum', 'Maximum'],
+        button_type='success'
+    )
+    
+    compagnie_selector = pn.widgets.MultiChoice(
+        name='Sélectionnez la ou les compagnies',
+        options=sorted(df['Compagnie'].unique().tolist()),
+        value=[df['Compagnie'].unique()[0]]
+    )
+
+    @pn.depends(variable_selector.param.value, prime_type_selector.param.value, compagnie_selector.param.value)
+    def update_plot(selected_variable, selected_prime_type, selected_companies):
+        if not selected_companies:
+            return pn.pane.Markdown("**Veuillez sélectionner au moins une compagnie.**")
+        
+        # Sélection du type de prime
+        prime_func = 'median' if selected_prime_type == 'Médiane' else 'min' if selected_prime_type == 'Minimum' else 'max'
+        prime_label = f'Prime {selected_prime_type}'
+        
+        # Traitement selon le type de variable
+        if selected_variable in variables_numeriques:
+            # Conversion en float pour assurer la compatibilité
+            try:
+                values = pd.to_numeric(df[selected_variable], errors='coerce')
+                if values.isna().all():
+                    return pn.pane.Markdown("**La variable sélectionnée ne contient pas de données numériques valides.**")
+                
+                # Groupement des données avec valeurs converties
+                grouped_df = (df[df['Compagnie'].isin(selected_companies)]
+                            .assign(**{selected_variable: values})
+                            .groupby([selected_variable, 'Compagnie'])
+                            .agg({'Prime': prime_func})
+                            .reset_index())
+                
+                grouped_df.columns = [selected_variable, 'Compagnie', prime_label]
+                grouped_df = grouped_df.sort_values(by=[selected_variable])
+                
+                # Création du graphique linéaire
+                fig = px.line(
+                    grouped_df,
+                    x=selected_variable,
+                    y=prime_label,
+                    color='Compagnie',
+                    title=f"Primes {selected_prime_type.lower()}s par '{selected_variable}' et Compagnie",
+                    labels={selected_variable: selected_variable, prime_label: 'Prime (€)'},
+                    markers=True
+                )
+            except Exception as e:
+                return pn.pane.Markdown(f"**Erreur lors de l'analyse des données: {str(e)}**")
+        else:
+            # Groupement pour variables catégorielles
+            try:
+                grouped_df = (df[df['Compagnie'].isin(selected_companies)]
+                            .groupby([selected_variable, 'Compagnie'])
+                            .agg({'Prime': prime_func})
+                            .reset_index())
+                
+                grouped_df.columns = [selected_variable, 'Compagnie', prime_label]
+                
+                # Création du graphique en barres
+                fig = px.bar(
+                    grouped_df,
+                    x=selected_variable,
+                    y=prime_label,
+                    color='Compagnie',
+                    barmode='group',
+                    title=f"Primes {selected_prime_type.lower()}s par '{selected_variable}' et Compagnie",
+                    labels={selected_variable: selected_variable, prime_label: 'Prime (€)'}
+                )
+            except Exception as e:
+                return pn.pane.Markdown(f"**Erreur lors de l'analyse des données: {str(e)}**")
+
+        # Personnalisation du graphique
+        fig.update_layout(
+            xaxis_title=selected_variable,
+            yaxis_title='Prime (€)',
+            width=900,
+            height=600,
+            legend_title_text='Compagnie',
+            template='plotly_white',
+            font=dict(color='black')
+        )
+
+        return pn.Column(
+            pn.pane.Plotly(fig),
+            styles={'background': 'white'},
+            css_classes=['custom-panel']
+        )
+
+    return pn.Column(
+        pn.pane.Markdown("## Distribution des Primes par Variables", styles={'color': 'black'}),
+        pn.Row(variable_selector, prime_type_selector, compagnie_selector),
+        update_plot,
+        styles={'background': 'white'},
+        css_classes=['custom-panel']
+    )
+def create_geographical_analysis_tab():
+    """
+    Crée un onglet d'analyse géographique des données d'assurance.
+    
+    Fonctionnalités :
+    1. Sélection interactive :
+       - Variables à analyser
+       - Compagnies d'assurance
+       - Niveau géographique (département)
+       
+    2. Visualisations :
+       - Carte choroplèthe de France
+       - Légende dynamique
+       - Infobulles détaillées
+       
+    3. Types d'analyses :
+       - Distribution géographique des primes
+       - Concentration des assurés
+       - Variations territoriales
+    
+    Mise à jour dynamique :
+    - Recalcul automatique lors de changement de sélection
+    - Adaptation de l'échelle de couleurs
+    - Actualisation des statistiques
+    
+    Returns:
+    --------
+    panel.Column
+        Interface interactive d'analyse géographique
+    """
+    df_geo = prepare_geographical_data(df)
+    
+    # Configuration des sélecteurs
+    variables_numeriques = ['Prime', 'Age', 'KmParcours', 'Bonus']
+    variables_categorielles = ['Genre', 'Profession', 'SituationMatrimoniale', 'Marque']
+    variables = variables_numeriques + variables_categorielles
+    
+    variable_selector = pn.widgets.Select(
+        name='Sélectionnez une variable',
+        options=variables,
+        value=variables_numeriques[0]
+    )
+    
+    compagnie_selector = pn.widgets.MultiChoice(
+        name='Sélectionnez la ou les compagnies',
+        options=sorted(df['Compagnie'].unique().tolist()),
+        value=[df['Compagnie'].unique()[0]]
+    )
+    
+    niveau_geo_selector = pn.widgets.RadioButtonGroup(
+        name='Niveau Géographique',
+        options=['Département'],
+        value='Département',
+        button_type='primary'
+    )
+    
+    @pn.depends(variable_selector.param.value, compagnie_selector.param.value, niveau_geo_selector.param.value)
+    def update_map(selected_variable, selected_companies, selected_geo_level):
+        if not selected_companies:
+            return pn.pane.Markdown("**Veuillez sélectionner au moins une compagnie.**")
+        
+        filtered_df = df_geo[df_geo['Compagnie'].isin(selected_companies)]
+        
+        if selected_variable not in filtered_df.columns:
+            return pn.pane.Markdown(f"**La variable '{selected_variable}' n'est pas disponible.**")
+        
+        # Configuration du niveau géographique
+        geo_code = 'Departement_Code'
+        featureidkey = 'properties.code'
+        geojson_data = load_departements_geojson('C:/Users/magueye.gueye/PycharmProjects/Webscraping_AUTO/notebooks/departements.geojson')
+        
+        # Traitement selon le type de variable
+        if selected_variable in variables_numeriques:
+            aggregation = filtered_df.groupby([geo_code, 'Region'])[selected_variable].mean().reset_index()
+            aggregation.rename(columns={selected_variable: 'Moyenne'}, inplace=True)
+            color_continuous_scale = "Viridis"
+            color_label = 'Moyenne'
+            aggregation['Region'] = aggregation['Region'].replace('Inconnu', 'Non spécifié')
+            
+            fig = px.choropleth_mapbox(
+                aggregation,
+                geojson=geojson_data,
+                locations=geo_code,
+                color='Moyenne',
+                featureidkey=featureidkey,
+                color_continuous_scale=color_continuous_scale,
+                mapbox_style="carto-positron",
+                zoom=5.5,
+                center={"lat": 46.2276, "lon": 2.2137},
+                opacity=0.6,
+                labels={'Moyenne': f"Moyenne de {selected_variable}"},
+                hover_data={'Region': True, 'Moyenne': ':.2f'},
+                title=f"Moyenne de '{selected_variable}' par Département"
+            )
+        else:
+            aggregation = filtered_df.groupby([geo_code, 'Region', selected_variable]).size().reset_index(name='Counts')
+            aggregation = aggregation.sort_values('Counts', ascending=False).drop_duplicates([geo_code, 'Region'])
+            aggregation.rename(columns={selected_variable: 'Catégorie Principale', 'Counts': 'Nombre'}, inplace=True)
+            
+            fig = px.choropleth_mapbox(
+                aggregation,
+                geojson=geojson_data,
+                locations=geo_code,
+                color='Nombre',
+                featureidkey=featureidkey,
+                color_continuous_scale="Blues",
+                mapbox_style="carto-positron",
+                zoom=5.5,
+                center={"lat": 46.2276, "lon": 2.2137},
+                opacity=0.6,
+                hover_data={'Region': True, 'Catégorie Principale': True, 'Nombre': True},
+                title=f"Distribution de '{selected_variable}' par Département"
+            )
+        
+        fig.update_layout(
+            margin={"r":0,"t":50,"l":0,"b":0},
+            height=800,
+            width=1200
+        )
+        
+        return pn.pane.Plotly(fig)
+    
+    return pn.Column(
+        pn.Row(variable_selector, compagnie_selector, niveau_geo_selector),
+        update_map
+    )
+
+def create_geographical_tariff_analysis_tab():
+    """
+    Crée un onglet d'analyse géographique des tarifs d'assurance.
+    
+    Visualisations :
+    1. Carte des primes maximales
+    2. Carte des primes minimales
+    3. Carte des primes médianes
+    
+    Fonctionnalités :
+    - Filtrage par niveau de protection
+    - Sélection multiple de compagnies
+    - Échelles de couleur distinctes
+    - Statistiques par département
+    
+    Interactivité :
+    - Zoom sur les régions
+    - Infobulles détaillées
+    - Filtres dynamiques
+    
+    Returns:
+    --------
+    panel.Column
+        Interface avec cartes et contrôles interactifs
+    """
+    df_geo = prepare_geographical_data(df)
+    
+    compagnie_selector = pn.widgets.MultiChoice(
+        name='Sélectionnez la ou les compagnies',
+        options=sorted(df['Compagnie'].unique().tolist()),
+        value=[df['Compagnie'].unique()[0]]
+    )
+    
+    niveau_protection_selector = pn.widgets.Select(
+        name='Sélectionnez le Niveau de Protection',
+        options=sorted(df['NiveauProtection'].unique().tolist()),
+        value=df['NiveauProtection'].unique()[0]
+    )
+    
+    @pn.depends(compagnie_selector.param.value, niveau_protection_selector.param.value)
+    def update_map(selected_companies, selected_niveau_protection):
+        if not selected_companies:
+            return pn.pane.Markdown("**Veuillez sélectionner au moins une compagnie.**")
+        
+        filtered_df = df_geo[
+            df_geo['Compagnie'].isin(selected_companies) & 
+            (df_geo['NiveauProtection'] == selected_niveau_protection)
+        ]
+        
+        # Calcul des statistiques par département
+        stats = filtered_df.groupby(['Departement_Code', 'Region'])['Prime'].agg(
+            ['max', 'min', 'median']
+        ).reset_index()
+        stats.columns = ['Departement_Code', 'Region', 'Prime Maximum', 'Prime Minimum', 'Prime Médiane']
+        
+        geojson_data = load_departements_geojson('C:/Users/magueye.gueye/PycharmProjects/Webscraping_AUTO/notebooks/departements.geojson')
+        
+        # Création des trois cartes choroplèthes
+        maps = []
+        for metric, color_scale in [
+            ('Prime Maximum', 'Viridis'),
+            ('Prime Minimum', 'Blues'),
+            ('Prime Médiane', 'Reds')
+        ]:
+            fig = px.choropleth_mapbox(
+                stats,
+                geojson=geojson_data,
+                locations='Departement_Code',
+                color=metric,
+                featureidkey='properties.code',
+                color_continuous_scale=color_scale,
+                mapbox_style="carto-positron",
+                zoom=5.5,
+                center={"lat": 46.2276, "lon": 2.2137},
+                opacity=0.6,
+                labels={metric: f'{metric} (€)'},
+                hover_data={'Region': True, metric: ':.2f'},
+                title=f"{metric} par Département - {selected_niveau_protection}"
+            )
+            
+            fig.update_layout(
+                height=800,
+                width=1200,
+                margin={"r":0,"t":50,"l":0,"b":0}
+            )
+            
+            maps.append(pn.pane.Plotly(fig))
+        
+        return pn.Column(*maps)
+    
+    return pn.Column(
+        pn.Row(compagnie_selector, niveau_protection_selector),
+        update_map
+    )
+
+def create_competitive_analysis_tab():
+    """
+    Crée l'onglet d'analyse concurrentielle.
+    """
+    age_range = pn.widgets.RangeSlider(
+        name='Plage d\'âge',
+        start=float(df['Age'].min()),
+        end=float(df['Age'].max()),
+        value=(25, 50),
+        step=1
+    )
+    
+    niveau_protection = pn.widgets.MultiChoice(
+        name='Niveau de Protection',
+        options=sorted(df['NiveauProtection'].unique().tolist()),
+        value=[df['NiveauProtection'].unique()[0]]
+    )
+
+    region_selector = pn.widgets.MultiChoice(
+        name='Régions',
+        options=sorted(df['Region'].unique().tolist()),
+        value=[df['Region'].unique()[0]]
+    )
+
+    @pn.depends(age_range.param.value, niveau_protection.param.value, region_selector.param.value)
+    def update_competitive_analysis(age_range, niveaux, regions):
+        # Filtrage des données avec conversion en types numériques
+        mask = (
+            (pd.to_numeric(df['Age'], errors='coerce').between(age_range[0], age_range[1])) &
+            (df['NiveauProtection'].isin(niveaux)) &
+            (df['Region'].isin(regions))
+        )
+        filtered_df = df[mask].copy()
+        filtered_df['Age'] = pd.to_numeric(filtered_df['Age'], errors='coerce')
+        filtered_df['Prime'] = pd.to_numeric(filtered_df['Prime'], errors='coerce')
+        
+        # Supprimer les lignes avec des valeurs manquantes
+        filtered_df = filtered_df.dropna(subset=['Age', 'Prime'])
+
+        # Analyse des parts de marché
+        best_offers = filtered_df.loc[filtered_df.groupby('ID')['Prime'].idxmin()]
+        market_share = best_offers['Compagnie'].value_counts(normalize=True).reset_index()
+        market_share.columns = ['Compagnie', 'Part de Marché Potentielle']
+
+        # Statistiques de prix
+        price_stats = filtered_df.groupby('Compagnie')['Prime'].agg([
+            ('Prime Moyenne', 'mean'),
+            ('Prime Médiane', 'median'),
+            ('Prime Min', 'min'),
+            ('Prime Max', 'max'),
+            ('Écart-type', 'std')
+        ]).round(2)
+
+        # Position concurrentielle
+        median_price = filtered_df['Prime'].median()
+        price_stats['Position vs Marché'] = (
+            (price_stats['Prime Médiane'] - median_price) / median_price * 100
+        ).round(2)
+
+        # Visualisations
+        fig1 = px.pie(
+            market_share,
+            values='Part de Marché Potentielle',
+            names='Compagnie',
+            title='Parts de Marché Potentielles',
+            hole=0.3
+        )
+
+        fig2 = go.Figure()
+        for company in price_stats.index:
+            company_data = filtered_df[filtered_df['Compagnie'] == company]
+            fig2.add_trace(go.Box(
+                y=company_data['Prime'],
+                name=company,
+                boxpoints='outliers'
+            ))
+        fig2.update_layout(
+            title='Distribution des Primes par Compagnie',
+            yaxis_title='Prime (€)',
+            showlegend=True
+        )
+
+        # Graphique de dispersion
+        price_variation = px.scatter(
+            filtered_df,
+            x='Age',
+            y='Prime',
+            color='Compagnie',
+            title='Dispersion des Prix par Âge',
+            labels={'Prime': 'Prime (€)', 'Age': 'Âge'}
+        )
+
+        # Ajout des courbes de tendance
+        for company in filtered_df['Compagnie'].unique():
+            company_data = filtered_df[filtered_df['Compagnie'] == company]
+            if len(company_data) > 2:
+                try:
+                    z = np.polyfit(company_data['Age'], company_data['Prime'], 2)
+                    p = np.poly1d(z)
+                    x_range = np.linspace(
+                        company_data['Age'].min(),
+                        company_data['Age'].max(),
+                        100
+                    )
+                    price_variation.add_scatter(
+                        x=x_range,
+                        y=p(x_range),
+                        name=f'Tendance {company}',
+                        mode='lines',
+                        line=dict(dash='dash'),
+                        showlegend=True
+                    )
+                except:
+                    continue
+
+        # Mise en page
+        for fig in [fig1, fig2, price_variation]:
+            fig.update_layout(
+                template='plotly_white',
+                font=dict(color='black')
+            )
+
+        return pn.Column(
+            pn.Row(pn.pane.Plotly(fig1), pn.pane.Plotly(fig2)),
+            pn.pane.Markdown("### Statistiques Détaillées par Compagnie"),
+            pn.pane.DataFrame(price_stats),
+            pn.pane.Plotly(price_variation),
+            styles={'background': 'white'},
+            css_classes=['custom-panel']
+        )
+
+    return pn.Column(
+        pn.pane.Markdown("## Analyse Concurrentielle", styles={'color': 'black'}),
+        pn.Row(age_range, niveau_protection, region_selector),
+        update_competitive_analysis,
+        styles={'background': 'white'},
+        css_classes=['custom-panel']
+    )
+
+
+def update_simulation(ref_company, shock, segments, niveaux):
+    """
+    Met à jour la simulation en fonction des paramètres sélectionnés.
+    """
+    # Filtrage des données
+    filtered_df = df[df['NiveauProtection'].isin(niveaux)].copy()
+    
+    # Calcul des primes simulées
+    if ref_company == 'Nouvelle compagnie':
+        market_avg = filtered_df.groupby('ID')['Prime'].mean().reset_index()
+        simulated_primes = market_avg['Prime'] * (1 + shock/100)
+        filtered_df['Prime_Simulee'] = filtered_df['ID'].map(
+            dict(zip(market_avg['ID'], simulated_primes))
+        )
+    else:
+        ref_primes = filtered_df[filtered_df['Compagnie'] == ref_company].copy()
+        ref_primes = ref_primes.groupby('ID')['Prime'].mean().reset_index()
+        simulated_primes = ref_primes['Prime'] * (1 + shock/100)
+        filtered_df['Prime_Simulee'] = filtered_df['ID'].map(
+            dict(zip(ref_primes['ID'], simulated_primes))
+        )
+
+    analyses = []
+    for segment in segments:
+        # Préparation du segment
+        if segment == 'Age':
+            filtered_df['Segment'] = pd.cut(
+                filtered_df['Age'].astype(float),
+                bins=[0, 25, 35, 45, 55, 65, 100],
+                labels=['18-25', '26-35', '36-45', '46-55', '56-65', '65+']
+            )
+        else:
+            filtered_df['Segment'] = filtered_df[segment]
+
+        # Analyse des compagnies existantes
+        existing_data = []
+        for company in filtered_df['Compagnie'].unique():
+            company_data = filtered_df[filtered_df['Compagnie'] == company]
+            stats = company_data.groupby('Segment', observed=True)['Prime'].agg([
+                'mean', 'count'
+            ]).reset_index()
+            stats['Compagnie'] = company
+            existing_data.append(stats)
+
+        # Analyse de la simulation
+        sim_data = filtered_df.groupby('Segment', observed=True)['Prime_Simulee'].agg([
+            'mean', 'count'
+        ]).reset_index()
+        sim_data['Compagnie'] = 'Simulation'
+
+        # Combinaison des données
+        all_data = pd.concat([*existing_data, sim_data], ignore_index=True)
+
+        # Création du graphique
+        fig = px.line(
+            all_data,
+            x='Segment',
+            y='mean',
+            color='Compagnie',
+            title=f'Analyse comparative par {segment}',
+            labels={
+                'Segment': segment,
+                'mean': 'Prime moyenne (€)',
+                'Compagnie': 'Assureur'
+            },
+            markers=True
+        )
+
+        # Personnalisation du graphique
+        fig.update_layout(
+            template='plotly_white',
+            showlegend=True,
+            legend_title_text='Assureur',
+            font=dict(color='black'),
+            title_x=0.5,
+            title_font=dict(size=16),
+            xaxis_title=segment,
+            yaxis_title='Prime moyenne (€)'
+        )
+
+        # Calcul des statistiques de marché
+        market_stats = (
+            filtered_df.groupby('ID')
+            .agg({
+                'Prime': 'min',
+                'Prime_Simulee': 'first'
+            })
+            .reset_index()
+        )
+        
+        market_stats['Competitive'] = market_stats['Prime_Simulee'] < market_stats['Prime']
+        part_marche = (market_stats['Competitive'].sum() / len(market_stats)) * 100
+
+        # Calcul des économies moyennes
+        economies = (market_stats['Prime'] - market_stats['Prime_Simulee'])
+        economie_moyenne = economies[market_stats['Competitive']].mean()
+
+        analyses.extend([
+            pn.pane.Markdown(f"### Analyse par {segment}"),
+            pn.pane.Plotly(fig),
+            pn.pane.Markdown(f"""
+            **Analyse du positionnement :**
+            - Part de marché potentielle : {part_marche:.1f}%
+            - Économie moyenne pour les clients : {economie_moyenne:.2f}€
+            """)
+        ])
+
+    return pn.Column(
+        pn.pane.Markdown(f"## Simulation avec choc de {shock:+.0f}%"),
+        *analyses,
+        styles={'background': 'white'},
+        css_classes=['custom-panel']
+    )
+
+def create_tariff_simulation_tab():
+    """
+    Crée l'onglet de simulation tarifaire.
+    """
+    # Widgets pour les paramètres de simulation
+    reference_company = pn.widgets.Select(
+        name='Compagnie de référence',
+        options=['Nouvelle compagnie'] + sorted(df['Compagnie'].unique().tolist())
+    )
+    
+    shock_percentage = pn.widgets.FloatSlider(
+        name='Choc tarifaire (%)',
+        start=-30,
+        end=30,
+        value=0,
+        step=1,
+        format='%d%%'
+    )
+    
+    segment_selector = pn.widgets.MultiChoice(
+        name='Segments à analyser',
+        options=['Age', 'Region', 'NiveauProtection', 'Profession'],
+        value=['Age']
+    )
+    
+    niveau_protection = pn.widgets.MultiChoice(
+        name='Niveau de Protection',
+        options=sorted(df['NiveauProtection'].unique().tolist()),
+        value=[df['NiveauProtection'].unique()[0]]
+    )
+
+    return pn.Column(
+        pn.pane.Markdown("# Simulation de Positionnement Tarifaire"),
+        pn.Row(reference_company, shock_percentage),
+        pn.Row(segment_selector, niveau_protection),
+        pn.bind(update_simulation, reference_company, shock_percentage, segment_selector, niveau_protection),
+        css_classes=['custom-panel']
+    )
+
+# Configuration finale du tableau de bord
+def configure_dashboard():
+    """
+    Configure et initialise le tableau de bord complet.
+    """
+    # Chargement initial des données
+    df = load_data()
+    
+    # Configuration du Tabulator
+    tabulator = pn.widgets.Tabulator(
+        df,
+        pagination='local',
+        page_size=25,
+        sizing_mode='stretch_both',
+        min_height=600,
+        show_index=False,
+        selectable='checkbox',
+        layout='fit_data_fill',
+        theme='default'
+    )
+    
+    # Création du tableau de bord avec tous les onglets
+    dashboard = pn.Tabs(
+    ("Données", tabulator),
+    ("Analyse des Profils et Coûts", create_stats_tab()),
+    ("Analyse Détaillée des Profils", create_profile_statistics_tab()),  # Nouvel onglet
+    ("Distribution des Primes", create_distribution_tab()),
+    ("Distribution des Primes par Variables", create_distribution_by_variables_tab()),
+    ("Visualisation géographique par Compagnie", create_geographical_analysis_tab()),
+    ("Visualisation géographique des tarifs", create_geographical_tariff_analysis_tab()),
+    ("Analyse Concurrentielle", create_competitive_analysis_tab()),
+    ("Simulation Tarifaire", create_tariff_simulation_tab()))
+    
+    return dashboard
+
+# Initialisation et lancement du tableau de bord
+if __name__ == "__main__":
+    dashboard = configure_dashboard()
+    dashboard
+
+
+
+"""
+Instructions d'utilisation:
+-------------------------
+1. Assurez-vous d'avoir toutes les dépendances installées
+2. Placez les fichiers de données aux chemins spécifiés
+3. Exécutez le script
+4. Accédez au tableau de bord via l'interface web générée
+
+Notes:
+-----
+- Le tableau de bord nécessite un accès aux fichiers GeoJSON et CSV des codes postaux
+- Les chemins des fichiers doivent être adaptés à votre environnement local
+- La performance peut varier selon la taille des données d'entrée
+
+Maintenance:
+----------
+- Vérifiez régulièrement les mises à jour des bibliothèques
+- Adaptez les chemins de fichiers selon votre environnement
+- Mettez à jour le dictionnaire des départements si nécessaire
+"""
