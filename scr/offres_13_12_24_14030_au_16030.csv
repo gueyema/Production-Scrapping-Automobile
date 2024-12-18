@@ -1,0 +1,339 @@
+Compagnie,Prime,ID,TypeBesoin,TypeBesoinDetails,AgeCar,OtherDriver,CarteGrise,Genre,DateNaissance,Age,SituationMatrimoniale,Profession,DateObtentionPermis,ConduiteAccompagné,DateNaissanceConjoint,DatePermisConjoint,Enfants_a_charge,Annee_Enfant_1,Annee_Enfant_2,Annee_Enfant_3,DateAchat,DateAchat_Prevue,DateCirculation,ID_vehicule_occasion,Marque_occasion,Modele_occasion,Alimentation_occasion,Carrosserie_occasion,Puissance_occasion,categorie_commerciale_vehicule_occasion,qualification_vehicule_vert_occasion,valeur_a_neuf_vehicule_ocassion,groupe_tarification_vehicule_occasion,classe_tarification_vehicule_occasion,code_type_frequence_bdg_occasion,code_type_cout_bdg_occasion,code_vente_vehicule_occasion,code_type_frequence_rcm_occasion,code_type_frequence_rcc_occasion,code_type_frequence_dta_occasion,code_type_frequence_vol_occasion,Marque_vehicule_neuf,Modele_vehicule_neuf,Alimentation_vehicule_neuf,Carrosserie_vehicule_neuf,Puissance_vehicule_neuf,ID_vehicule_neuf,valeur_a_neuf_vehiculeNeuve,groupe_tarification_vehicule_Neuve,classe_tarification_vehicule_Neuve,puissance_reel_vehicule_Neuve,categorie_commerciale_vehicule_Neuve,code_type_frequence_rcm_Neuve,code_type_frequence_rcc_Neuve,code_type_cout_rcm_Neuve,code_type_frequence_dta_Neuve,qualification_vehicule_vert_Neuve,code_type_frequence_vol_Neuve,code_type_cout_vol_Neuve,code_type_frequence_bdg_Neuve,code_type_cout_bdg_Neuve,code_vente_vehicule_Neuve,ModeFinancement,Usage,KmParcours,CP_Stationnement,Ville_Stationnement,ResidenceType,TypeLocation,CP_Travail,Ville_Travail,nom_departement,code_departement,code_region,Type_Parking,TypeAssure,NbreAnneeAssure,Bonus,NbreAnneePossessionVeh,CtrActuel,AssureurActuel,NiveauProtection,Date_scraping
+"	
+Groupe AXA",994 €,14045,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,25/10/2000,24,Pacsé(e),Sans profession,02/2022,Non,09/10/1963,,Non,non,non,non,03/2021,,12/2005,CI36377,CITROEN,JUMPER,DIES,FGN,7,U2,0,31515,14,D,11,11,99,14,9,7,9,,,,,,,,,,,,,,,,,,,,,,L,3,30000,69110,69202,1,2,89150,89428,Rhône,69,84,C,P,2,0.9,3,A,89,E,13/12/2024
+"	
+MMA",1 776 €,14045,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,25/10/2000,24,Pacsé(e),Sans profession,02/2022,Non,09/10/1963,,Non,non,non,non,03/2021,,12/2005,CI36377,CITROEN,JUMPER,DIES,FGN,7,U2,0,31515,14,D,11,11,99,14,9,7,9,,,,,,,,,,,,,,,,,,,,,,L,3,30000,69110,69202,1,2,89150,89428,Rhône,69,84,C,P,2,0.9,3,A,89,E,13/12/2024
+"	
+MAAF Assurances",1 830 €,14045,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,25/10/2000,24,Pacsé(e),Sans profession,02/2022,Non,09/10/1963,,Non,non,non,non,03/2021,,12/2005,CI36377,CITROEN,JUMPER,DIES,FGN,7,U2,0,31515,14,D,11,11,99,14,9,7,9,,,,,,,,,,,,,,,,,,,,,,L,3,30000,69110,69202,1,2,89150,89428,Rhône,69,84,C,P,2,0.9,3,A,89,E,13/12/2024
+"	
+SOS Malus",2 206 €,14045,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,25/10/2000,24,Pacsé(e),Sans profession,02/2022,Non,09/10/1963,,Non,non,non,non,03/2021,,12/2005,CI36377,CITROEN,JUMPER,DIES,FGN,7,U2,0,31515,14,D,11,11,99,14,9,7,9,,,,,,,,,,,,,,,,,,,,,,L,3,30000,69110,69202,1,2,89150,89428,Rhône,69,84,C,P,2,0.9,3,A,89,E,13/12/2024
+"	
+GMF",2 539 €,14045,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,25/10/2000,24,Pacsé(e),Sans profession,02/2022,Non,09/10/1963,,Non,non,non,non,03/2021,,12/2005,CI36377,CITROEN,JUMPER,DIES,FGN,7,U2,0,31515,14,D,11,11,99,14,9,7,9,,,,,,,,,,,,,,,,,,,,,,L,3,30000,69110,69202,1,2,89150,89428,Rhône,69,84,C,P,2,0.9,3,A,89,E,13/12/2024
+"	
+Groupe Admiral",3 281 €,14045,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,25/10/2000,24,Pacsé(e),Sans profession,02/2022,Non,09/10/1963,,Non,non,non,non,03/2021,,12/2005,CI36377,CITROEN,JUMPER,DIES,FGN,7,U2,0,31515,14,D,11,11,99,14,9,7,9,,,,,,,,,,,,,,,,,,,,,,L,3,30000,69110,69202,1,2,89150,89428,Rhône,69,84,C,P,2,0.9,3,A,89,E,13/12/2024
+"	
+Abeille Assurances",262 €,14043,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,07/11/1954,70,Marié(e),Commerçant,05/2019,Non,13/06/1971,07/2020,Non,non,non,non,02/2013,,11/2005,AU15421,AUDI,A6,CARB,BER,9,H1,0,37230,13,G,8,12,99,14,6,13,4,,,,,,,,,,,,,,,,,,,,,,D,1,1000,77124,77513,2,1,77230,77420,Seine-et-Marne,77,11,G,P,5,0.76,6,E,60,A,13/12/2024
+"	
+Active Assurances",336 €,14043,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,07/11/1954,70,Marié(e),Commerçant,05/2019,Non,13/06/1971,07/2020,Non,non,non,non,02/2013,,11/2005,AU15421,AUDI,A6,CARB,BER,9,H1,0,37230,13,G,8,12,99,14,6,13,4,,,,,,,,,,,,,,,,,,,,,,D,1,1000,77124,77513,2,1,77230,77420,Seine-et-Marne,77,11,G,P,5,0.76,6,E,60,A,13/12/2024
+"	
+Groupe Admiral",340 €,14043,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,07/11/1954,70,Marié(e),Commerçant,05/2019,Non,13/06/1971,07/2020,Non,non,non,non,02/2013,,11/2005,AU15421,AUDI,A6,CARB,BER,9,H1,0,37230,13,G,8,12,99,14,6,13,4,,,,,,,,,,,,,,,,,,,,,,D,1,1000,77124,77513,2,1,77230,77420,Seine-et-Marne,77,11,G,P,5,0.76,6,E,60,A,13/12/2024
+"	
+MAAF Assurances",412 €,14043,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,07/11/1954,70,Marié(e),Commerçant,05/2019,Non,13/06/1971,07/2020,Non,non,non,non,02/2013,,11/2005,AU15421,AUDI,A6,CARB,BER,9,H1,0,37230,13,G,8,12,99,14,6,13,4,,,,,,,,,,,,,,,,,,,,,,D,1,1000,77124,77513,2,1,77230,77420,Seine-et-Marne,77,11,G,P,5,0.76,6,E,60,A,13/12/2024
+"	
+GMF",482 €,14043,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,07/11/1954,70,Marié(e),Commerçant,05/2019,Non,13/06/1971,07/2020,Non,non,non,non,02/2013,,11/2005,AU15421,AUDI,A6,CARB,BER,9,H1,0,37230,13,G,8,12,99,14,6,13,4,,,,,,,,,,,,,,,,,,,,,,D,1,1000,77124,77513,2,1,77230,77420,Seine-et-Marne,77,11,G,P,5,0.76,6,E,60,A,13/12/2024
+"	
+Groupe Allianz",485 €,14043,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,07/11/1954,70,Marié(e),Commerçant,05/2019,Non,13/06/1971,07/2020,Non,non,non,non,02/2013,,11/2005,AU15421,AUDI,A6,CARB,BER,9,H1,0,37230,13,G,8,12,99,14,6,13,4,,,,,,,,,,,,,,,,,,,,,,D,1,1000,77124,77513,2,1,77230,77420,Seine-et-Marne,77,11,G,P,5,0.76,6,E,60,A,13/12/2024
+"	
+AcommeAssure",511 €,14043,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,07/11/1954,70,Marié(e),Commerçant,05/2019,Non,13/06/1971,07/2020,Non,non,non,non,02/2013,,11/2005,AU15421,AUDI,A6,CARB,BER,9,H1,0,37230,13,G,8,12,99,14,6,13,4,,,,,,,,,,,,,,,,,,,,,,D,1,1000,77124,77513,2,1,77230,77420,Seine-et-Marne,77,11,G,P,5,0.76,6,E,60,A,13/12/2024
+"	
+AMV",646 €,14043,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,07/11/1954,70,Marié(e),Commerçant,05/2019,Non,13/06/1971,07/2020,Non,non,non,non,02/2013,,11/2005,AU15421,AUDI,A6,CARB,BER,9,H1,0,37230,13,G,8,12,99,14,6,13,4,,,,,,,,,,,,,,,,,,,,,,D,1,1000,77124,77513,2,1,77230,77420,Seine-et-Marne,77,11,G,P,5,0.76,6,E,60,A,13/12/2024
+"	
+Groupe AXA",1 101 €,14043,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,07/11/1954,70,Marié(e),Commerçant,05/2019,Non,13/06/1971,07/2020,Non,non,non,non,02/2013,,11/2005,AU15421,AUDI,A6,CARB,BER,9,H1,0,37230,13,G,8,12,99,14,6,13,4,,,,,,,,,,,,,,,,,,,,,,D,1,1000,77124,77513,2,1,77230,77420,Seine-et-Marne,77,11,G,P,5,0.76,6,E,60,A,13/12/2024
+"	
+Groupe AXA",338 €,14046,Vous comptez l'acheter,D'une voiture supplémentaire,Neuve,Non,Vous,Un homme,22/01/1984,40,Pacsé(e),Recherche d'emploi,07/2009,Non,31/01/1952,03/1981,Non,non,non,non,N/A,01/07/2025,03/2000,BM19069,BMW,323,CARB,CAB,11,M2,0,34362,16,G,8,11,99,7,4,12,8,VOLKSWAGEN,MULTIVAN T7,CARB,CBC,11,VW62008,51400,13,J,204,K1,15,5,5,7,0,9,12,9,4,99,D,3,25000,54450,54271,1,2,51300,51433,Meurthe-et-Moselle,54,44,C,P,15,20,0,E,37,C,13/12/2024
+"	
+Groupe Admiral",501 €,14046,Vous comptez l'acheter,D'une voiture supplémentaire,Neuve,Non,Vous,Un homme,22/01/1984,40,Pacsé(e),Recherche d'emploi,07/2009,Non,31/01/1952,03/1981,Non,non,non,non,N/A,01/07/2025,03/2000,BM19069,BMW,323,CARB,CAB,11,M2,0,34362,16,G,8,11,99,7,4,12,8,VOLKSWAGEN,MULTIVAN T7,CARB,CBC,11,VW62008,51400,13,J,204,K1,15,5,5,7,0,9,12,9,4,99,D,3,25000,54450,54271,1,2,51300,51433,Meurthe-et-Moselle,54,44,C,P,15,20,0,E,37,C,13/12/2024
+"	
+Active Assurances",506 €,14046,Vous comptez l'acheter,D'une voiture supplémentaire,Neuve,Non,Vous,Un homme,22/01/1984,40,Pacsé(e),Recherche d'emploi,07/2009,Non,31/01/1952,03/1981,Non,non,non,non,N/A,01/07/2025,03/2000,BM19069,BMW,323,CARB,CAB,11,M2,0,34362,16,G,8,11,99,7,4,12,8,VOLKSWAGEN,MULTIVAN T7,CARB,CBC,11,VW62008,51400,13,J,204,K1,15,5,5,7,0,9,12,9,4,99,D,3,25000,54450,54271,1,2,51300,51433,Meurthe-et-Moselle,54,44,C,P,15,20,0,E,37,C,13/12/2024
+"	
+MAAF Assurances",516 €,14046,Vous comptez l'acheter,D'une voiture supplémentaire,Neuve,Non,Vous,Un homme,22/01/1984,40,Pacsé(e),Recherche d'emploi,07/2009,Non,31/01/1952,03/1981,Non,non,non,non,N/A,01/07/2025,03/2000,BM19069,BMW,323,CARB,CAB,11,M2,0,34362,16,G,8,11,99,7,4,12,8,VOLKSWAGEN,MULTIVAN T7,CARB,CBC,11,VW62008,51400,13,J,204,K1,15,5,5,7,0,9,12,9,4,99,D,3,25000,54450,54271,1,2,51300,51433,Meurthe-et-Moselle,54,44,C,P,15,20,0,E,37,C,13/12/2024
+"	
+GMF",719 €,14046,Vous comptez l'acheter,D'une voiture supplémentaire,Neuve,Non,Vous,Un homme,22/01/1984,40,Pacsé(e),Recherche d'emploi,07/2009,Non,31/01/1952,03/1981,Non,non,non,non,N/A,01/07/2025,03/2000,BM19069,BMW,323,CARB,CAB,11,M2,0,34362,16,G,8,11,99,7,4,12,8,VOLKSWAGEN,MULTIVAN T7,CARB,CBC,11,VW62008,51400,13,J,204,K1,15,5,5,7,0,9,12,9,4,99,D,3,25000,54450,54271,1,2,51300,51433,Meurthe-et-Moselle,54,44,C,P,15,20,0,E,37,C,13/12/2024
+"	
+Groupe Allianz",799 €,14046,Vous comptez l'acheter,D'une voiture supplémentaire,Neuve,Non,Vous,Un homme,22/01/1984,40,Pacsé(e),Recherche d'emploi,07/2009,Non,31/01/1952,03/1981,Non,non,non,non,N/A,01/07/2025,03/2000,BM19069,BMW,323,CARB,CAB,11,M2,0,34362,16,G,8,11,99,7,4,12,8,VOLKSWAGEN,MULTIVAN T7,CARB,CBC,11,VW62008,51400,13,J,204,K1,15,5,5,7,0,9,12,9,4,99,D,3,25000,54450,54271,1,2,51300,51433,Meurthe-et-Moselle,54,44,C,P,15,20,0,E,37,C,13/12/2024
+"	
+Groupe Vilavi",831 €,14046,Vous comptez l'acheter,D'une voiture supplémentaire,Neuve,Non,Vous,Un homme,22/01/1984,40,Pacsé(e),Recherche d'emploi,07/2009,Non,31/01/1952,03/1981,Non,non,non,non,N/A,01/07/2025,03/2000,BM19069,BMW,323,CARB,CAB,11,M2,0,34362,16,G,8,11,99,7,4,12,8,VOLKSWAGEN,MULTIVAN T7,CARB,CBC,11,VW62008,51400,13,J,204,K1,15,5,5,7,0,9,12,9,4,99,D,3,25000,54450,54271,1,2,51300,51433,Meurthe-et-Moselle,54,44,C,P,15,20,0,E,37,C,13/12/2024
+"	
+Groupe Vilavi",872 €,14046,Vous comptez l'acheter,D'une voiture supplémentaire,Neuve,Non,Vous,Un homme,22/01/1984,40,Pacsé(e),Recherche d'emploi,07/2009,Non,31/01/1952,03/1981,Non,non,non,non,N/A,01/07/2025,03/2000,BM19069,BMW,323,CARB,CAB,11,M2,0,34362,16,G,8,11,99,7,4,12,8,VOLKSWAGEN,MULTIVAN T7,CARB,CBC,11,VW62008,51400,13,J,204,K1,15,5,5,7,0,9,12,9,4,99,D,3,25000,54450,54271,1,2,51300,51433,Meurthe-et-Moselle,54,44,C,P,15,20,0,E,37,C,13/12/2024
+"	
+AMV",1 136 €,14046,Vous comptez l'acheter,D'une voiture supplémentaire,Neuve,Non,Vous,Un homme,22/01/1984,40,Pacsé(e),Recherche d'emploi,07/2009,Non,31/01/1952,03/1981,Non,non,non,non,N/A,01/07/2025,03/2000,BM19069,BMW,323,CARB,CAB,11,M2,0,34362,16,G,8,11,99,7,4,12,8,VOLKSWAGEN,MULTIVAN T7,CARB,CBC,11,VW62008,51400,13,J,204,K1,15,5,5,7,0,9,12,9,4,99,D,3,25000,54450,54271,1,2,51300,51433,Meurthe-et-Moselle,54,44,C,P,15,20,0,E,37,C,13/12/2024
+"	
+Groupe AXA",390 €,14044,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,17/04/1991,33,Marié(e),Etudiant,03/2019,Oui,27/12/1941,10/2020,Non,non,non,non,01/2011,,03/2000,VW30027,VOLKSWAGEN,BORA,CARB,BRK,12,M1,0,24986,15,E,8,7,99,5,5,9,6,,,,,,,,,,,,,,,,,,,,,,D,3,20000,02870,02132,2,1,09350,09105,Aisne,02,32,C,P,5,0.76,6,A,60,E,13/12/2024
+"	
+Abeille Assurances",471 €,14044,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,17/04/1991,33,Marié(e),Etudiant,03/2019,Oui,27/12/1941,10/2020,Non,non,non,non,01/2011,,03/2000,VW30027,VOLKSWAGEN,BORA,CARB,BRK,12,M1,0,24986,15,E,8,7,99,5,5,9,6,,,,,,,,,,,,,,,,,,,,,,D,3,20000,02870,02132,2,1,09350,09105,Aisne,02,32,C,P,5,0.76,6,A,60,E,13/12/2024
+"	
+MMA",522 €,14044,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,17/04/1991,33,Marié(e),Etudiant,03/2019,Oui,27/12/1941,10/2020,Non,non,non,non,01/2011,,03/2000,VW30027,VOLKSWAGEN,BORA,CARB,BRK,12,M1,0,24986,15,E,8,7,99,5,5,9,6,,,,,,,,,,,,,,,,,,,,,,D,3,20000,02870,02132,2,1,09350,09105,Aisne,02,32,C,P,5,0.76,6,A,60,E,13/12/2024
+"	
+MAAF Assurances",776 €,14044,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,17/04/1991,33,Marié(e),Etudiant,03/2019,Oui,27/12/1941,10/2020,Non,non,non,non,01/2011,,03/2000,VW30027,VOLKSWAGEN,BORA,CARB,BRK,12,M1,0,24986,15,E,8,7,99,5,5,9,6,,,,,,,,,,,,,,,,,,,,,,D,3,20000,02870,02132,2,1,09350,09105,Aisne,02,32,C,P,5,0.76,6,A,60,E,13/12/2024
+"	
+Groupe Admiral",901 €,14044,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,17/04/1991,33,Marié(e),Etudiant,03/2019,Oui,27/12/1941,10/2020,Non,non,non,non,01/2011,,03/2000,VW30027,VOLKSWAGEN,BORA,CARB,BRK,12,M1,0,24986,15,E,8,7,99,5,5,9,6,,,,,,,,,,,,,,,,,,,,,,D,3,20000,02870,02132,2,1,09350,09105,Aisne,02,32,C,P,5,0.76,6,A,60,E,13/12/2024
+"	
+Active Assurances",1 052 €,14044,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,17/04/1991,33,Marié(e),Etudiant,03/2019,Oui,27/12/1941,10/2020,Non,non,non,non,01/2011,,03/2000,VW30027,VOLKSWAGEN,BORA,CARB,BRK,12,M1,0,24986,15,E,8,7,99,5,5,9,6,,,,,,,,,,,,,,,,,,,,,,D,3,20000,02870,02132,2,1,09350,09105,Aisne,02,32,C,P,5,0.76,6,A,60,E,13/12/2024
+"	
+Groupe Allianz",1 107 €,14044,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,17/04/1991,33,Marié(e),Etudiant,03/2019,Oui,27/12/1941,10/2020,Non,non,non,non,01/2011,,03/2000,VW30027,VOLKSWAGEN,BORA,CARB,BRK,12,M1,0,24986,15,E,8,7,99,5,5,9,6,,,,,,,,,,,,,,,,,,,,,,D,3,20000,02870,02132,2,1,09350,09105,Aisne,02,32,C,P,5,0.76,6,A,60,E,13/12/2024
+"	
+GMF",1 752 €,14044,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,17/04/1991,33,Marié(e),Etudiant,03/2019,Oui,27/12/1941,10/2020,Non,non,non,non,01/2011,,03/2000,VW30027,VOLKSWAGEN,BORA,CARB,BRK,12,M1,0,24986,15,E,8,7,99,5,5,9,6,,,,,,,,,,,,,,,,,,,,,,D,3,20000,02870,02132,2,1,09350,09105,Aisne,02,32,C,P,5,0.76,6,A,60,E,13/12/2024
+"	
+Groupe AXA",244 €,14055,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,20/10/1977,47,Séparé(e),Salarié,07/2011,Non,,,Non,non,non,non,11/2016,,03/2010,AU37013,AUDI,A5 SPORTBACK,CARB,BER,13,M2,0,47800,14,H,7,11,98,5,5,12,7,,,,,,,,,,,,,,,,,,,,,,C,1,7000,28480,28219,1,1,36120,36169,Eure-et-Loir,28,24,C,P,13,0.5,6,A,73,D,13/12/2024
+"	
+Abeille Assurances",312 €,14055,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,20/10/1977,47,Séparé(e),Salarié,07/2011,Non,,,Non,non,non,non,11/2016,,03/2010,AU37013,AUDI,A5 SPORTBACK,CARB,BER,13,M2,0,47800,14,H,7,11,98,5,5,12,7,,,,,,,,,,,,,,,,,,,,,,C,1,7000,28480,28219,1,1,36120,36169,Eure-et-Loir,28,24,C,P,13,0.5,6,A,73,D,13/12/2024
+"	
+Groupe Admiral",380 €,14055,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,20/10/1977,47,Séparé(e),Salarié,07/2011,Non,,,Non,non,non,non,11/2016,,03/2010,AU37013,AUDI,A5 SPORTBACK,CARB,BER,13,M2,0,47800,14,H,7,11,98,5,5,12,7,,,,,,,,,,,,,,,,,,,,,,C,1,7000,28480,28219,1,1,36120,36169,Eure-et-Loir,28,24,C,P,13,0.5,6,A,73,D,13/12/2024
+"	
+MAAF Assurances",388 €,14055,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,20/10/1977,47,Séparé(e),Salarié,07/2011,Non,,,Non,non,non,non,11/2016,,03/2010,AU37013,AUDI,A5 SPORTBACK,CARB,BER,13,M2,0,47800,14,H,7,11,98,5,5,12,7,,,,,,,,,,,,,,,,,,,,,,C,1,7000,28480,28219,1,1,36120,36169,Eure-et-Loir,28,24,C,P,13,0.5,6,A,73,D,13/12/2024
+"	
+Active Assurances",429 €,14055,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,20/10/1977,47,Séparé(e),Salarié,07/2011,Non,,,Non,non,non,non,11/2016,,03/2010,AU37013,AUDI,A5 SPORTBACK,CARB,BER,13,M2,0,47800,14,H,7,11,98,5,5,12,7,,,,,,,,,,,,,,,,,,,,,,C,1,7000,28480,28219,1,1,36120,36169,Eure-et-Loir,28,24,C,P,13,0.5,6,A,73,D,13/12/2024
+"	
+AcommeAssure",492 €,14055,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,20/10/1977,47,Séparé(e),Salarié,07/2011,Non,,,Non,non,non,non,11/2016,,03/2010,AU37013,AUDI,A5 SPORTBACK,CARB,BER,13,M2,0,47800,14,H,7,11,98,5,5,12,7,,,,,,,,,,,,,,,,,,,,,,C,1,7000,28480,28219,1,1,36120,36169,Eure-et-Loir,28,24,C,P,13,0.5,6,A,73,D,13/12/2024
+"	
+Groupe Allianz",492 €,14055,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,20/10/1977,47,Séparé(e),Salarié,07/2011,Non,,,Non,non,non,non,11/2016,,03/2010,AU37013,AUDI,A5 SPORTBACK,CARB,BER,13,M2,0,47800,14,H,7,11,98,5,5,12,7,,,,,,,,,,,,,,,,,,,,,,C,1,7000,28480,28219,1,1,36120,36169,Eure-et-Loir,28,24,C,P,13,0.5,6,A,73,D,13/12/2024
+"	
+GMF",520 €,14055,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,20/10/1977,47,Séparé(e),Salarié,07/2011,Non,,,Non,non,non,non,11/2016,,03/2010,AU37013,AUDI,A5 SPORTBACK,CARB,BER,13,M2,0,47800,14,H,7,11,98,5,5,12,7,,,,,,,,,,,,,,,,,,,,,,C,1,7000,28480,28219,1,1,36120,36169,Eure-et-Loir,28,24,C,P,13,0.5,6,A,73,D,13/12/2024
+"	
+Groupe Vilavi",646 €,14055,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,20/10/1977,47,Séparé(e),Salarié,07/2011,Non,,,Non,non,non,non,11/2016,,03/2010,AU37013,AUDI,A5 SPORTBACK,CARB,BER,13,M2,0,47800,14,H,7,11,98,5,5,12,7,,,,,,,,,,,,,,,,,,,,,,C,1,7000,28480,28219,1,1,36120,36169,Eure-et-Loir,28,24,C,P,13,0.5,6,A,73,D,13/12/2024
+"	
+Groupe Vilavi",685 €,14055,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,20/10/1977,47,Séparé(e),Salarié,07/2011,Non,,,Non,non,non,non,11/2016,,03/2010,AU37013,AUDI,A5 SPORTBACK,CARB,BER,13,M2,0,47800,14,H,7,11,98,5,5,12,7,,,,,,,,,,,,,,,,,,,,,,C,1,7000,28480,28219,1,1,36120,36169,Eure-et-Loir,28,24,C,P,13,0.5,6,A,73,D,13/12/2024
+"	
+AMV",815 €,14055,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,20/10/1977,47,Séparé(e),Salarié,07/2011,Non,,,Non,non,non,non,11/2016,,03/2010,AU37013,AUDI,A5 SPORTBACK,CARB,BER,13,M2,0,47800,14,H,7,11,98,5,5,12,7,,,,,,,,,,,,,,,,,,,,,,C,1,7000,28480,28219,1,1,36120,36169,Eure-et-Loir,28,24,C,P,13,0.5,6,A,73,D,13/12/2024
+"	
+MAAF Assurances",113 €,14056,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,28/05/1977,47,Marié(e),Etudiant,11/2009,Non,25/06/1966,,Non,non,non,non,02/2023,,02/2022,TL04003,TESLA,MODEL Y,ELEC,VTC,6,H,1,49990,16,H,7,13,99,12,3,7,6,,,,,,,,,,,,,,,,,,,,,,C,1,10000,55200,55212,1,1,55700,55250,Meuse,55,44,C,P,15,20,1,A,79,A,13/12/2024
+"	
+Abeille Assurances",219 €,14056,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,28/05/1977,47,Marié(e),Etudiant,11/2009,Non,25/06/1966,,Non,non,non,non,02/2023,,02/2022,TL04003,TESLA,MODEL Y,ELEC,VTC,6,H,1,49990,16,H,7,13,99,12,3,7,6,,,,,,,,,,,,,,,,,,,,,,C,1,10000,55200,55212,1,1,55700,55250,Meuse,55,44,C,P,15,20,1,A,79,A,13/12/2024
+"	
+MMA",236 €,14056,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,28/05/1977,47,Marié(e),Etudiant,11/2009,Non,25/06/1966,,Non,non,non,non,02/2023,,02/2022,TL04003,TESLA,MODEL Y,ELEC,VTC,6,H,1,49990,16,H,7,13,99,12,3,7,6,,,,,,,,,,,,,,,,,,,,,,C,1,10000,55200,55212,1,1,55700,55250,Meuse,55,44,C,P,15,20,1,A,79,A,13/12/2024
+"	
+Active Assurances",273 €,14056,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,28/05/1977,47,Marié(e),Etudiant,11/2009,Non,25/06/1966,,Non,non,non,non,02/2023,,02/2022,TL04003,TESLA,MODEL Y,ELEC,VTC,6,H,1,49990,16,H,7,13,99,12,3,7,6,,,,,,,,,,,,,,,,,,,,,,C,1,10000,55200,55212,1,1,55700,55250,Meuse,55,44,C,P,15,20,1,A,79,A,13/12/2024
+"	
+GMF",277 €,14056,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,28/05/1977,47,Marié(e),Etudiant,11/2009,Non,25/06/1966,,Non,non,non,non,02/2023,,02/2022,TL04003,TESLA,MODEL Y,ELEC,VTC,6,H,1,49990,16,H,7,13,99,12,3,7,6,,,,,,,,,,,,,,,,,,,,,,C,1,10000,55200,55212,1,1,55700,55250,Meuse,55,44,C,P,15,20,1,A,79,A,13/12/2024
+"	
+Groupe Vilavi",342 €,14056,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,28/05/1977,47,Marié(e),Etudiant,11/2009,Non,25/06/1966,,Non,non,non,non,02/2023,,02/2022,TL04003,TESLA,MODEL Y,ELEC,VTC,6,H,1,49990,16,H,7,13,99,12,3,7,6,,,,,,,,,,,,,,,,,,,,,,C,1,10000,55200,55212,1,1,55700,55250,Meuse,55,44,C,P,15,20,1,A,79,A,13/12/2024
+"	
+Groupe Vilavi",383 €,14056,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,28/05/1977,47,Marié(e),Etudiant,11/2009,Non,25/06/1966,,Non,non,non,non,02/2023,,02/2022,TL04003,TESLA,MODEL Y,ELEC,VTC,6,H,1,49990,16,H,7,13,99,12,3,7,6,,,,,,,,,,,,,,,,,,,,,,C,1,10000,55200,55212,1,1,55700,55250,Meuse,55,44,C,P,15,20,1,A,79,A,13/12/2024
+"	
+Groupe Allianz",389 €,14056,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,28/05/1977,47,Marié(e),Etudiant,11/2009,Non,25/06/1966,,Non,non,non,non,02/2023,,02/2022,TL04003,TESLA,MODEL Y,ELEC,VTC,6,H,1,49990,16,H,7,13,99,12,3,7,6,,,,,,,,,,,,,,,,,,,,,,C,1,10000,55200,55212,1,1,55700,55250,Meuse,55,44,C,P,15,20,1,A,79,A,13/12/2024
+"	
+Groupe AXA",412 €,14056,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,28/05/1977,47,Marié(e),Etudiant,11/2009,Non,25/06/1966,,Non,non,non,non,02/2023,,02/2022,TL04003,TESLA,MODEL Y,ELEC,VTC,6,H,1,49990,16,H,7,13,99,12,3,7,6,,,,,,,,,,,,,,,,,,,,,,C,1,10000,55200,55212,1,1,55700,55250,Meuse,55,44,C,P,15,20,1,A,79,A,13/12/2024
+"	
+Groupe Admiral",514 €,14056,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,28/05/1977,47,Marié(e),Etudiant,11/2009,Non,25/06/1966,,Non,non,non,non,02/2023,,02/2022,TL04003,TESLA,MODEL Y,ELEC,VTC,6,H,1,49990,16,H,7,13,99,12,3,7,6,,,,,,,,,,,,,,,,,,,,,,C,1,10000,55200,55212,1,1,55700,55250,Meuse,55,44,C,P,15,20,1,A,79,A,13/12/2024
+"	
+Abeille Assurances",187 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+GMF",212 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+AMV",232 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+Groupe Admiral",239 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+Groupe Vilavi",262 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+AcommeAssure",273 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+Groupe AXA",274 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+MMA",278 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+Groupe Vilavi",282 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+Active Assurances",297 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+Groupe Allianz",346 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+MAAF Assurances",350 €,14057,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,05/09/1979,45,Pacsé(e),Chef d'entreprise,10/2001,Non,11/10/1960,04/2012,Non,non,non,non,N/A,15/10/2025,12/2005,CI44048,CITROEN,C8,DIES,MSP,7,H1,0,32950,10,E,9,13,99,13,6,9,2,,,,,,,,,,,,,,,,,,,,,,C,2,25000,86300,86070,1,2,78550,78520,Vienne,86,75,P,P,23,100,0,E,22,A,13/12/2024
+"	
+GMF",6 212 €,14060,Vous comptez l'acheter,D'une voiture en remplacement,Neuve,Non,Vous,Un homme,22/06/2006,18,Concubin(e) / vie maritale,Salarié,11/2024,Oui,08/07/1989,,Non,non,non,non,N/A,17/07/2025,11/2005,AU15560,AUDI,A6,CARB,BRK,17,H1,0,56190,16,J,8,12,99,5,4,11,7,BMW,SERIE 2,DIES,CPE,6,BM73715,33850,12,E,116,M1,10,10,10,14,0,5,12,11,13,99,T,3,25000,77370,77481,2,1,80150,80599,Seine-et-Marne,77,11,V,P,0,1,0,A,4,E,13/12/2024
+"	
+Assurpeople.com",7 664 €,14060,Vous comptez l'acheter,D'une voiture en remplacement,Neuve,Non,Vous,Un homme,22/06/2006,18,Concubin(e) / vie maritale,Salarié,11/2024,Oui,08/07/1989,,Non,non,non,non,N/A,17/07/2025,11/2005,AU15560,AUDI,A6,CARB,BRK,17,H1,0,56190,16,J,8,12,99,5,4,11,7,BMW,SERIE 2,DIES,CPE,6,BM73715,33850,12,E,116,M1,10,10,10,14,0,5,12,11,13,99,T,3,25000,77370,77481,2,1,80150,80599,Seine-et-Marne,77,11,V,P,0,1,0,A,4,E,13/12/2024
+"	
+Active Assurances",688 €,14065,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,31/03/2003,21,Concubin(e) / vie maritale,Salarié Cadre,12/2022,Non,13/09/1985,,Non,non,non,non,05/2024,,02/2022,RE0D001,RENAULT,EXPRESS II,CARB,FTE,8,M1,0,21000,11,C,6,9,99,4,4,4,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,72550,72045,2,1,73640,73323,Sarthe,72,52,C,S,2,0.9,0,E,49,C,13/12/2024
+"	
+MAAF Assurances",698 €,14065,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,31/03/2003,21,Concubin(e) / vie maritale,Salarié Cadre,12/2022,Non,13/09/1985,,Non,non,non,non,05/2024,,02/2022,RE0D001,RENAULT,EXPRESS II,CARB,FTE,8,M1,0,21000,11,C,6,9,99,4,4,4,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,72550,72045,2,1,73640,73323,Sarthe,72,52,C,S,2,0.9,0,E,49,C,13/12/2024
+"	
+AcommeAssure",734 €,14065,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,31/03/2003,21,Concubin(e) / vie maritale,Salarié Cadre,12/2022,Non,13/09/1985,,Non,non,non,non,05/2024,,02/2022,RE0D001,RENAULT,EXPRESS II,CARB,FTE,8,M1,0,21000,11,C,6,9,99,4,4,4,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,72550,72045,2,1,73640,73323,Sarthe,72,52,C,S,2,0.9,0,E,49,C,13/12/2024
+"	
+GMF",806 €,14065,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,31/03/2003,21,Concubin(e) / vie maritale,Salarié Cadre,12/2022,Non,13/09/1985,,Non,non,non,non,05/2024,,02/2022,RE0D001,RENAULT,EXPRESS II,CARB,FTE,8,M1,0,21000,11,C,6,9,99,4,4,4,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,72550,72045,2,1,73640,73323,Sarthe,72,52,C,S,2,0.9,0,E,49,C,13/12/2024
+"	
+Groupe Admiral",912 €,14065,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,31/03/2003,21,Concubin(e) / vie maritale,Salarié Cadre,12/2022,Non,13/09/1985,,Non,non,non,non,05/2024,,02/2022,RE0D001,RENAULT,EXPRESS II,CARB,FTE,8,M1,0,21000,11,C,6,9,99,4,4,4,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,72550,72045,2,1,73640,73323,Sarthe,72,52,C,S,2,0.9,0,E,49,C,13/12/2024
+"	
+MMA",933 €,14065,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,31/03/2003,21,Concubin(e) / vie maritale,Salarié Cadre,12/2022,Non,13/09/1985,,Non,non,non,non,05/2024,,02/2022,RE0D001,RENAULT,EXPRESS II,CARB,FTE,8,M1,0,21000,11,C,6,9,99,4,4,4,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,72550,72045,2,1,73640,73323,Sarthe,72,52,C,S,2,0.9,0,E,49,C,13/12/2024
+"	
+Groupe AXA",1 218 €,14065,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,31/03/2003,21,Concubin(e) / vie maritale,Salarié Cadre,12/2022,Non,13/09/1985,,Non,non,non,non,05/2024,,02/2022,RE0D001,RENAULT,EXPRESS II,CARB,FTE,8,M1,0,21000,11,C,6,9,99,4,4,4,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,72550,72045,2,1,73640,73323,Sarthe,72,52,C,S,2,0.9,0,E,49,C,13/12/2024
+"	
+Groupe AXA",1 582 €,14074,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/12/2005,19,Séparé(e),Salarié,02/2024,Non,,,Non,non,non,non,10/2007,,12/2005,FI28265,FIAT,DUCATO,DIES,FGN,8,U2,0,25295,12,C,11,11,99,15,9,7,8,,,,,,,,,,,,,,,,,,,,,,L,3,25000,48800,48135,1,2,34650,34121,Lozère,48,76,P,P,0,1,6,E,76,A,13/12/2024
+"	
+Groupe Admiral",2 097 €,14074,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/12/2005,19,Séparé(e),Salarié,02/2024,Non,,,Non,non,non,non,10/2007,,12/2005,FI28265,FIAT,DUCATO,DIES,FGN,8,U2,0,25295,12,C,11,11,99,15,9,7,8,,,,,,,,,,,,,,,,,,,,,,L,3,25000,48800,48135,1,2,34650,34121,Lozère,48,76,P,P,0,1,6,E,76,A,13/12/2024
+"	
+GMF",2 694 €,14074,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/12/2005,19,Séparé(e),Salarié,02/2024,Non,,,Non,non,non,non,10/2007,,12/2005,FI28265,FIAT,DUCATO,DIES,FGN,8,U2,0,25295,12,C,11,11,99,15,9,7,8,,,,,,,,,,,,,,,,,,,,,,L,3,25000,48800,48135,1,2,34650,34121,Lozère,48,76,P,P,0,1,6,E,76,A,13/12/2024
+"	
+Active Assurances",892 €,14082,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Une femme,12/12/2000,24,Célibataire,Salarié Cadre,11/2024,Oui,,,Non,non,non,non,N/A,25/12/2024,07/2005,RE69043,RENAULT,GRAND SCENIC,CARB,MSP,9,M1,0,25050,11,4,6,9,99,5,4,7,4,FORD,TRANSIT COURIER,DIES,FGN,6,FO43014,19308,9,B,75,K1,12,9,2,7,1,3,3,9,6,99,C,2,20000,88410,88096,1,1,72550,72113,Vosges,88,44,P,P,0,1,0,E,81,C,13/12/2024
+"	
+Groupe Vilavi",899 €,14082,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Une femme,12/12/2000,24,Célibataire,Salarié Cadre,11/2024,Oui,,,Non,non,non,non,N/A,25/12/2024,07/2005,RE69043,RENAULT,GRAND SCENIC,CARB,MSP,9,M1,0,25050,11,4,6,9,99,5,4,7,4,FORD,TRANSIT COURIER,DIES,FGN,6,FO43014,19308,9,B,75,K1,12,9,2,7,1,3,3,9,6,99,C,2,20000,88410,88096,1,1,72550,72113,Vosges,88,44,P,P,0,1,0,E,81,C,13/12/2024
+"	
+Groupe Vilavi",926 €,14082,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Une femme,12/12/2000,24,Célibataire,Salarié Cadre,11/2024,Oui,,,Non,non,non,non,N/A,25/12/2024,07/2005,RE69043,RENAULT,GRAND SCENIC,CARB,MSP,9,M1,0,25050,11,4,6,9,99,5,4,7,4,FORD,TRANSIT COURIER,DIES,FGN,6,FO43014,19308,9,B,75,K1,12,9,2,7,1,3,3,9,6,99,C,2,20000,88410,88096,1,1,72550,72113,Vosges,88,44,P,P,0,1,0,E,81,C,13/12/2024
+"	
+Groupe Admiral",987 €,14082,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Une femme,12/12/2000,24,Célibataire,Salarié Cadre,11/2024,Oui,,,Non,non,non,non,N/A,25/12/2024,07/2005,RE69043,RENAULT,GRAND SCENIC,CARB,MSP,9,M1,0,25050,11,4,6,9,99,5,4,7,4,FORD,TRANSIT COURIER,DIES,FGN,6,FO43014,19308,9,B,75,K1,12,9,2,7,1,3,3,9,6,99,C,2,20000,88410,88096,1,1,72550,72113,Vosges,88,44,P,P,0,1,0,E,81,C,13/12/2024
+"	
+Groupe AXA",1 264 €,14082,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Une femme,12/12/2000,24,Célibataire,Salarié Cadre,11/2024,Oui,,,Non,non,non,non,N/A,25/12/2024,07/2005,RE69043,RENAULT,GRAND SCENIC,CARB,MSP,9,M1,0,25050,11,4,6,9,99,5,4,7,4,FORD,TRANSIT COURIER,DIES,FGN,6,FO43014,19308,9,B,75,K1,12,9,2,7,1,3,3,9,6,99,C,2,20000,88410,88096,1,1,72550,72113,Vosges,88,44,P,P,0,1,0,E,81,C,13/12/2024
+"	
+AcommeAssure",1 441 €,14082,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Une femme,12/12/2000,24,Célibataire,Salarié Cadre,11/2024,Oui,,,Non,non,non,non,N/A,25/12/2024,07/2005,RE69043,RENAULT,GRAND SCENIC,CARB,MSP,9,M1,0,25050,11,4,6,9,99,5,4,7,4,FORD,TRANSIT COURIER,DIES,FGN,6,FO43014,19308,9,B,75,K1,12,9,2,7,1,3,3,9,6,99,C,2,20000,88410,88096,1,1,72550,72113,Vosges,88,44,P,P,0,1,0,E,81,C,13/12/2024
+"	
+GMF",1 814 €,14082,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Une femme,12/12/2000,24,Célibataire,Salarié Cadre,11/2024,Oui,,,Non,non,non,non,N/A,25/12/2024,07/2005,RE69043,RENAULT,GRAND SCENIC,CARB,MSP,9,M1,0,25050,11,4,6,9,99,5,4,7,4,FORD,TRANSIT COURIER,DIES,FGN,6,FO43014,19308,9,B,75,K1,12,9,2,7,1,3,3,9,6,99,C,2,20000,88410,88096,1,1,72550,72113,Vosges,88,44,P,P,0,1,0,E,81,C,13/12/2024
+"	
+Groupe Admiral",549 €,14086,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,31/03/2006,18,Marié(e),Salarié,05/2024,Oui,18/11/1937,08/1993,Non,non,non,non,01/2012,,12/2005,CI43101,CITROEN,C3,CARB,BER,6,B,0,17350,11,A,6,7,99,10,6,9,4,,,,,,,,,,,,,,,,,,,,,,D,1,5000,60120,60627,2,2,62380,62702,Oise,60,32,G,P,0,1,6,A,82,A,13/12/2024
+"	
+Assurpeople.com",881 €,14086,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,31/03/2006,18,Marié(e),Salarié,05/2024,Oui,18/11/1937,08/1993,Non,non,non,non,01/2012,,12/2005,CI43101,CITROEN,C3,CARB,BER,6,B,0,17350,11,A,6,7,99,10,6,9,4,,,,,,,,,,,,,,,,,,,,,,D,1,5000,60120,60627,2,2,62380,62702,Oise,60,32,G,P,0,1,6,A,82,A,13/12/2024
+"	
+Groupe AXA",1 233 €,14086,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,31/03/2006,18,Marié(e),Salarié,05/2024,Oui,18/11/1937,08/1993,Non,non,non,non,01/2012,,12/2005,CI43101,CITROEN,C3,CARB,BER,6,B,0,17350,11,A,6,7,99,10,6,9,4,,,,,,,,,,,,,,,,,,,,,,D,1,5000,60120,60627,2,2,62380,62702,Oise,60,32,G,P,0,1,6,A,82,A,13/12/2024
+"	
+GMF",1 373 €,14086,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,31/03/2006,18,Marié(e),Salarié,05/2024,Oui,18/11/1937,08/1993,Non,non,non,non,01/2012,,12/2005,CI43101,CITROEN,C3,CARB,BER,6,B,0,17350,11,A,6,7,99,10,6,9,4,,,,,,,,,,,,,,,,,,,,,,D,1,5000,60120,60627,2,2,62380,62702,Oise,60,32,G,P,0,1,6,A,82,A,13/12/2024
+"	
+Groupe AXA",327 €,14090,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,11/07/1978,46,Marié(e),Fonctionnaire territorial,02/1998,Non,09/06/1978,,Non,non,non,non,04/2022,,12/2005,FI28215,FIAT,DUCATO,DIES,FGN,9,U2,0,29900,15,D,11,11,99,17,9,7,9,,,,,,,,,,,,,,,,,,,,,,D,3,25000,77480,77187,1,1,85200,85092,Seine-et-Marne,77,11,P,P,26,120,2,E,18,E,13/12/2024
+"	
+MMA",368 €,14090,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,11/07/1978,46,Marié(e),Fonctionnaire territorial,02/1998,Non,09/06/1978,,Non,non,non,non,04/2022,,12/2005,FI28215,FIAT,DUCATO,DIES,FGN,9,U2,0,29900,15,D,11,11,99,17,9,7,9,,,,,,,,,,,,,,,,,,,,,,D,3,25000,77480,77187,1,1,85200,85092,Seine-et-Marne,77,11,P,P,26,120,2,E,18,E,13/12/2024
+"	
+GMF",475 €,14090,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,11/07/1978,46,Marié(e),Fonctionnaire territorial,02/1998,Non,09/06/1978,,Non,non,non,non,04/2022,,12/2005,FI28215,FIAT,DUCATO,DIES,FGN,9,U2,0,29900,15,D,11,11,99,17,9,7,9,,,,,,,,,,,,,,,,,,,,,,D,3,25000,77480,77187,1,1,85200,85092,Seine-et-Marne,77,11,P,P,26,120,2,E,18,E,13/12/2024
+"	
+MAAF Assurances",524 €,14090,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,11/07/1978,46,Marié(e),Fonctionnaire territorial,02/1998,Non,09/06/1978,,Non,non,non,non,04/2022,,12/2005,FI28215,FIAT,DUCATO,DIES,FGN,9,U2,0,29900,15,D,11,11,99,17,9,7,9,,,,,,,,,,,,,,,,,,,,,,D,3,25000,77480,77187,1,1,85200,85092,Seine-et-Marne,77,11,P,P,26,120,2,E,18,E,13/12/2024
+"	
+Groupe Admiral",608 €,14090,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,11/07/1978,46,Marié(e),Fonctionnaire territorial,02/1998,Non,09/06/1978,,Non,non,non,non,04/2022,,12/2005,FI28215,FIAT,DUCATO,DIES,FGN,9,U2,0,29900,15,D,11,11,99,17,9,7,9,,,,,,,,,,,,,,,,,,,,,,D,3,25000,77480,77187,1,1,85200,85092,Seine-et-Marne,77,11,P,P,26,120,2,E,18,E,13/12/2024
+"	
+Groupe Allianz",690 €,14090,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,11/07/1978,46,Marié(e),Fonctionnaire territorial,02/1998,Non,09/06/1978,,Non,non,non,non,04/2022,,12/2005,FI28215,FIAT,DUCATO,DIES,FGN,9,U2,0,29900,15,D,11,11,99,17,9,7,9,,,,,,,,,,,,,,,,,,,,,,D,3,25000,77480,77187,1,1,85200,85092,Seine-et-Marne,77,11,P,P,26,120,2,E,18,E,13/12/2024
+"	
+Active Assurances",720 €,14090,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,11/07/1978,46,Marié(e),Fonctionnaire territorial,02/1998,Non,09/06/1978,,Non,non,non,non,04/2022,,12/2005,FI28215,FIAT,DUCATO,DIES,FGN,9,U2,0,29900,15,D,11,11,99,17,9,7,9,,,,,,,,,,,,,,,,,,,,,,D,3,25000,77480,77187,1,1,85200,85092,Seine-et-Marne,77,11,P,P,26,120,2,E,18,E,13/12/2024
+"	
+Groupe Vilavi",786 €,14090,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,11/07/1978,46,Marié(e),Fonctionnaire territorial,02/1998,Non,09/06/1978,,Non,non,non,non,04/2022,,12/2005,FI28215,FIAT,DUCATO,DIES,FGN,9,U2,0,29900,15,D,11,11,99,17,9,7,9,,,,,,,,,,,,,,,,,,,,,,D,3,25000,77480,77187,1,1,85200,85092,Seine-et-Marne,77,11,P,P,26,120,2,E,18,E,13/12/2024
+"	
+Groupe Vilavi",825 €,14090,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,11/07/1978,46,Marié(e),Fonctionnaire territorial,02/1998,Non,09/06/1978,,Non,non,non,non,04/2022,,12/2005,FI28215,FIAT,DUCATO,DIES,FGN,9,U2,0,29900,15,D,11,11,99,17,9,7,9,,,,,,,,,,,,,,,,,,,,,,D,3,25000,77480,77187,1,1,85200,85092,Seine-et-Marne,77,11,P,P,26,120,2,E,18,E,13/12/2024
+"	
+AMV",992 €,14090,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,11/07/1978,46,Marié(e),Fonctionnaire territorial,02/1998,Non,09/06/1978,,Non,non,non,non,04/2022,,12/2005,FI28215,FIAT,DUCATO,DIES,FGN,9,U2,0,29900,15,D,11,11,99,17,9,7,9,,,,,,,,,,,,,,,,,,,,,,D,3,25000,77480,77187,1,1,85200,85092,Seine-et-Marne,77,11,P,P,26,120,2,E,18,E,13/12/2024
+"	
+Groupe AXA",724 €,14096,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,16/04/1998,26,Concubin(e) / vie maritale,Profession libérale,08/2016,Non,21/12/1995,11/2018,Non,non,non,non,08/2017,,11/2005,BM30002,BMW,630,CARB,CAB,17,H2,0,78700,16,L,9,14,99,4,5,13,8,,,,,,,,,,,,,,,,,,,,,,L,1,1000,74930,74211,2,1,74140,74121,Haute-Savoie,74,84,P,P,8,0.64,6,E,45,E,13/12/2024
+"	
+Groupe Admiral",910 €,14096,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,16/04/1998,26,Concubin(e) / vie maritale,Profession libérale,08/2016,Non,21/12/1995,11/2018,Non,non,non,non,08/2017,,11/2005,BM30002,BMW,630,CARB,CAB,17,H2,0,78700,16,L,9,14,99,4,5,13,8,,,,,,,,,,,,,,,,,,,,,,L,1,1000,74930,74211,2,1,74140,74121,Haute-Savoie,74,84,P,P,8,0.64,6,E,45,E,13/12/2024
+"	
+SOS Malus",1 374 €,14096,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,16/04/1998,26,Concubin(e) / vie maritale,Profession libérale,08/2016,Non,21/12/1995,11/2018,Non,non,non,non,08/2017,,11/2005,BM30002,BMW,630,CARB,CAB,17,H2,0,78700,16,L,9,14,99,4,5,13,8,,,,,,,,,,,,,,,,,,,,,,L,1,1000,74930,74211,2,1,74140,74121,Haute-Savoie,74,84,P,P,8,0.64,6,E,45,E,13/12/2024
+"	
+GMF",247 €,14103,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Un homme,30/03/1976,48,Marié(e),Fonctionnaire territorial,10/2008,Oui,22/05/1951,06/2010,Non,non,non,non,N/A,10/06/2025,11/2019,CI73018,CITROEN,C4 III,ELEC,BER,4,M1,1,38800,12,F,5,11,99,10,7,8,5,FIAT,DUCATO,DIES,FGN,7,FI28AQR,53712,15,J,180,U2,15,9,7,10,0,10,12,11,11,99,C,3,30000,81170,81108,2,2,67450,67256,Tarn,81,76,V,P,16,30,0,A,34,A,13/12/2024
+"	
+MAAF Assurances",288 €,14103,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Un homme,30/03/1976,48,Marié(e),Fonctionnaire territorial,10/2008,Oui,22/05/1951,06/2010,Non,non,non,non,N/A,10/06/2025,11/2019,CI73018,CITROEN,C4 III,ELEC,BER,4,M1,1,38800,12,F,5,11,99,10,7,8,5,FIAT,DUCATO,DIES,FGN,7,FI28AQR,53712,15,J,180,U2,15,9,7,10,0,10,12,11,11,99,C,3,30000,81170,81108,2,2,67450,67256,Tarn,81,76,V,P,16,30,0,A,34,A,13/12/2024
+"	
+Groupe AXA",358 €,14103,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Un homme,30/03/1976,48,Marié(e),Fonctionnaire territorial,10/2008,Oui,22/05/1951,06/2010,Non,non,non,non,N/A,10/06/2025,11/2019,CI73018,CITROEN,C4 III,ELEC,BER,4,M1,1,38800,12,F,5,11,99,10,7,8,5,FIAT,DUCATO,DIES,FGN,7,FI28AQR,53712,15,J,180,U2,15,9,7,10,0,10,12,11,11,99,C,3,30000,81170,81108,2,2,67450,67256,Tarn,81,76,V,P,16,30,0,A,34,A,13/12/2024
+"	
+MMA",363 €,14103,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Un homme,30/03/1976,48,Marié(e),Fonctionnaire territorial,10/2008,Oui,22/05/1951,06/2010,Non,non,non,non,N/A,10/06/2025,11/2019,CI73018,CITROEN,C4 III,ELEC,BER,4,M1,1,38800,12,F,5,11,99,10,7,8,5,FIAT,DUCATO,DIES,FGN,7,FI28AQR,53712,15,J,180,U2,15,9,7,10,0,10,12,11,11,99,C,3,30000,81170,81108,2,2,67450,67256,Tarn,81,76,V,P,16,30,0,A,34,A,13/12/2024
+"	
+Groupe Vilavi",363 €,14103,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Un homme,30/03/1976,48,Marié(e),Fonctionnaire territorial,10/2008,Oui,22/05/1951,06/2010,Non,non,non,non,N/A,10/06/2025,11/2019,CI73018,CITROEN,C4 III,ELEC,BER,4,M1,1,38800,12,F,5,11,99,10,7,8,5,FIAT,DUCATO,DIES,FGN,7,FI28AQR,53712,15,J,180,U2,15,9,7,10,0,10,12,11,11,99,C,3,30000,81170,81108,2,2,67450,67256,Tarn,81,76,V,P,16,30,0,A,34,A,13/12/2024
+"	
+Groupe Vilavi",404 €,14103,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Un homme,30/03/1976,48,Marié(e),Fonctionnaire territorial,10/2008,Oui,22/05/1951,06/2010,Non,non,non,non,N/A,10/06/2025,11/2019,CI73018,CITROEN,C4 III,ELEC,BER,4,M1,1,38800,12,F,5,11,99,10,7,8,5,FIAT,DUCATO,DIES,FGN,7,FI28AQR,53712,15,J,180,U2,15,9,7,10,0,10,12,11,11,99,C,3,30000,81170,81108,2,2,67450,67256,Tarn,81,76,V,P,16,30,0,A,34,A,13/12/2024
+"	
+Groupe Admiral",424 €,14103,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Un homme,30/03/1976,48,Marié(e),Fonctionnaire territorial,10/2008,Oui,22/05/1951,06/2010,Non,non,non,non,N/A,10/06/2025,11/2019,CI73018,CITROEN,C4 III,ELEC,BER,4,M1,1,38800,12,F,5,11,99,10,7,8,5,FIAT,DUCATO,DIES,FGN,7,FI28AQR,53712,15,J,180,U2,15,9,7,10,0,10,12,11,11,99,C,3,30000,81170,81108,2,2,67450,67256,Tarn,81,76,V,P,16,30,0,A,34,A,13/12/2024
+"	
+Groupe Allianz",481 €,14103,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Un homme,30/03/1976,48,Marié(e),Fonctionnaire territorial,10/2008,Oui,22/05/1951,06/2010,Non,non,non,non,N/A,10/06/2025,11/2019,CI73018,CITROEN,C4 III,ELEC,BER,4,M1,1,38800,12,F,5,11,99,10,7,8,5,FIAT,DUCATO,DIES,FGN,7,FI28AQR,53712,15,J,180,U2,15,9,7,10,0,10,12,11,11,99,C,3,30000,81170,81108,2,2,67450,67256,Tarn,81,76,V,P,16,30,0,A,34,A,13/12/2024
+"	
+AMV",521 €,14103,Vous comptez l'acheter,D'une première voiture,Neuve,Non,Vous,Un homme,30/03/1976,48,Marié(e),Fonctionnaire territorial,10/2008,Oui,22/05/1951,06/2010,Non,non,non,non,N/A,10/06/2025,11/2019,CI73018,CITROEN,C4 III,ELEC,BER,4,M1,1,38800,12,F,5,11,99,10,7,8,5,FIAT,DUCATO,DIES,FGN,7,FI28AQR,53712,15,J,180,U2,15,9,7,10,0,10,12,11,11,99,C,3,30000,81170,81108,2,2,67450,67256,Tarn,81,76,V,P,16,30,0,A,34,A,13/12/2024
+"	
+MAAF Assurances",270 €,14104,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,09/07/1990,34,Marié(e),Fonctionnaire hospitalier,05/2010,Oui,07/05/1996,,Non,non,non,non,12/2024,,03/2024,ME74128,MERCEDES,CLASSE A IV,EE,BER,9,B,0,48399,14,H,7,7,99,9,5,11,7,,,,,,,,,,,,,,,,,,,,,,T,1,5000,53200,53101,1,2,50810,50046,Mayenne,53,52,C,P,14,10,0,E,85,C,13/12/2024
+"	
+Groupe AXA",288 €,14104,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,09/07/1990,34,Marié(e),Fonctionnaire hospitalier,05/2010,Oui,07/05/1996,,Non,non,non,non,12/2024,,03/2024,ME74128,MERCEDES,CLASSE A IV,EE,BER,9,B,0,48399,14,H,7,7,99,9,5,11,7,,,,,,,,,,,,,,,,,,,,,,T,1,5000,53200,53101,1,2,50810,50046,Mayenne,53,52,C,P,14,10,0,E,85,C,13/12/2024
+"	
+MMA",318 €,14104,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,09/07/1990,34,Marié(e),Fonctionnaire hospitalier,05/2010,Oui,07/05/1996,,Non,non,non,non,12/2024,,03/2024,ME74128,MERCEDES,CLASSE A IV,EE,BER,9,B,0,48399,14,H,7,7,99,9,5,11,7,,,,,,,,,,,,,,,,,,,,,,T,1,5000,53200,53101,1,2,50810,50046,Mayenne,53,52,C,P,14,10,0,E,85,C,13/12/2024
+"	
+Groupe Admiral",339 €,14104,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,09/07/1990,34,Marié(e),Fonctionnaire hospitalier,05/2010,Oui,07/05/1996,,Non,non,non,non,12/2024,,03/2024,ME74128,MERCEDES,CLASSE A IV,EE,BER,9,B,0,48399,14,H,7,7,99,9,5,11,7,,,,,,,,,,,,,,,,,,,,,,T,1,5000,53200,53101,1,2,50810,50046,Mayenne,53,52,C,P,14,10,0,E,85,C,13/12/2024
+"	
+GMF",361 €,14104,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,09/07/1990,34,Marié(e),Fonctionnaire hospitalier,05/2010,Oui,07/05/1996,,Non,non,non,non,12/2024,,03/2024,ME74128,MERCEDES,CLASSE A IV,EE,BER,9,B,0,48399,14,H,7,7,99,9,5,11,7,,,,,,,,,,,,,,,,,,,,,,T,1,5000,53200,53101,1,2,50810,50046,Mayenne,53,52,C,P,14,10,0,E,85,C,13/12/2024
+"	
+Active Assurances",387 €,14104,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,09/07/1990,34,Marié(e),Fonctionnaire hospitalier,05/2010,Oui,07/05/1996,,Non,non,non,non,12/2024,,03/2024,ME74128,MERCEDES,CLASSE A IV,EE,BER,9,B,0,48399,14,H,7,7,99,9,5,11,7,,,,,,,,,,,,,,,,,,,,,,T,1,5000,53200,53101,1,2,50810,50046,Mayenne,53,52,C,P,14,10,0,E,85,C,13/12/2024
+"	
+Groupe Vilavi",411 €,14104,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,09/07/1990,34,Marié(e),Fonctionnaire hospitalier,05/2010,Oui,07/05/1996,,Non,non,non,non,12/2024,,03/2024,ME74128,MERCEDES,CLASSE A IV,EE,BER,9,B,0,48399,14,H,7,7,99,9,5,11,7,,,,,,,,,,,,,,,,,,,,,,T,1,5000,53200,53101,1,2,50810,50046,Mayenne,53,52,C,P,14,10,0,E,85,C,13/12/2024
+"	
+Groupe Allianz",442 €,14104,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,09/07/1990,34,Marié(e),Fonctionnaire hospitalier,05/2010,Oui,07/05/1996,,Non,non,non,non,12/2024,,03/2024,ME74128,MERCEDES,CLASSE A IV,EE,BER,9,B,0,48399,14,H,7,7,99,9,5,11,7,,,,,,,,,,,,,,,,,,,,,,T,1,5000,53200,53101,1,2,50810,50046,Mayenne,53,52,C,P,14,10,0,E,85,C,13/12/2024
+"	
+Groupe Vilavi",451 €,14104,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,09/07/1990,34,Marié(e),Fonctionnaire hospitalier,05/2010,Oui,07/05/1996,,Non,non,non,non,12/2024,,03/2024,ME74128,MERCEDES,CLASSE A IV,EE,BER,9,B,0,48399,14,H,7,7,99,9,5,11,7,,,,,,,,,,,,,,,,,,,,,,T,1,5000,53200,53101,1,2,50810,50046,Mayenne,53,52,C,P,14,10,0,E,85,C,13/12/2024
+"	
+AMV",896 €,14104,Vous le possédez déjà,N/A,N/A,Non,Vous,Un homme,09/07/1990,34,Marié(e),Fonctionnaire hospitalier,05/2010,Oui,07/05/1996,,Non,non,non,non,12/2024,,03/2024,ME74128,MERCEDES,CLASSE A IV,EE,BER,9,B,0,48399,14,H,7,7,99,9,5,11,7,,,,,,,,,,,,,,,,,,,,,,T,1,5000,53200,53101,1,2,50810,50046,Mayenne,53,52,C,P,14,10,0,E,85,C,13/12/2024
+"	
+MMA",195 €,14107,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1977,47,Séparé(e),Salarié,07/2001,Oui,,,Non,non,non,non,08/2024,,03/2024,CI71163,CITROEN,BERLINGO III,ELEC,LSP,4,M1,1,41700,11,G,3,11,99,3,2,3,2,,,,,,,,,,,,,,,,,,,,,,D,1,5000,63210,63386,1,2,49300,49099,Puy-de-Dôme,63,84,C,P,23,100,0,E,85,D,13/12/2024
+"	
+GMF",250 €,14107,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1977,47,Séparé(e),Salarié,07/2001,Oui,,,Non,non,non,non,08/2024,,03/2024,CI71163,CITROEN,BERLINGO III,ELEC,LSP,4,M1,1,41700,11,G,3,11,99,3,2,3,2,,,,,,,,,,,,,,,,,,,,,,D,1,5000,63210,63386,1,2,49300,49099,Puy-de-Dôme,63,84,C,P,23,100,0,E,85,D,13/12/2024
+"	
+Groupe AXA",255 €,14107,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1977,47,Séparé(e),Salarié,07/2001,Oui,,,Non,non,non,non,08/2024,,03/2024,CI71163,CITROEN,BERLINGO III,ELEC,LSP,4,M1,1,41700,11,G,3,11,99,3,2,3,2,,,,,,,,,,,,,,,,,,,,,,D,1,5000,63210,63386,1,2,49300,49099,Puy-de-Dôme,63,84,C,P,23,100,0,E,85,D,13/12/2024
+"	
+Active Assurances",271 €,14107,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1977,47,Séparé(e),Salarié,07/2001,Oui,,,Non,non,non,non,08/2024,,03/2024,CI71163,CITROEN,BERLINGO III,ELEC,LSP,4,M1,1,41700,11,G,3,11,99,3,2,3,2,,,,,,,,,,,,,,,,,,,,,,D,1,5000,63210,63386,1,2,49300,49099,Puy-de-Dôme,63,84,C,P,23,100,0,E,85,D,13/12/2024
+"	
+MAAF Assurances",282 €,14107,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1977,47,Séparé(e),Salarié,07/2001,Oui,,,Non,non,non,non,08/2024,,03/2024,CI71163,CITROEN,BERLINGO III,ELEC,LSP,4,M1,1,41700,11,G,3,11,99,3,2,3,2,,,,,,,,,,,,,,,,,,,,,,D,1,5000,63210,63386,1,2,49300,49099,Puy-de-Dôme,63,84,C,P,23,100,0,E,85,D,13/12/2024
+"	
+AcommeAssure",329 €,14107,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1977,47,Séparé(e),Salarié,07/2001,Oui,,,Non,non,non,non,08/2024,,03/2024,CI71163,CITROEN,BERLINGO III,ELEC,LSP,4,M1,1,41700,11,G,3,11,99,3,2,3,2,,,,,,,,,,,,,,,,,,,,,,D,1,5000,63210,63386,1,2,49300,49099,Puy-de-Dôme,63,84,C,P,23,100,0,E,85,D,13/12/2024
+"	
+Groupe Admiral",360 €,14107,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1977,47,Séparé(e),Salarié,07/2001,Oui,,,Non,non,non,non,08/2024,,03/2024,CI71163,CITROEN,BERLINGO III,ELEC,LSP,4,M1,1,41700,11,G,3,11,99,3,2,3,2,,,,,,,,,,,,,,,,,,,,,,D,1,5000,63210,63386,1,2,49300,49099,Puy-de-Dôme,63,84,C,P,23,100,0,E,85,D,13/12/2024
+"	
+Groupe Vilavi",390 €,14107,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1977,47,Séparé(e),Salarié,07/2001,Oui,,,Non,non,non,non,08/2024,,03/2024,CI71163,CITROEN,BERLINGO III,ELEC,LSP,4,M1,1,41700,11,G,3,11,99,3,2,3,2,,,,,,,,,,,,,,,,,,,,,,D,1,5000,63210,63386,1,2,49300,49099,Puy-de-Dôme,63,84,C,P,23,100,0,E,85,D,13/12/2024
+"	
+Groupe Allianz",396 €,14107,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1977,47,Séparé(e),Salarié,07/2001,Oui,,,Non,non,non,non,08/2024,,03/2024,CI71163,CITROEN,BERLINGO III,ELEC,LSP,4,M1,1,41700,11,G,3,11,99,3,2,3,2,,,,,,,,,,,,,,,,,,,,,,D,1,5000,63210,63386,1,2,49300,49099,Puy-de-Dôme,63,84,C,P,23,100,0,E,85,D,13/12/2024
+"	
+Groupe Vilavi",423 €,14107,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1977,47,Séparé(e),Salarié,07/2001,Oui,,,Non,non,non,non,08/2024,,03/2024,CI71163,CITROEN,BERLINGO III,ELEC,LSP,4,M1,1,41700,11,G,3,11,99,3,2,3,2,,,,,,,,,,,,,,,,,,,,,,D,1,5000,63210,63386,1,2,49300,49099,Puy-de-Dôme,63,84,C,P,23,100,0,E,85,D,13/12/2024
+"	
+AMV",431 €,14107,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1977,47,Séparé(e),Salarié,07/2001,Oui,,,Non,non,non,non,08/2024,,03/2024,CI71163,CITROEN,BERLINGO III,ELEC,LSP,4,M1,1,41700,11,G,3,11,99,3,2,3,2,,,,,,,,,,,,,,,,,,,,,,D,1,5000,63210,63386,1,2,49300,49099,Puy-de-Dôme,63,84,C,P,23,100,0,E,85,D,13/12/2024
+"	
+MAAF Assurances",634 €,14112,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/06/1983,41,Pacsé(e),Profession libérale,03/2015,Non,16/01/1935,12/1969,Non,non,non,non,06/2024,,03/2024,ME82024,MERCEDES,CLASSE GLA II,DIES,VTC,6,M1,0,44699,12,H,9,12,99,9,4,6,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,63600,63027,1,2,64390,64004,Puy-de-Dôme,63,84,G,P,9,0.6,0,A,20,E,13/12/2024
+"	
+MMA",766 €,14112,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/06/1983,41,Pacsé(e),Profession libérale,03/2015,Non,16/01/1935,12/1969,Non,non,non,non,06/2024,,03/2024,ME82024,MERCEDES,CLASSE GLA II,DIES,VTC,6,M1,0,44699,12,H,9,12,99,9,4,6,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,63600,63027,1,2,64390,64004,Puy-de-Dôme,63,84,G,P,9,0.6,0,A,20,E,13/12/2024
+"	
+GMF",814 €,14112,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/06/1983,41,Pacsé(e),Profession libérale,03/2015,Non,16/01/1935,12/1969,Non,non,non,non,06/2024,,03/2024,ME82024,MERCEDES,CLASSE GLA II,DIES,VTC,6,M1,0,44699,12,H,9,12,99,9,4,6,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,63600,63027,1,2,64390,64004,Puy-de-Dôme,63,84,G,P,9,0.6,0,A,20,E,13/12/2024
+"	
+Abeille Assurances",897 €,14112,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/06/1983,41,Pacsé(e),Profession libérale,03/2015,Non,16/01/1935,12/1969,Non,non,non,non,06/2024,,03/2024,ME82024,MERCEDES,CLASSE GLA II,DIES,VTC,6,M1,0,44699,12,H,9,12,99,9,4,6,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,63600,63027,1,2,64390,64004,Puy-de-Dôme,63,84,G,P,9,0.6,0,A,20,E,13/12/2024
+"	
+AcommeAssure",1 082 €,14112,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/06/1983,41,Pacsé(e),Profession libérale,03/2015,Non,16/01/1935,12/1969,Non,non,non,non,06/2024,,03/2024,ME82024,MERCEDES,CLASSE GLA II,DIES,VTC,6,M1,0,44699,12,H,9,12,99,9,4,6,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,63600,63027,1,2,64390,64004,Puy-de-Dôme,63,84,G,P,9,0.6,0,A,20,E,13/12/2024
+"	
+Active Assurances",1 180 €,14112,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/06/1983,41,Pacsé(e),Profession libérale,03/2015,Non,16/01/1935,12/1969,Non,non,non,non,06/2024,,03/2024,ME82024,MERCEDES,CLASSE GLA II,DIES,VTC,6,M1,0,44699,12,H,9,12,99,9,4,6,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,63600,63027,1,2,64390,64004,Puy-de-Dôme,63,84,G,P,9,0.6,0,A,20,E,13/12/2024
+"	
+Groupe Allianz",1 280 €,14112,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/06/1983,41,Pacsé(e),Profession libérale,03/2015,Non,16/01/1935,12/1969,Non,non,non,non,06/2024,,03/2024,ME82024,MERCEDES,CLASSE GLA II,DIES,VTC,6,M1,0,44699,12,H,9,12,99,9,4,6,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,63600,63027,1,2,64390,64004,Puy-de-Dôme,63,84,G,P,9,0.6,0,A,20,E,13/12/2024
+"	
+Groupe Admiral",1 338 €,14112,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/06/1983,41,Pacsé(e),Profession libérale,03/2015,Non,16/01/1935,12/1969,Non,non,non,non,06/2024,,03/2024,ME82024,MERCEDES,CLASSE GLA II,DIES,VTC,6,M1,0,44699,12,H,9,12,99,9,4,6,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,63600,63027,1,2,64390,64004,Puy-de-Dôme,63,84,G,P,9,0.6,0,A,20,E,13/12/2024
+"	
+Groupe AXA",1 388 €,14112,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,10/06/1983,41,Pacsé(e),Profession libérale,03/2015,Non,16/01/1935,12/1969,Non,non,non,non,06/2024,,03/2024,ME82024,MERCEDES,CLASSE GLA II,DIES,VTC,6,M1,0,44699,12,H,9,12,99,9,4,6,3,,,,,,,,,,,,,,,,,,,,,,L,2,25000,63600,63027,1,2,64390,64004,Puy-de-Dôme,63,84,G,P,9,0.6,0,A,20,E,13/12/2024
+"	
+Groupe AXA",207 €,14109,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,16/05/1963,61,Marié(e),Salarié,12/2010,Non,16/12/1935,03/1992,Non,non,non,non,07/2000,,03/2000,SE08125,SEAT,CORDOBA,CARB,BRK,5,M1,0,12728,13,B,6,9,99,11,6,9,3,,,,,,,,,,,,,,,,,,,,,,C,3,25000,47190,47004,1,1,31260,31315,Lot-et-Garonne,47,75,C,P,14,10,6,A,59,D,13/12/2024
+"	
+Abeille Assurances",255 €,14109,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,16/05/1963,61,Marié(e),Salarié,12/2010,Non,16/12/1935,03/1992,Non,non,non,non,07/2000,,03/2000,SE08125,SEAT,CORDOBA,CARB,BRK,5,M1,0,12728,13,B,6,9,99,11,6,9,3,,,,,,,,,,,,,,,,,,,,,,C,3,25000,47190,47004,1,1,31260,31315,Lot-et-Garonne,47,75,C,P,14,10,6,A,59,D,13/12/2024
+"	
+MAAF Assurances",268 €,14109,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,16/05/1963,61,Marié(e),Salarié,12/2010,Non,16/12/1935,03/1992,Non,non,non,non,07/2000,,03/2000,SE08125,SEAT,CORDOBA,CARB,BRK,5,M1,0,12728,13,B,6,9,99,11,6,9,3,,,,,,,,,,,,,,,,,,,,,,C,3,25000,47190,47004,1,1,31260,31315,Lot-et-Garonne,47,75,C,P,14,10,6,A,59,D,13/12/2024
+"	
+AMV",280 €,14109,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,16/05/1963,61,Marié(e),Salarié,12/2010,Non,16/12/1935,03/1992,Non,non,non,non,07/2000,,03/2000,SE08125,SEAT,CORDOBA,CARB,BRK,5,M1,0,12728,13,B,6,9,99,11,6,9,3,,,,,,,,,,,,,,,,,,,,,,C,3,25000,47190,47004,1,1,31260,31315,Lot-et-Garonne,47,75,C,P,14,10,6,A,59,D,13/12/2024
+"	
+Active Assurances",282 €,14109,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,16/05/1963,61,Marié(e),Salarié,12/2010,Non,16/12/1935,03/1992,Non,non,non,non,07/2000,,03/2000,SE08125,SEAT,CORDOBA,CARB,BRK,5,M1,0,12728,13,B,6,9,99,11,6,9,3,,,,,,,,,,,,,,,,,,,,,,C,3,25000,47190,47004,1,1,31260,31315,Lot-et-Garonne,47,75,C,P,14,10,6,A,59,D,13/12/2024
+"	
+Groupe Admiral",299 €,14109,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,16/05/1963,61,Marié(e),Salarié,12/2010,Non,16/12/1935,03/1992,Non,non,non,non,07/2000,,03/2000,SE08125,SEAT,CORDOBA,CARB,BRK,5,M1,0,12728,13,B,6,9,99,11,6,9,3,,,,,,,,,,,,,,,,,,,,,,C,3,25000,47190,47004,1,1,31260,31315,Lot-et-Garonne,47,75,C,P,14,10,6,A,59,D,13/12/2024
+"	
+MMA",307 €,14109,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,16/05/1963,61,Marié(e),Salarié,12/2010,Non,16/12/1935,03/1992,Non,non,non,non,07/2000,,03/2000,SE08125,SEAT,CORDOBA,CARB,BRK,5,M1,0,12728,13,B,6,9,99,11,6,9,3,,,,,,,,,,,,,,,,,,,,,,C,3,25000,47190,47004,1,1,31260,31315,Lot-et-Garonne,47,75,C,P,14,10,6,A,59,D,13/12/2024
+"	
+Groupe Allianz",394 €,14109,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,16/05/1963,61,Marié(e),Salarié,12/2010,Non,16/12/1935,03/1992,Non,non,non,non,07/2000,,03/2000,SE08125,SEAT,CORDOBA,CARB,BRK,5,M1,0,12728,13,B,6,9,99,11,6,9,3,,,,,,,,,,,,,,,,,,,,,,C,3,25000,47190,47004,1,1,31260,31315,Lot-et-Garonne,47,75,C,P,14,10,6,A,59,D,13/12/2024
+"	
+Abeille Assurances",277 €,14115,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1976,48,Célibataire,Enseignant,01/2022,Oui,,,Non,non,non,non,09/2008,,08/2005,RE70120,RENAULT,MODUS,DIES,CLE,6,B2,0,13933,10,1,7,4,99,6,10,5,6,,,,,,,,,,,,,,,,,,,,,,L,1,10000,67160,67104,1,2,86120,86206,Bas-Rhin,67,44,P,P,2,0.9,6,A,14,A,13/12/2024
+"	
+Groupe AXA",284 €,14115,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1976,48,Célibataire,Enseignant,01/2022,Oui,,,Non,non,non,non,09/2008,,08/2005,RE70120,RENAULT,MODUS,DIES,CLE,6,B2,0,13933,10,1,7,4,99,6,10,5,6,,,,,,,,,,,,,,,,,,,,,,L,1,10000,67160,67104,1,2,86120,86206,Bas-Rhin,67,44,P,P,2,0.9,6,A,14,A,13/12/2024
+"	
+GMF",367 €,14115,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1976,48,Célibataire,Enseignant,01/2022,Oui,,,Non,non,non,non,09/2008,,08/2005,RE70120,RENAULT,MODUS,DIES,CLE,6,B2,0,13933,10,1,7,4,99,6,10,5,6,,,,,,,,,,,,,,,,,,,,,,L,1,10000,67160,67104,1,2,86120,86206,Bas-Rhin,67,44,P,P,2,0.9,6,A,14,A,13/12/2024
+"	
+Assurpeople.com",373 €,14115,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1976,48,Célibataire,Enseignant,01/2022,Oui,,,Non,non,non,non,09/2008,,08/2005,RE70120,RENAULT,MODUS,DIES,CLE,6,B2,0,13933,10,1,7,4,99,6,10,5,6,,,,,,,,,,,,,,,,,,,,,,L,1,10000,67160,67104,1,2,86120,86206,Bas-Rhin,67,44,P,P,2,0.9,6,A,14,A,13/12/2024
+"	
+Active Assurances",409 €,14115,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1976,48,Célibataire,Enseignant,01/2022,Oui,,,Non,non,non,non,09/2008,,08/2005,RE70120,RENAULT,MODUS,DIES,CLE,6,B2,0,13933,10,1,7,4,99,6,10,5,6,,,,,,,,,,,,,,,,,,,,,,L,1,10000,67160,67104,1,2,86120,86206,Bas-Rhin,67,44,P,P,2,0.9,6,A,14,A,13/12/2024
+"	
+Groupe Admiral",437 €,14115,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1976,48,Célibataire,Enseignant,01/2022,Oui,,,Non,non,non,non,09/2008,,08/2005,RE70120,RENAULT,MODUS,DIES,CLE,6,B2,0,13933,10,1,7,4,99,6,10,5,6,,,,,,,,,,,,,,,,,,,,,,L,1,10000,67160,67104,1,2,86120,86206,Bas-Rhin,67,44,P,P,2,0.9,6,A,14,A,13/12/2024
+"	
+AcommeAssure",494 €,14115,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1976,48,Célibataire,Enseignant,01/2022,Oui,,,Non,non,non,non,09/2008,,08/2005,RE70120,RENAULT,MODUS,DIES,CLE,6,B2,0,13933,10,1,7,4,99,6,10,5,6,,,,,,,,,,,,,,,,,,,,,,L,1,10000,67160,67104,1,2,86120,86206,Bas-Rhin,67,44,P,P,2,0.9,6,A,14,A,13/12/2024
+"	
+MAAF Assurances",551 €,14115,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1976,48,Célibataire,Enseignant,01/2022,Oui,,,Non,non,non,non,09/2008,,08/2005,RE70120,RENAULT,MODUS,DIES,CLE,6,B2,0,13933,10,1,7,4,99,6,10,5,6,,,,,,,,,,,,,,,,,,,,,,L,1,10000,67160,67104,1,2,86120,86206,Bas-Rhin,67,44,P,P,2,0.9,6,A,14,A,13/12/2024
+"	
+SOS Malus",558 €,14115,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1976,48,Célibataire,Enseignant,01/2022,Oui,,,Non,non,non,non,09/2008,,08/2005,RE70120,RENAULT,MODUS,DIES,CLE,6,B2,0,13933,10,1,7,4,99,6,10,5,6,,,,,,,,,,,,,,,,,,,,,,L,1,10000,67160,67104,1,2,86120,86206,Bas-Rhin,67,44,P,P,2,0.9,6,A,14,A,13/12/2024
+"	
+MMA",585 €,14115,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1976,48,Célibataire,Enseignant,01/2022,Oui,,,Non,non,non,non,09/2008,,08/2005,RE70120,RENAULT,MODUS,DIES,CLE,6,B2,0,13933,10,1,7,4,99,6,10,5,6,,,,,,,,,,,,,,,,,,,,,,L,1,10000,67160,67104,1,2,86120,86206,Bas-Rhin,67,44,P,P,2,0.9,6,A,14,A,13/12/2024
+"	
+PEYRAC ASSURANCES",675 €,14115,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,13/12/1976,48,Célibataire,Enseignant,01/2022,Oui,,,Non,non,non,non,09/2008,,08/2005,RE70120,RENAULT,MODUS,DIES,CLE,6,B2,0,13933,10,1,7,4,99,6,10,5,6,,,,,,,,,,,,,,,,,,,,,,L,1,10000,67160,67104,1,2,86120,86206,Bas-Rhin,67,44,P,P,2,0.9,6,A,14,A,13/12/2024
+"	
+Groupe AXA",664 €,14128,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,17/08/1987,37,Marié(e),Fonctionnaire territorial,12/2024,Oui,19/02/1998,04/2021,Non,non,non,non,N/A,26/12/2024,11/2005,BM18229,BMW,320,CARB,CAB,11,M2,0,43000,16,H,8,13,99,12,6,14,8,,,,,,,,,,,,,,,,,,,,,,C,1,10000,38150,38051,2,1,38230,38316,Isère,38,84,J,P,0,1,0,E,76,C,13/12/2024
+"	
+GMF",1 584 €,14128,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,17/08/1987,37,Marié(e),Fonctionnaire territorial,12/2024,Oui,19/02/1998,04/2021,Non,non,non,non,N/A,26/12/2024,11/2005,BM18229,BMW,320,CARB,CAB,11,M2,0,43000,16,H,8,13,99,12,6,14,8,,,,,,,,,,,,,,,,,,,,,,C,1,10000,38150,38051,2,1,38230,38316,Isère,38,84,J,P,0,1,0,E,76,C,13/12/2024
+"	
+Groupe Vilavi",2 056 €,14128,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,17/08/1987,37,Marié(e),Fonctionnaire territorial,12/2024,Oui,19/02/1998,04/2021,Non,non,non,non,N/A,26/12/2024,11/2005,BM18229,BMW,320,CARB,CAB,11,M2,0,43000,16,H,8,13,99,12,6,14,8,,,,,,,,,,,,,,,,,,,,,,C,1,10000,38150,38051,2,1,38230,38316,Isère,38,84,J,P,0,1,0,E,76,C,13/12/2024
+"	
+Groupe Vilavi",2 081 €,14128,Vous comptez l'acheter,D'une première voiture,D'occasion,Non,Vous,Une femme,17/08/1987,37,Marié(e),Fonctionnaire territorial,12/2024,Oui,19/02/1998,04/2021,Non,non,non,non,N/A,26/12/2024,11/2005,BM18229,BMW,320,CARB,CAB,11,M2,0,43000,16,H,8,13,99,12,6,14,8,,,,,,,,,,,,,,,,,,,,,,C,1,10000,38150,38051,2,1,38230,38316,Isère,38,84,J,P,0,1,0,E,76,C,13/12/2024
+"	
+Groupe AXA",333 €,14141,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,14/07/1985,39,Marié(e),Agriculteur,02/2021,Non,07/08/1996,,Non,non,non,non,06/2023,,11/2005,AU21018,AUDI,TT,CARB,CAB,12,M1,0,40660,16,G,7,10,99,5,5,14,9,,,,,,,,,,,,,,,,,,,,,,L,1,1000,16240,16127,2,1,09400,09240,Charente,16,75,P,P,3,0.85,1,A,78,C,13/12/2024
+"	
+Groupe Admiral",700 €,14141,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,14/07/1985,39,Marié(e),Agriculteur,02/2021,Non,07/08/1996,,Non,non,non,non,06/2023,,11/2005,AU21018,AUDI,TT,CARB,CAB,12,M1,0,40660,16,G,7,10,99,5,5,14,9,,,,,,,,,,,,,,,,,,,,,,L,1,1000,16240,16127,2,1,09400,09240,Charente,16,75,P,P,3,0.85,1,A,78,C,13/12/2024
+"	
+SOS Malus",720 €,14141,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,14/07/1985,39,Marié(e),Agriculteur,02/2021,Non,07/08/1996,,Non,non,non,non,06/2023,,11/2005,AU21018,AUDI,TT,CARB,CAB,12,M1,0,40660,16,G,7,10,99,5,5,14,9,,,,,,,,,,,,,,,,,,,,,,L,1,1000,16240,16127,2,1,09400,09240,Charente,16,75,P,P,3,0.85,1,A,78,C,13/12/2024
+"	
+Active Assurances",936 €,14141,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,14/07/1985,39,Marié(e),Agriculteur,02/2021,Non,07/08/1996,,Non,non,non,non,06/2023,,11/2005,AU21018,AUDI,TT,CARB,CAB,12,M1,0,40660,16,G,7,10,99,5,5,14,9,,,,,,,,,,,,,,,,,,,,,,L,1,1000,16240,16127,2,1,09400,09240,Charente,16,75,P,P,3,0.85,1,A,78,C,13/12/2024
+"	
+GMF",976 €,14141,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,14/07/1985,39,Marié(e),Agriculteur,02/2021,Non,07/08/1996,,Non,non,non,non,06/2023,,11/2005,AU21018,AUDI,TT,CARB,CAB,12,M1,0,40660,16,G,7,10,99,5,5,14,9,,,,,,,,,,,,,,,,,,,,,,L,1,1000,16240,16127,2,1,09400,09240,Charente,16,75,P,P,3,0.85,1,A,78,C,13/12/2024
+"	
+Groupe Allianz",998 €,14141,Vous le possédez déjà,N/A,N/A,Non,Vous,Une femme,14/07/1985,39,Marié(e),Agriculteur,02/2021,Non,07/08/1996,,Non,non,non,non,06/2023,,11/2005,AU21018,AUDI,TT,CARB,CAB,12,M1,0,40660,16,G,7,10,99,5,5,14,9,,,,,,,,,,,,,,,,,,,,,,L,1,1000,16240,16127,2,1,09400,09240,Charente,16,75,P,P,3,0.85,1,A,78,C,13/12/2024

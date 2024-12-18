@@ -31,11 +31,11 @@ fake = Faker('fr_FR')
 # Nombre de profils qu'on veut lancer.....
 nbre_profils_souhaites = 1000
 # Le compteur ID de départ pour les identifiants des profils
-id_counter = 10500
+id_counter = 16030
 
 # Paramètres sur les lignes de départ et d'arrivé
-start_line = 10500  # Commencer à la première ligne
-end_line = 11500   # Finir à la dixième ligne
+start_line = 16030  # Commencer à la première ligne
+end_line = 17030  # Finir à la dixième ligne
 # Liste de domaines d'email valides en France
 email_domains = [
   "gmail.com", "yahoo.fr", "orange.fr", "hotmail.fr", "free.fr",
@@ -393,7 +393,7 @@ def generer_profil(vehicules_df, communes_df):
 
     # Définir les tranches d'âge et leur distribution
     tranches_age = [(18, 25), (26, 35), (36, 50), (51, 65), (66, 80), (81, 100)]
-    distribution_age = [5, 25, 30, 20, 10, 10]
+    distribution_age = [50, 25, 20, 10, 5, 0]
     tranche_age = choix_pondere(tranches_age, distribution_age)
     age_min, age_max = tranche_age
     date_naissance = aujourd_hui - timedelta(days=random.randint(age_min * 365, age_max * 365))
@@ -529,15 +529,15 @@ def generer_profil(vehicules_df, communes_df):
 
 
 # Charger les données de véhicules
-chemin_fichier_vehicules = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_sra_final.csv'  # Remplacez par le chemin de votre fichier CSV
+chemin_fichier_vehicules = r'C:\Users\Utilisateur\PycharmProjects\Production-Scrapping-Automobile-version\notebook\df_sra_final.csv'  # Remplacez par le chemin de votre fichier CSV
 vehicules_df = charger_donnees_vehicules(chemin_fichier_vehicules)
 
 # Charger les données de véhicules neufs
-chemin_fichier_vehicules_neuves = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_sra_neuve.csv'  # Remplacez par le chemin de votre fichier CSV
+chemin_fichier_vehicules_neuves = r'C:\Users\Utilisateur\PycharmProjects\Production-Scrapping-Automobile-version\notebook\df_sra_neuve.csv'  # Remplacez par le chemin de votre fichier CSV
 vehicules_neuves_df = charger_donnees_vehicules_neuve(chemin_fichier_vehicules_neuves)
 
 # Charger les données des communes
-chemin_fichier_communes = 'C:/Users/User/PycharmProjects/Production-Scrapping-Automobile/notebook/df_communes.csv'  # Remplacez par le chemin réel
+chemin_fichier_communes = r'C:\Users\Utilisateur\PycharmProjects\Production-Scrapping-Automobile-version\notebook\df_communes.csv'  # Remplacez par le chemin réel
 communes_df = charger_donnees_communes(chemin_fichier_communes)
 
 # Générer les profils avec les informations de véhicules
@@ -781,7 +781,8 @@ print(profils_df['PrimaryApplicantOccupationCode'].value_counts().head(10))
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 TIMEOUT = 2 * 60000
-SBR_WS_CDP = 'wss://brd-customer-hl_e9a5f52e-zone-scraping_browser1:jpuci55coo47@brd.superproxy.io:9222'
+AUTH = 'brd-customer-hl_e9a5f52e-zone-scraping_browser_prod_auto:7cxvu1xvqo1x'
+SBR_WS_CDP = f'https://{AUTH}@brd.superproxy.io:9222'
 # SBR_WS_CDP = 'wss://brd-customer-hl_538b14f9-zone-scraping_browser1:zk8riomp0pt9@brd.superproxy.io:9222'
 
 TARGET_URL = environ.get('TARGET_URL', default='https://www.assurland.com/')
@@ -1188,7 +1189,7 @@ async def fill_form_profil(page, profile):
         Elle effectue également des vérifications pour s'assurer que les valeurs sont correctement saisies.
     """
     try:
-        await page.wait_for_selector('div.al_label span:text("Votre profil")', timeout=TIMEOUT)
+        #await page.wait_for_selector('div.al_label span:text("Votre profil")', timeout=TIMEOUT)
         await page.wait_for_selector('.PrimaryApplicantSex', state="visible", timeout=TIMEOUT)
         if profile['PrimaryApplicantSex'] == "Un homme":
             await page.click('.PrimaryApplicantSex button.list-group-item[value="H"]')
@@ -1330,7 +1331,7 @@ async def fill_form_profil(page, profile):
                     f"Année de l'enfant 1 '{profile['ChildBirthDateYear1']}' saisie avec succès.")
                 await page.select_option('#ChildBirthDateYear2', value=profile['ChildBirthDateYear2'])
                 print(
-                    f"Année de l'enfant 2'{profile['ChildBirthDateYear2']}' saisie avec succès.")
+                    f"Année de l'enfant 2 '{profile['ChildBirthDateYear2']}' saisie avec succès.")
                 await page.select_option('#ChildBirthDateYear3', value=profile['ChildBirthDateYear3'])
                 print(
                     f"Année de l'enfant 3 '{profile['ChildBirthDateYear3']}' saisie avec succès.")
@@ -1453,6 +1454,143 @@ async def select_car_brand_Occasion(page: Page, profile: dict, max_retries=3, re
     print("Impossible de sélectionner la marque de voiture.")
     return False
 
+
+
+async def select_car_attribute(page: Page, selector: str, attribute_value: str, attribute_name: str,
+                               max_retries=3, retry_delay=2, check_enabled=True, strict=False,
+                               use_label=False, visibility_timeout=120000, enabled_timeout=60000):
+    for attempt in range(max_retries):
+        try:
+            # Vérifier si l'élément existe dans le DOM
+            element_handle = await page.query_selector(selector)
+            if not element_handle:
+                print(f"L'élément '{selector}' n'existe pas dans le DOM. Tentative de rechargement de la page.")
+                await page.reload()
+                await page.wait_for_load_state("load")
+                continue
+
+            # Vérifier si l'élément est visible
+            is_visible = await element_handle.is_visible()
+            if not is_visible:
+                print(f"L'élément '{selector}' n'est pas visible. Tentative de faire défiler jusqu'à l'élément.")
+                await element_handle.scroll_into_view_if_needed()
+                await page.wait_for_timeout(1000)  # Attendre un peu après le défilement
+
+            # Attendre que le sélecteur soit visible
+            try:
+                await page.wait_for_selector(selector, state="visible", timeout=visibility_timeout)
+            except TimeoutError:
+                print(f"Le sélecteur '{selector}' n'est pas devenu visible. Tentative de contournement.")
+                # Ici, vous pouvez ajouter des actions spécifiques pour contourner le problème
+                # Par exemple, cliquer sur un autre élément pour faire apparaître le sélecteur
+                # await page.click("#someOtherElement")
+
+            if check_enabled:
+                # Attendre que le sélecteur soit activé (non désactivé)
+                try:
+                    await element_handle.wait_for_element_state("enabled", timeout=enabled_timeout)
+                except TimeoutError:
+                    print(f"Le sélecteur '{selector}' n'est pas devenu actif. Tentative de contournement.")
+                    # Ici, vous pouvez ajouter des actions spécifiques pour activer le sélecteur
+                    # Par exemple, cliquer sur un élément qui active le sélecteur
+                    # await page.click("#activatorElement")
+
+            # Vérifier si l'option existe et obtenir toutes les options disponibles
+            options_data = await page.evaluate(f"""
+                    () => {{
+                        const select = document.querySelector('{selector}');
+                        if (!select) return null;
+                        const options = Array.from(select.options);
+                        const targetOption = options.find(option => 
+                            option.{'text' if use_label else 'value'} === '{attribute_value}'
+                        );
+                        return {{
+                            optionExists: !!targetOption,
+                            allOptions: options.map(option => ({{
+                                text: option.text,
+                                value: option.value
+                            }}))
+                        }};
+                    }}
+                """)
+
+            if not options_data:
+                print(f"Le sélecteur '{selector}' n'a pas été trouvé.")
+                return False
+
+            if not options_data['optionExists']:
+                print(
+                    f"L'option '{attribute_value}' n'existe pas dans la liste déroulante pour {attribute_name}. Sélection d'une option au hasard.")
+                if not options_data['allOptions']:
+                    print("Aucune option disponible dans la liste déroulante.")
+                    return False
+                random_option = random.choice(options_data['allOptions'])
+                attribute_value = random_option['text' if use_label else 'value']
+                print(f"Option sélectionnée au hasard : {attribute_value}")
+
+            # Sélectionner l'option
+            select_args = {'label' if use_label else 'value': attribute_value, 'timeout': 6000, 'strict': strict}
+            await page.select_option(selector, **select_args)
+
+            # Vérifier si la sélection a réussi
+            selected_value = await page.evaluate(f"""
+                () => {{
+                    const select = document.querySelector('{selector}');
+                    const selectedOption = select.options[select.selectedIndex];
+                    return selectedOption ? selectedOption.{'text' if use_label else 'value'} : null;
+                }}
+            """)
+            if selected_value == attribute_value:
+                print(f"----> {attribute_name} de la voiture '{attribute_value}' sélectionné(e) avec succès.")
+                return True
+            else:
+                raise Exception("La sélection n'a pas été appliquée.")
+
+        except PlaywrightTimeoutError as e:
+            if attempt < max_retries - 1:
+                print(f"Tentative {attempt + 1} échouée pour {attribute_name}. Nouvelle tentative dans {retry_delay} secondes...")
+                await asyncio.sleep(retry_delay)
+            else:
+                print(f"Le sélecteur '{selector}' pour {attribute_name} n'est pas devenu interactif après {max_retries} tentatives.")
+
+        except Exception as e:
+            logging.error(f"Erreur lors de la sélection de {attribute_name} de la voiture: {str(e)}")
+            if attempt < max_retries - 1:
+                print(f"Tentative de récupération. Nouvelle tentative dans {retry_delay} secondes...")
+                await asyncio.sleep(retry_delay)
+            else:
+                raise ValueError(f"Erreur lors de la sélection de {attribute_name} de la voiture : {str(e)}")
+
+    print(f"Impossible de sélectionner {attribute_name} de la voiture.")
+    return False
+
+# Les fonctions spécifiques restent les mêmes
+async def select_car_fuel_type_Neuve(page: Page, profile: dict):
+    return await select_car_attribute(page, "#SpecCarFuelType", profile['SpecCarFuelTypeNeuve'], "l'alimentation")
+
+async def select_car_body_type_Neuve(page: Page, profile: dict):
+    return await select_car_attribute(page, "#SpecCarBodyType", profile['SpecCarBodyTypeNeuve'], "la carrosserie")
+
+async def select_car_power_Neuve(page: Page, profile: dict):
+    return await select_car_attribute(page, "#SpecCarPower", profile['SpecCarPowerNeuve'], "la puissance", check_enabled=False, strict=True)
+
+async def select_car_model_Neuve(page: Page, profile: dict):
+    return await select_car_attribute(page, "#SpecCarType", profile['SpecCarTypeNeuve'], "le modèle",
+                                      use_label=True, visibility_timeout=120000, enabled_timeout=6000)
+
+async def select_car_fuel_type_occasion(page: Page, profile: dict):
+    return await select_car_attribute(page, "#SpecCarFuelType", profile['SpecCarFuelType'], "l'alimentation")
+
+async def select_car_body_type_occasion(page: Page, profile: dict):
+    return await select_car_attribute(page, "#SpecCarBodyType", profile['SpecCarBodyType'], "la carrosserie")
+
+async def select_car_power_occasion(page: Page, profile: dict):
+    return await select_car_attribute(page, "#SpecCarPower", profile['SpecCarPower'], "la puissance", check_enabled=False, strict=True)
+
+async def select_car_model_occasion(page: Page, profile: dict):
+    return await select_car_attribute(page, "#SpecCarType", profile['SpecCarType'], "le modèle",
+                                      use_label=True, visibility_timeout=120000, enabled_timeout=6000)
+
 async def fill_form_vehicule(page, profile):
     """
     Remplit de manière asynchrone un formulaire de véhicule sur une page web en utilisant les informations de profil fournies.
@@ -1549,59 +1687,29 @@ async def fill_form_vehicule(page, profile):
             if not success:
                 print("La sélection de la marque de voiture a échoué. Gestion de l'erreur...")
 
-            """ Modéle de la marque de voiture """
             await asyncio.sleep(2)
-            try:
-                await page.wait_for_selector("#SpecCarType", state="visible", timeout=2 * 60000)
-                element_SpecCarType = await page.query_selector("#SpecCarType")
-                await element_SpecCarType.wait_for_element_state("enabled", timeout=6000)
-                await page.select_option("#SpecCarType", label=profile['SpecCarTypeNeuve'], timeout=6000)
-                print(f"----> Modéle de la voiture '{profile['SpecCarTypeNeuve']}' sélectionné avec succès.")
-            except PlaywrightTimeoutError:
-                print("Le bouton '.SpecCarType' n'est pas visible.")
-            except Exception as e:
-                logging.error(f"Erreur lors de la sélection du modéle de voiture: {str(e)}")
-                raise ValueError(f"Erreur lors de la sélection du modéle de voiture : {str(e)}")
+            """ Modéle de la marque de voiture """
+            success_model = await select_car_model_Neuve(page, profile)
+            if not success_model:
+                print("La sélection du modéle de voiture a échoué. Gestion de l'erreur...")
 
             """ Type d'alimentation de la voiture """
+            success_alimentation = await select_car_fuel_type_Neuve(page, profile)
+            if not success_alimentation:
+                print("La sélection du type d'alimentation de voiture a échoué. Gestion de l'erreur...")
+
             await asyncio.sleep(3)
-            try:
-                await page.wait_for_selector("#SpecCarFuelType", state="visible", timeout=TIMEOUT)
-                element_SpecCarFuelType = await page.query_selector("#SpecCarFuelType")
-                await element_SpecCarFuelType.wait_for_element_state("enabled", timeout=60000)
-                await page.select_option("#SpecCarFuelType", value=profile['SpecCarFuelTypeNeuve'], timeout=6000)
-                print(f"----> Alimentation de la voiture '{profile['SpecCarFuelTypeNeuve']}' sélectionné avec succès.")
-            except PlaywrightTimeoutError:
-                print("Le bouton '.SpecCarFuelType' n'est pas visible.")
-            except Exception as e:
-                logging.error(f"Erreur lors de la sélection de Alimentation de voiture: {str(e)}")
-                raise ValueError(f"Erreur lors de la sélection de Alimentation de voiture : {str(e)}")
 
             """ Type de carrosserie de la voiture """
-            await asyncio.sleep(3)
-            try:
-                await page.wait_for_selector("#SpecCarBodyType", state="visible", timeout=TIMEOUT)
-                element_SpecCarBodyType = await page.query_selector("#SpecCarBodyType")
-                await element_SpecCarBodyType.wait_for_element_state("enabled", timeout=60000)
-                await page.select_option("#SpecCarBodyType", value=profile['SpecCarBodyTypeNeuve'], timeout=6000)
-                print(f"----> Carosserie de la voiture '{profile['SpecCarBodyTypeNeuve']}' sélectionnée avec succès.")
-            except PlaywrightTimeoutError:
-                print(f"Le sélecteur SpecCarBodyType n'est pas devenu visible dans le délai imparti.")
-            except Exception as e:
-                logging.error(f"Erreur lors de la sélection de la carrosserie de la voiture: {str(e)}")
-                raise ValueError(f"Erreur lors de la sélection de la carrosserie de voiture : {str(e)}")
+            success_carroserie = await select_car_body_type_Neuve(page, profile)
+            if not success_carroserie:
+                print("La sélection du type de carroserie de voiture a échoué. Gestion de l'erreur...")
 
             """ Puissance de la voiture """
             await asyncio.sleep(2)
-            try:
-                await page.wait_for_selector("#SpecCarPower", state="visible", timeout=TIMEOUT)
-                await page.select_option("#SpecCarPower", value=profile['SpecCarPowerNeuve'], strict=True)
-                print(f"----> Puissance de la voiture '{profile['SpecCarPowerNeuve']}' sélectionnée avec succès.")
-            except PlaywrightTimeoutError:
-                print(f"Le sélecteur #SpecCarPower n'est pas visible.")
-            except Exception as e:
-                logging.error(f"Erreur lors de la sélection de la puissance de la voiture: {str(e)}")
-                raise ValueError(f"Erreur lors de la sélection de la puissance de voiture : {str(e)}")
+            success_puissance = await select_car_power_Neuve(page, profile)
+            if not success_puissance:
+                print("La sélection de la puissance de voiture a échoué. Gestion de l'erreur...")
 
             """ ID de la voiture """
             try:
@@ -1683,57 +1791,27 @@ async def fill_form_vehicule(page, profile):
 
             """ Modéle de la marque de voiture """
             await asyncio.sleep(2)
-            try:
-                await page.wait_for_selector("#SpecCarType", state="visible", timeout=2 * 60000)
-                element_SpecCarType = await page.query_selector("#SpecCarType")
-                await element_SpecCarType.wait_for_element_state("enabled", timeout=6000)
-                await page.select_option("#SpecCarType", label=profile['SpecCarType'], timeout=60000)
-                print(f"----> Modéle de la voiture '{profile['SpecCarType']}' sélectionné avec succès.")
-            except PlaywrightTimeoutError:
-                print("Le bouton '.SpecCarType' n'est pas visible.")
-            except Exception as e:
-                logging.error(f"Erreur lors de la sélection du modéle de voiture: {str(e)}")
-                raise ValueError(f"Erreur lors de la sélection du modéle de voiture : {str(e)}")
+            success_modele_occassion = await select_car_model_occasion(page, profile)
+            if not success_modele_occassion:
+                print("La sélection du modéle de voiture a échoué. Gestion de l'erreur...")
 
             """ Type d'alimentation de la voiture """
             await asyncio.sleep(3)
-            try:
-                await page.wait_for_selector("#SpecCarFuelType", state="visible", timeout=TIMEOUT * 2)
-                element_SpecCarFuelType = await page.query_selector("#SpecCarFuelType")
-                await element_SpecCarFuelType.wait_for_element_state("enabled", timeout=60000)
-                await page.select_option("#SpecCarFuelType", value=profile['SpecCarFuelType'], timeout=60000)
-                print(f"----> Alimentation de la voiture '{profile['SpecCarFuelType']}' sélectionné avec succès.")
-            except PlaywrightTimeoutError:
-                print("Le bouton '.SpecCarFuelType' n'est pas visible.")
-            except Exception as e:
-                logging.error(f"Erreur lors de la sélection de Alimentation de voiture: {str(e)}")
-                raise ValueError(f"Erreur lors de la sélection de Alimentation de voiture : {str(e)}")
+            success_alimentation_occassion = await select_car_fuel_type_occasion(page, profile)
+            if not success_alimentation_occassion:
+                print("La sélection du type d'alimentation de voiture a échoué. Gestion de l'erreur...")
 
             """ Type de carrosserie de la voiture """
             await asyncio.sleep(3)
-            try:
-                await page.wait_for_selector("#SpecCarBodyType", state="visible", timeout=TIMEOUT)
-                element_SpecCarBodyType = await page.query_selector("#SpecCarBodyType")
-                await element_SpecCarBodyType.wait_for_element_state("enabled", timeout=60000)
-                await page.select_option("#SpecCarBodyType", value=profile['SpecCarBodyType'], timeout=6000)
-                print(f"----> Carosserie de la voiture '{profile['SpecCarBodyType']}' sélectionnée avec succès.")
-            except PlaywrightTimeoutError:
-                print(f"Le sélecteur SpecCarBodyType n'est pas devenu visible dans le délai imparti.")
-            except Exception as e:
-                logging.error(f"Erreur lors de la sélection de la carrosserie de la voiture: {str(e)}")
-                raise ValueError(f"Erreur lors de la sélection de la carrosserie de voiture : {str(e)}")
+            success_carroserie_occassion = await select_car_body_type_occasion(page, profile)
+            if not success_carroserie_occassion:
+                print("La sélection du type de carroserie de voiture a échoué. Gestion de l'erreur...")
 
             """ Puissance de la voiture """
             await asyncio.sleep(2)
-            try:
-                await page.wait_for_selector("#SpecCarPower", state="visible", timeout=TIMEOUT)
-                await page.select_option("#SpecCarPower", value=profile['SpecCarPower'], strict=True)
-                print(f"----> Puissance de la voiture '{profile['SpecCarPower']}' sélectionnée avec succès.")
-            except PlaywrightTimeoutError:
-                print(f"Le sélecteur #SpecCarPower n'est pas visible.")
-            except Exception as e:
-                logging.error(f"Erreur lors de la sélection de la puissance de la voiture: {str(e)}")
-                raise ValueError(f"Erreur lors de la sélection de la puissance de voiture : {str(e)}")
+            success_puissance_occassion = await select_car_power_occasion(page, profile)
+            if not success_puissance_occassion:
+                print("La sélection de la puissance de voiture a échoué. Gestion de l'erreur...")
 
             """ ID de la voiture """
             try:
@@ -2582,16 +2660,16 @@ async def run_for_profile(playwright: Playwright, profile: dict, headless: bool,
         logger.info("Cliqué sur le div 'Comparez les assurances auto'")
         print(f"Le profil '{profile['Id']}' est lancé....")
         await fill_form_projet(page, profile)
-        await page.wait_for_load_state("networkidle")
+        await page.wait_for_load_state("load")
         logger.info("=" * 100)
         await fill_form_profil(page, profile)
         await page.wait_for_load_state("load")
         logger.info("=" * 100)
         await fill_form_vehicule(page, profile)
-        await page.wait_for_load_state("networkidle")
+        await page.wait_for_load_state("load")
         logger.info("=" * 100)
         await fill_antecedents(page, profile)
-        await page.wait_for_load_state("networkidle")
+        await page.wait_for_load_state("load")
         logger.info("=" * 100)
         await fill_form_contrats(page, profile)
         logger.info("=" * 100)
@@ -2733,4 +2811,4 @@ if __name__ == "__main__":
         - L'utilisation de Bright Data (bright_data=True) implique que la configuration appropriée
         pour Bright Data est en place.
     """
-    asyncio.run(main(headless=False, bright_data=True, max_concurrent=20))
+    asyncio.run(main(headless=False, bright_data=True, max_concurrent=10))
