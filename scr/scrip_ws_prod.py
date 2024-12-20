@@ -29,13 +29,13 @@ from playwright.async_api import async_playwright, Playwright, expect, TimeoutEr
 fake = Faker('fr_FR')
 
 # Nombre de profils qu'on veut lancer.....
-nbre_profils_souhaites = 1000
+nbre_profils_souhaites = 500
 # Le compteur ID de départ pour les identifiants des profils
-id_counter = 16030
+id_counter = 22501
 
 # Paramètres sur les lignes de départ et d'arrivé
-start_line = 16030  # Commencer à la première ligne
-end_line = 17030  # Finir à la dixième ligne
+start_line = 22501  # Commencer à la première ligne
+end_line = 23000  # Finir à la dixième ligne
 # Liste de domaines d'email valides en France
 email_domains = [
   "gmail.com", "yahoo.fr", "orange.fr", "hotmail.fr", "free.fr",
@@ -43,9 +43,9 @@ email_domains = [
 ]
 # Poids pour les régions
 poids_regions = {
-  '11': 30, '24': 15, '27': 15, '28': 15, '32': 15, '44': 15,
-  '52': 15, '53': 15, '75': 15, '76': 15, '84': 15, '93': 15,
-  '94': 5, '01': 0, '02': 0, '03': 0, '04': 0, '06': 0
+  '11': 10, '24': 10, '27': 10, '28': 10, '32': 10, '44': 10,
+  '52': 10, '53': 10, '75': 10, '76': 10, '84': 10, '93': 10,
+  '94': 10, '01': 10, '02': 10, '03': 10, '04': 10, '06': 10
 }
 
 # Types de trajet et critères correspondants
@@ -379,7 +379,7 @@ def generer_profil(vehicules_df, communes_df):
     # Définir les pourcentages pour le statut marital
     statut_marital = choix_pondere(
         ["Célibataire", "Marié(e)", "Concubin(e) / vie maritale", "Pacsé(e)", "Veuf(ve)", "Séparé(e)", "Divorcé(e)"],
-        [20, 30, 20, 10, 5, 10, 5]
+        [25, 40, 20, 10, 0, 0, 5]
     )
 
     # Définir les pourcentages pour l'occupation
@@ -388,12 +388,12 @@ def generer_profil(vehicules_df, communes_df):
          "Fonctionnaire Défense/Intérieur", "Fonctionnaire autre", "Enseignant", "Agriculteur", "Artisan",
          "Chef d'entreprise", "Profession libérale", "VRP", "Etudiant", "Retraité", "Sans profession",
          "Recherche d'emploi", "Prof. du spectacle", "Forain", "Taxi/VTC"],
-        [10, 20, 5, 5, 5, 5, 5, 5, 2, 2, 2, 5, 2, 5, 10, 5, 2, 2, 2, 2]
+        [25, 45, 0, 0, 0, 0, 0, 0, 2, 2, 0, 9, 0, 10, 0, 0, 2, 2, 2, 2]
     )
 
     # Définir les tranches d'âge et leur distribution
     tranches_age = [(18, 25), (26, 35), (36, 50), (51, 65), (66, 80), (81, 100)]
-    distribution_age = [50, 25, 20, 10, 5, 0]
+    distribution_age = [15, 70, 15, 0, 0, 0]
     tranche_age = choix_pondere(tranches_age, distribution_age)
     age_min, age_max = tranche_age
     date_naissance = aujourd_hui - timedelta(days=random.randint(age_min * 365, age_max * 365))
